@@ -1,4 +1,4 @@
-# Vivy
+# Vivy (work in progress)
 PHP validation engine
 
 🚀 Blazingly fast  
