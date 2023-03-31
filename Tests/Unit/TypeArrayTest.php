@@ -29,13 +29,13 @@ test('array-1', function () use ($faker) {
 	$data = [];
 	for ($i = 0; $i < 20; $i++) {
 		$data[] = [
-			'nome'         => $faker->name,
-			'cognome'      => $faker->lastName,
-			'email'        => $faker->email,
-			'data_nascita' => $faker->date,
-			'via'          => $faker->streetAddress,
-			'citta'        => $faker->city,
-			'stato'        => $faker->countryCode,
+			'nome'         => $faker->name(),
+			'cognome'      => $faker->lastName(),
+			'email'        => $faker->email(),
+			'data_nascita' => $faker->date(),
+			'via'          => $faker->streetAddress(),
+			'citta'        => $faker->city(),
+			'stato'        => $faker->countryCode(),
 		];
 	}
 
