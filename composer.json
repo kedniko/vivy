@@ -12,20 +12,14 @@
 	"minimum-stability": "stable",
 	"prefer-stable": true,
 	"require": {
-		"kedniko/php-ide-helper": "dev-main",
 		"nikic/php-parser": "^4.15",
-		"brick/math": "^0.11.0"
+		"brick/math": "^0.11.0",
+		"kedniko/php-ide-helper": "^0.0.1"
 	},
 	"require-dev": {
-		"pestphp/pest": "^1.22",
+		"pestphp/pest": "^2.3",
 		"fakerphp/faker": "^1.21"
 	},
-	"repositories": [
-		{
-			"type": "path",
-			"url": "D:/repositories/kedniko/php-ide-helper"
-		}
-	],
 	"config": {
 		"allow-plugins": {
 			"pestphp/pest-plugin": true
