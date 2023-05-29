@@ -10,28 +10,28 @@ namespace Kedniko\Vivy\Core;
  */
 class GroupBuilder
 {
-	// use TraitUserDefinedCallGroup;
+    // use TraitUserDefinedCallGroup;
 
-	// // protected $types;
+    // // protected $types;
 
-	// /** @var LinkedList $types */
-	// protected $types;
+    // /** @var LinkedList $types */
+    // protected $types;
 
-	// public function __construct($setup = null)
-	// {
-	// 	$this->fields = new LinkedList;
+    // public function __construct($setup = null)
+    // {
+    // 	$this->fields = new LinkedList;
 
-	// 	if (!$setup) {
-	// 		return;
-	// 	}
+    // 	if (!$setup) {
+    // 		return;
+    // 	}
 
-	// 	// if (is_callable($setup)) {
-	// 	// 	$setup($this);
-	// 	// 	return;
-	// 	// }
+    // 	// if (is_callable($setup)) {
+    // 	// 	$setup($this);
+    // 	// 	return;
+    // 	// }
 
-	// 	if (is_array($setup)) {
-	// 		$this->applyArraySetup($setup);
-	// 	}
-	// }
+    // 	if (is_array($setup)) {
+    // 		$this->applyArraySetup($setup);
+    // 	}
+    // }
 }

@@ -8,36 +8,37 @@ use Kedniko\Vivy\V;
 
 class ScanCommand
 {
-	public function handle($exportPath = null)
-	{
-		$exportPath = $exportPath ?? 'ide-helper.rules.php';
-		$registered = array_map(function ($item) {
-			$r = new Register();
+    public function handle($exportPath = null)
+    {
+        $exportPath = $exportPath ?? 'ide-helper.rules.php';
+        $registered = array_map(function ($item) {
+            $r = new Register();
 
-			$returnType = $item['returnType'];
-			$availableForType = $item['availableForType'];
-			$fn = $item['function'];
-			if (is_array($fn)) {
-				$classname = $item['function'][0];
-				$methodname = $item['function'][1];
-				$r->useMethod($classname, $methodname);
-			} else {
-				$r->useFunction($fn);
-			}
-			$name = $item['methodName'];
-			$is_static = $availableForType === V::class;
-			$r->name($name)->asStatic($is_static)->to($availableForType)->setReturn($returnType);
-			return $r;
-		}, V::$registeredMiddlewares);
+            $returnType = $item['returnType'];
+            $availableForType = $item['availableForType'];
+            $fn = $item['function'];
+            if (is_array($fn)) {
+                $classname = $item['function'][0];
+                $methodname = $item['function'][1];
+                $r->useMethod($classname, $methodname);
+            } else {
+                $r->useFunction($fn);
+            }
+            $name = $item['methodName'];
+            $is_static = $availableForType === V::class;
+            $r->name($name)->asStatic($is_static)->to($availableForType)->setReturn($returnType);
 
-		$ih = new IdeHelper($registered);
-		$ih->setHeader($this->getHeader());
-		$ih->generate($exportPath);
-	}
+            return $r;
+        }, V::$registeredMiddlewares);
 
-	private function getHeader()
-	{
-		return <<<HEADER
+        $ih = new IdeHelper($registered);
+        $ih->setHeader($this->getHeader());
+        $ih->generate($exportPath);
+    }
+
+    private function getHeader()
+    {
+        return <<<'HEADER'
 
         // @formatter:off
         /**
@@ -47,5 +48,5 @@ class ScanCommand
          */
         
         HEADER;
-	}
+    }
 }

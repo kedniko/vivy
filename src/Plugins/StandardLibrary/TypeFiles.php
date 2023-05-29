@@ -9,296 +9,299 @@ use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeCompound;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeFile;
 use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Types\Type;
 
 class TypeFiles extends TypeCompound
 {
-	public function count($count, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Numero di file errato';
+    public function count($count, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Numero di file errato';
 
-		$middleware = new Rule('count', function (Context $c) use ($count) {
-			$value = $c->value;
+        $middleware = new Rule('count', function (Context $c) use ($count) {
+            $value = $c->value;
 
-			return count($value['name']) === $count &&
-				count($value['full_path']) === $count &&
-				count($value['type']) === $count &&
-				count($value['tmp_name']) === $count &&
-				count($value['error']) === $count &&
-				count($value['size']) === $count;
-		}, $errormessage);
+            return count($value['name']) === $count &&
+                count($value['full_path']) === $count &&
+                count($value['type']) === $count &&
+                count($value['tmp_name']) === $count &&
+                count($value['error']) === $count &&
+                count($value['size']) === $count;
+        }, $errormessage);
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+        $this->addRule($middleware, $options);
 
-	public function minCount($minCount, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Numero di file troppo piccolo';
+        return $this;
+    }
 
-		$middleware = new Rule('minCount', function (Context $c) use ($minCount) {
-			$value = $c->value;
+    public function minCount($minCount, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Numero di file troppo piccolo';
 
-			return count($value['name']) >= $minCount &&
-				count($value['full_path']) >= $minCount &&
-				count($value['type']) >= $minCount &&
-				count($value['tmp_name']) >= $minCount &&
-				count($value['error']) >= $minCount &&
-				count($value['size']) >= $minCount;
-		}, $errormessage);
+        $middleware = new Rule('minCount', function (Context $c) use ($minCount) {
+            $value = $c->value;
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+            return count($value['name']) >= $minCount &&
+                count($value['full_path']) >= $minCount &&
+                count($value['type']) >= $minCount &&
+                count($value['tmp_name']) >= $minCount &&
+                count($value['error']) >= $minCount &&
+                count($value['size']) >= $minCount;
+        }, $errormessage);
 
-	public function maxCount($maxCount, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Numero di file troppo grande';
+        $this->addRule($middleware, $options);
 
-		$middleware = new Rule('maxCount', function (Context $c) use ($maxCount) {
-			$value = $c->value;
+        return $this;
+    }
 
-			return is_array($value) &&
-				array_key_exists('name', $value) && count($value['name']) <= $maxCount &&
-				array_key_exists('full_path', $value) && count($value['full_path']) <= $maxCount &&
-				array_key_exists('type', $value) && count($value['type']) <= $maxCount &&
-				array_key_exists('tmp_name', $value) && count($value['tmp_name']) <= $maxCount &&
-				array_key_exists('error', $value) && count($value['error']) <= $maxCount &&
-				array_key_exists('size', $value) && count($value['size']) <= $maxCount;
-		}, $errormessage);
+    public function maxCount($maxCount, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Numero di file troppo grande';
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+        $middleware = new Rule('maxCount', function (Context $c) use ($maxCount) {
+            $value = $c->value;
 
-	/**
-	 * @param mixed $totalSize
-	 * @param int|float $unit `B`|`KB`|`MB`|`GB`
-	 * @param Options|null $options
-	 */
-	public function totalSize($totalSize, $unit = 'B', Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Dimensioni files non accettate';
+            return is_array($value) &&
+                array_key_exists('name', $value) && count($value['name']) <= $maxCount &&
+                array_key_exists('full_path', $value) && count($value['full_path']) <= $maxCount &&
+                array_key_exists('type', $value) && count($value['type']) <= $maxCount &&
+                array_key_exists('tmp_name', $value) && count($value['tmp_name']) <= $maxCount &&
+                array_key_exists('error', $value) && count($value['error']) <= $maxCount &&
+                array_key_exists('size', $value) && count($value['size']) <= $maxCount;
+        }, $errormessage);
 
-		$totalSize = $this->convertUnit($totalSize, $unit, 'B');
+        $this->addRule($middleware, $options);
 
-		$middleware = new Rule('totalSize', function (Context $c) use ($totalSize) {
-			$value = $c->value;
-			$totalSize = 0;
-			foreach ($value['size'] as $size) {
-				$totalSize += $size;
-			}
+        return $this;
+    }
 
-			return $totalSize === $totalSize;
-		}, $errormessage);
+    /**
+     * @param  mixed  $totalSize
+     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     */
+    public function totalSize($totalSize, $unit = 'B', Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Dimensioni files non accettate';
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+        $totalSize = $this->convertUnit($totalSize, $unit, 'B');
 
-	/**
-	 * @param mixed $minTotalSize
-	 * @param int|float $unit `B`|`KB`|`MB`|`GB`
-	 * @param Options|null $options
-	 */
-	public function minTotalSize($minTotalSize, $unit = 'B', Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo piccole';
+        $middleware = new Rule('totalSize', function (Context $c) use ($totalSize) {
+            $value = $c->value;
+            $totalSize = 0;
+            foreach ($value['size'] as $size) {
+                $totalSize += $size;
+            }
 
-		$minTotalSize = $this->convertUnit($minTotalSize, $unit, 'B');
+            return $totalSize === $totalSize;
+        }, $errormessage);
 
-		$middleware = new Rule('minTotalSize', function (Context $c) use ($minTotalSize) {
-			$value = $c->value;
-			$totalSize = 0;
-			foreach ($value['size'] as $size) {
-				$totalSize += $size;
-			}
+        $this->addRule($middleware, $options);
 
-			return $totalSize >= $minTotalSize;
-		}, $errormessage);
+        return $this;
+    }
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+    /**
+     * @param  mixed  $minTotalSize
+     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     */
+    public function minTotalSize($minTotalSize, $unit = 'B', Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo piccole';
 
-	/**
-	 * @param mixed $maxTotalSize
-	 * @param int|float $unit `B`|`KB`|`MB`|`GB`
-	 * @param Options|null $options
-	 */
-	public function maxTotalSize($maxTotalSize, $unit = 'B', Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo grandi';
+        $minTotalSize = $this->convertUnit($minTotalSize, $unit, 'B');
 
-		$maxTotalSize = $this->convertUnit($maxTotalSize, $unit, 'B');
+        $middleware = new Rule('minTotalSize', function (Context $c) use ($minTotalSize) {
+            $value = $c->value;
+            $totalSize = 0;
+            foreach ($value['size'] as $size) {
+                $totalSize += $size;
+            }
 
-		$middleware = new Rule('maxTotalSize', function (Context $c) use ($maxTotalSize) {
-			$value = $c->value;
-			$totalSize = 0;
-			foreach ($value['size'] as $size) {
-				$totalSize += $size;
-			}
+            return $totalSize >= $minTotalSize;
+        }, $errormessage);
 
-			return $totalSize <= $maxTotalSize;
-		}, $errormessage);
+        $this->addRule($middleware, $options);
 
-		$this->addRule($middleware, $options);
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param array $args
-	 */
-	public function toJson(Options $options = null)
-	{
-		$errormessage = $options->getErrorMessage() ?: 'TRANSFORMER: toJson';
-		$transformer = new Transformer('toJson', function (Context $c) {
-			return json_encode($c->value);
-		}, $errormessage);
-		$this->addTransformer($transformer, $options);
-		return $this;
-	}
+    /**
+     * @param  mixed  $maxTotalSize
+     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     */
+    public function maxTotalSize($maxTotalSize, $unit = 'B', Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo grandi';
 
-	/**
-	 * @param TypeFile $fileField
-	 * @param bool|callable $stopOnItemFailure
-	 * @param Options|null $options
-	 */
-	public function each(TypeFile $fileField, $stopOnItemFailure = false, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
+        $maxTotalSize = $this->convertUnit($maxTotalSize, $unit, 'B');
 
-		$rule = $this->getEachRule($fileField, $stopOnItemFailure, $options->getErrorMessage());
-		$this->addRule($rule, $options);
+        $middleware = new Rule('maxTotalSize', function (Context $c) use ($maxTotalSize) {
+            $value = $c->value;
+            $totalSize = 0;
+            foreach ($value['size'] as $size) {
+                $totalSize += $size;
+            }
 
-		return $this;
-	}
+            return $totalSize <= $maxTotalSize;
+        }, $errormessage);
 
-	private function getEachRule(Type $type, $stopOnItemFailure, $errormessage)
-	{
-		$ruleID = 'each';
-		$ruleFn = function (Context $c) use ($type, $stopOnItemFailure) {
-			if (!is_array($c->value)) {
-				throw new \Exception('This is not an array. Got [' . gettype($c->value) . ']: ' . json_encode($c->value), 1);
-			}
+        $this->addRule($middleware, $options);
 
-			$contextProxy = new ContextProxy($c);
+        return $this;
+    }
 
-			$arrayContext = new ArrayContext();
-			$arrayContextProxy = new ContextProxy($arrayContext);
+    /**
+     * @param  array  $args
+     */
+    public function toJson(Options $options = null)
+    {
+        $errormessage = $options->getErrorMessage() ?: 'TRANSFORMER: toJson';
+        $transformer = new Transformer('toJson', function (Context $c) {
+            return json_encode($c->value);
+        }, $errormessage);
+        $this->addTransformer($transformer, $options);
 
-			$failsCount = 0;
-			$successCount = 0;
+        return $this;
+    }
 
-			$value = $c->value;
+    /**
+     * @param  bool|callable  $stopOnItemFailure
+     */
+    public function each(TypeFile $fileField, $stopOnItemFailure = false, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
 
-			$files = $this->normalizeFileStructure($value);
+        $rule = $this->getEachRule($fileField, $stopOnItemFailure, $options->getErrorMessage());
+        $this->addRule($rule, $options);
 
-			foreach ($files as $index => $file) {
-				$type->_extra = [
-					'isArrayContext' => true,
-					'index'          => $index,
-					'failsCount'     => $failsCount,
-				];
+        return $this;
+    }
 
-				$validated = $type->validate($file, $c);
+    private function getEachRule(Type $type, $stopOnItemFailure, $errormessage)
+    {
+        $ruleID = 'each';
+        $ruleFn = function (Context $c) use ($type, $stopOnItemFailure) {
+            if (! is_array($c->value)) {
+                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
+            }
 
-				$c->value[$index] = $validated->value();
+            $contextProxy = new ContextProxy($c);
 
-				if ($validated->fails()) {
-					$failsCount++;
-					$c->errors[$index] = $validated->errors();
-					if (is_callable($stopOnItemFailure)) {
-						$arrayContextProxy->setIndex($index);
-						$arrayContextProxy->setFailsCount($failsCount);
-						$arrayContextProxy->setSuccessCount($successCount);
-						if ($stopOnItemFailure($arrayContext)) {
-							break;
-						}
-					} elseif ($stopOnItemFailure) {
-						break;
-					}
-				} else {
-					$successCount++;
-				}
-			}
+            $arrayContext = new ArrayContext();
+            $arrayContextProxy = new ContextProxy($arrayContext);
 
-			$validated = new Validated($c->value, $c->errors);
-			return $validated;
-		};
+            $failsCount = 0;
+            $successCount = 0;
 
-		if ($errormessage === null) {
-			$errormessage = function (Context $c) {
-				return $c->errors;
-			};
-		}
+            $value = $c->value;
 
-		return new Rule($ruleID, $ruleFn, $errormessage);
-	}
+            $files = $this->normalizeFileStructure($value);
 
-	/**
-	 * @param mixed $value
-	 * @param mixed $from `B`|`KB`|`MB`|`GB`
-	 * @param mixed $to `B`|`KB`|`MB`|`GB`
-	 */
-	private function convertUnit($value, $from, $to)
-	{
-		$from = strtoupper($from);
-		$to = strtoupper($to);
-		$value = floatval($value);
-		$units = ['B', 'KB', 'MB', 'GB', ];
-		$index = array_search($from, $units);
-		$toIndex = array_search($to, $units);
-		$diff = $toIndex - $index;
-		if ($diff === 0) {
-			return $value;
-		} elseif ($diff > 0) {
-			for ($i = 0; $i < $diff; $i++) {
-				$value /= 1024;
-			}
-		} else {
-			for ($i = 0; $i < abs($diff); $i++) {
-				$value *= 1024;
-			}
-		}
-		return $value;
-	}
+            foreach ($files as $index => $file) {
+                $type->_extra = [
+                    'isArrayContext' => true,
+                    'index' => $index,
+                    'failsCount' => $failsCount,
+                ];
 
-	private function normalizeFileStructure($files)
-	{
-		foreach ($files as $property => $value) {
-			for ($i = 0, $count = count($value); $i < $count; $i++) {
-				$newFiles[$i][$property] = $value[$i];
-			}
-		}
-		return $newFiles;
-	}
+                $validated = $type->validate($file, $c);
 
-	// public function group($setup, Options $options = null)
-	// {
-	// 	$options = Helpers::getOptions($options);
+                $c->value[$index] = $validated->value();
 
-	// 	$type = new BasicGroup($setup, $options);
+                if ($validated->fails()) {
+                    $failsCount++;
+                    $c->errors[$index] = $validated->errors();
+                    if (is_callable($stopOnItemFailure)) {
+                        $arrayContextProxy->setIndex($index);
+                        $arrayContextProxy->setFailsCount($failsCount);
+                        $arrayContextProxy->setSuccessCount($successCount);
+                        if ($stopOnItemFailure($arrayContext)) {
+                            break;
+                        }
+                    } elseif ($stopOnItemFailure) {
+                        break;
+                    }
+                } else {
+                    $successCount++;
+                }
+            }
 
-	// 	$type->addRule(Rules::notNull($options->getErrormessage() ?: RuleMessage::getErrorMessage('group.notNull')), $options);
-	// 	$type->addRule(Rules::notEmptyString($options->getErrormessage() ?: RuleMessage::getErrorMessage('group.notEmptyString')), $options);
-	// 	$type->addRule(Rules::array($options->getErrormessage()), $options);
+            $validated = new Validated($c->value, $c->errors);
 
-	// 	/** @var LinkedList $types */
-	// 	$types = (new TypeProxy($type))->getChildState()->getFields();
-	// 	$type->group($types, true, $options);
+            return $validated;
+        };
 
-	// 	// share state
-	// 	$type->state = $this->state;
-	// 	return $type;
-	// }
+        if ($errormessage === null) {
+            $errormessage = function (Context $c) {
+                return $c->errors;
+            };
+        }
+
+        return new Rule($ruleID, $ruleFn, $errormessage);
+    }
+
+    /**
+     * @param  mixed  $value
+     * @param  mixed  $from `B`|`KB`|`MB`|`GB`
+     * @param  mixed  $to `B`|`KB`|`MB`|`GB`
+     */
+    private function convertUnit($value, $from, $to)
+    {
+        $from = strtoupper($from);
+        $to = strtoupper($to);
+        $value = floatval($value);
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $index = array_search($from, $units);
+        $toIndex = array_search($to, $units);
+        $diff = $toIndex - $index;
+        if ($diff === 0) {
+            return $value;
+        } elseif ($diff > 0) {
+            for ($i = 0; $i < $diff; $i++) {
+                $value /= 1024;
+            }
+        } else {
+            for ($i = 0; $i < abs($diff); $i++) {
+                $value *= 1024;
+            }
+        }
+
+        return $value;
+    }
+
+    private function normalizeFileStructure($files)
+    {
+        foreach ($files as $property => $value) {
+            for ($i = 0, $count = count($value); $i < $count; $i++) {
+                $newFiles[$i][$property] = $value[$i];
+            }
+        }
+
+        return $newFiles;
+    }
+
+    // public function group($setup, Options $options = null)
+    // {
+    // 	$options = Helpers::getOptions($options);
+
+    // 	$type = new BasicGroup($setup, $options);
+
+    // 	$type->addRule(Rules::notNull($options->getErrormessage() ?: RuleMessage::getErrorMessage('group.notNull')), $options);
+    // 	$type->addRule(Rules::notEmptyString($options->getErrormessage() ?: RuleMessage::getErrorMessage('group.notEmptyString')), $options);
+    // 	$type->addRule(Rules::array($options->getErrormessage()), $options);
+
+    // 	/** @var LinkedList $types */
+    // 	$types = (new TypeProxy($type))->getChildState()->getFields();
+    // 	$type->group($types, true, $options);
+
+    // 	// share state
+    // 	$type->state = $this->state;
+    // 	return $type;
+    // }
 }

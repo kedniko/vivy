@@ -2,7 +2,6 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Core\Ref;
 use Kedniko\Vivy\Exceptions\VivyValidationFailedException;
 use Kedniko\Vivy\V;
 
@@ -17,12 +16,14 @@ class Validated
      * @var array|Ref
      */
     private $errors;
+
     public $chain;
+
     protected $orFail;
 
     /**
-     * @param mixed $value
-     * @param array $errors
+     * @param  mixed  $value
+     * @param  array  $errors
      */
     public function __construct($value, $errors)
     {
@@ -32,7 +33,7 @@ class Validated
     }
 
     /**
-     * @param callable $handler
+     * @param  callable  $handler
      */
     private function fail($handler)
     {
@@ -40,6 +41,7 @@ class Validated
             return $handler($this);
         } elseif (V::getFailHandler()) {
             $handler = V::getFailHandler();
+
             return $handler($this);
         } else {
             throw new VivyValidationFailedException();
@@ -47,19 +49,21 @@ class Validated
     }
 
     /**
-     * @param string|callable $handler
+     * @param  string|callable  $handler
      */
     public function forceFailWith($handler)
     {
         if (is_string($handler)) {
             $handler = V::getFailHandler($handler);
         }
+
         return $this->fail($handler);
     }
 
     /**
      * Handler can be set with `V::setFailHandler()`
-     * @param string|callable $handler
+     *
+     * @param  string|callable  $handler
      */
     public function orFailWith($handler)
     {
@@ -69,6 +73,7 @@ class Validated
             }
             $this->fail($handler);
         }
+
         return $this;
     }
 
@@ -80,6 +85,7 @@ class Validated
     public function isValid()
     {
         $errors = $this->errors();
+
         return count($errors) === 0;
     }
 

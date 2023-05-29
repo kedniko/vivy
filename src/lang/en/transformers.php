@@ -1,5 +1,5 @@
 <?php
 
 return [
-	// ... copia da 'it/transformers.php'
+    // ... copia da 'it/transformers.php'
 ];

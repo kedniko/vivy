@@ -4,16 +4,17 @@ namespace Kedniko\Vivy\Exceptions;
 
 class VivyValidationFailedException extends VivyException
 {
-	private $payload;
+    private $payload;
 
-	public function setPayload($payload)
-	{
-		$this->payload = $payload;
-		return $this;
-	}
+    public function setPayload($payload)
+    {
+        $this->payload = $payload;
 
-	public function getPayload()
-	{
-		return $this->payload;
-	}
+        return $this;
+    }
+
+    public function getPayload()
+    {
+        return $this->payload;
+    }
 }

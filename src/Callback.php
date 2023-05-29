@@ -3,37 +3,36 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Messages\RuleMessage;
 
 class Callback extends Middleware
 {
-	public function getID()
-	{
-		return $this->id;
-	}
+    public function getID()
+    {
+        return $this->id;
+    }
 
-	public function getCallback()
-	{
-		return   $this->callback;
-	}
+    public function getCallback()
+    {
+        return $this->callback;
+    }
 
-	public function getErrorMessage()
-	{
-		return $this->errormessage;
-	}
+    public function getErrorMessage()
+    {
+        return $this->errormessage;
+    }
 
-	public function setErrorMessage($errmessage)
-	{
-		$this->errormessage = $errmessage;
-	}
+    public function setErrorMessage($errmessage)
+    {
+        $this->errormessage = $errmessage;
+    }
 
-	public function setStopOnFailure($stopOnFailure)
-	{
-		$this->stopOnFailure = $stopOnFailure;
-	}
+    public function setStopOnFailure($stopOnFailure)
+    {
+        $this->stopOnFailure = $stopOnFailure;
+    }
 
-	public function getStopOnFailure()
-	{
-		return $this->stopOnFailure;
-	}
+    public function getStopOnFailure()
+    {
+        return $this->stopOnFailure;
+    }
 }

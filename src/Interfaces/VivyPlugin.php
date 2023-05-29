@@ -4,5 +4,5 @@ namespace Kedniko\Vivy\Interfaces;
 
 interface VivyPlugin
 {
-	public function register();
+    public function register();
 }

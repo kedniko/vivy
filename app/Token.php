@@ -4,8 +4,8 @@ namespace App;
 
 class Token
 {
-	public function __construct(public bool $expired = false)
-	{
-		//
-	}
+    public function __construct(public bool $expired = false)
+    {
+        //
+    }
 }

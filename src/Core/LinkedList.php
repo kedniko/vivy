@@ -2,276 +2,284 @@
 
 namespace Kedniko\Vivy\Core;
 
-use ArrayAccess;
-
 class LinkedList
 {
-	/** @var Node|null */
-	public $head;
-	/** @var Node|null */
-	public $tail;
-	/** @var Node|null */
-	public $current;
-	/** @var Node|null */
-	public $prev;
+    /** @var Node|null */
+    public $head;
 
-	/**
-	 * @var int
-	 */
-	public $length;
+    /** @var Node|null */
+    public $tail;
 
-	/**
-	 * Iteration started
-	 * @var bool
-	 * */
-	private $advance;
+    /** @var Node|null */
+    public $current;
 
-	/**
-	 * @param array $items
-	 */
-	public function __construct($items = [])
-	{
-		$this->advance = false;
+    /** @var Node|null */
+    public $prev;
 
-		$this->head = null;
-		$this->tail = null;
-		$this->current = null;
-		$this->prev = null;
-		$this->length = 0;
+    /**
+     * @var int
+     */
+    public $length;
 
-		if ($items) {
-			$this->fromArray($items);
-		}
-	}
+    /**
+     * Iteration started
+     *
+     * @var bool
+     * */
+    private $advance;
 
-	private function incrementLength()
-	{
-		$this->length++;
-	}
+    /**
+     * @param  array  $items
+     */
+    public function __construct($items = [])
+    {
+        $this->advance = false;
 
-	private function decrementLength()
-	{
-		if ($this->length > 0) {
-			$this->length--;
-		}
-	}
+        $this->head = null;
+        $this->tail = null;
+        $this->current = null;
+        $this->prev = null;
+        $this->length = 0;
 
-	public function isEmpty()
-	{
-		return $this->length === 0;
-	}
+        if ($items) {
+            $this->fromArray($items);
+        }
+    }
 
-	public function length()
-	{
-		return $this->length;
-	}
+    private function incrementLength()
+    {
+        $this->length++;
+    }
 
-	public function toArray()
-	{
-		$items = [];
-		$this->each(function ($item) use (&$items) {
-			$items[] = $item;
-		});
-		return $items;
-	}
+    private function decrementLength()
+    {
+        if ($this->length > 0) {
+            $this->length--;
+        }
+    }
 
-	/**
-	 * @param array $items
-	 */
-	public function fromArray($items)
-	{
-		foreach ($items as $item) {
-			$this->append(new Node($item));
-		}
-		return $this;
-	}
+    public function isEmpty()
+    {
+        return $this->length === 0;
+    }
 
-	/**
-	 * @param Node|mixed $node
-	 */
-	public function prepend($node)
-	{
-		if (!$node instanceof Node) {
-			$node = new Node($node);
-		}
-		$node->next = $this->head;
-		$this->head = $node;
-		$this->current = $this->head;
-		$node->prev = null;
-	}
+    public function length()
+    {
+        return $this->length;
+    }
 
-	/**
-	 * @param Node|mixed $node
-	 */
-	public function append($node)
-	{
-		$this->incrementLength();
+    public function toArray()
+    {
+        $items = [];
+        $this->each(function ($item) use (&$items) {
+            $items[] = $item;
+        });
 
-		if (!$node instanceof Node) {
-			$node = new Node($node);
-		}
+        return $items;
+    }
 
-		if ($this->tail === null) {
-			$this->prepend($node);
-			$this->tail = $node;
-			return;
-		}
+    /**
+     * @param  array  $items
+     */
+    public function fromArray($items)
+    {
+        foreach ($items as $item) {
+            $this->append(new Node($item));
+        }
 
-		$this->tail->next = $node;
-		$node->next = null;
-		$node->prev = $this->tail;
+        return $this;
+    }
 
-		$this->tail = $node;
+    /**
+     * @param  Node|mixed  $node
+     */
+    public function prepend($node)
+    {
+        if (! $node instanceof Node) {
+            $node = new Node($node);
+        }
+        $node->next = $this->head;
+        $this->head = $node;
+        $this->current = $this->head;
+        $node->prev = null;
+    }
 
-		if ($this->current === null) {
-			$this->current = $node;
-		}
-	}
+    /**
+     * @param  Node|mixed  $node
+     */
+    public function append($node)
+    {
+        $this->incrementLength();
 
-	/**
-	 * @param Node|mixed $node
-	 */
-	public function appendAfterCurrent($node)
-	{
-		$this->decrementLength();
+        if (! $node instanceof Node) {
+            $node = new Node($node);
+        }
 
-		if (!$node instanceof Node) {
-			$node = new Node($node);
-		}
-		if ($this->current === null) {
-			$this->prepend($node);
-			$this->tail = $node;
-			return;
-		}
+        if ($this->tail === null) {
+            $this->prepend($node);
+            $this->tail = $node;
 
-		$node->next = $this->current->next;
+            return;
+        }
 
-		if ($this->current->next) {
-			$this->current->next->prev = $node;
-		}
+        $this->tail->next = $node;
+        $node->next = null;
+        $node->prev = $this->tail;
 
-		$this->current->next = $node;
+        $this->tail = $node;
 
-		$node->prev = $this->current;
+        if ($this->current === null) {
+            $this->current = $node;
+        }
+    }
 
-		if ($this->current === $this->tail) {
-			$this->tail = $node;
-		}
-	}
+    /**
+     * @param  Node|mixed  $node
+     */
+    public function appendAfterCurrent($node)
+    {
+        $this->decrementLength();
 
-	public function hasNext()
-	{
-		if ($this->advance === false) {
-			return $this->current !== null;
-		}
+        if (! $node instanceof Node) {
+            $node = new Node($node);
+        }
+        if ($this->current === null) {
+            $this->prepend($node);
+            $this->tail = $node;
 
-		return $this->current->next !== null;
-	}
+            return;
+        }
 
-	public function each(callable $callback)
-	{
-		$this->rewind();
-		while ($this->hasNext()) {
-			$type = $this->getNext();
-			if ($callback($type) === false) {
-				break;
-			}
-		}
-		$this->rewind();
-	}
+        $node->next = $this->current->next;
 
-	// public function find($cb)
-	// {
-	// 	return $this->each(function ($item) use ($cb) {
-	// 		if ($cb($item) === true) {
-	// 			return $item;
-	// 		}
-	// 		return null;
-	// 	});
-	// }
+        if ($this->current->next) {
+            $this->current->next->prev = $node;
+        }
 
-	public function rewind()
-	{
-		$this->advance = false;
-		$this->current = $this->head;
-	}
+        $this->current->next = $node;
 
-	public function getCurrent()
-	{
-		$data = $this->current->data;
-		return $data;
-	}
+        $node->prev = $this->current;
 
-	public function getNext()
-	{
-		if ($this->advance) {
-			$this->advanceCurrent();
-		}
+        if ($this->current === $this->tail) {
+            $this->tail = $node;
+        }
+    }
 
-		$this->advance = true;
+    public function hasNext()
+    {
+        if ($this->advance === false) {
+            return $this->current !== null;
+        }
 
-		$data = $this->current->data;
-		return $data;
-	}
+        return $this->current->next !== null;
+    }
 
-	private function advanceCurrent()
-	{
-		$this->current = $this->current->next;
-	}
+    public function each(callable $callback)
+    {
+        $this->rewind();
+        while ($this->hasNext()) {
+            $type = $this->getNext();
+            if ($callback($type) === false) {
+                break;
+            }
+        }
+        $this->rewind();
+    }
 
-	public function removeCurrent()
-	{
-		$this->decrementLength();
+    // public function find($cb)
+    // {
+    // 	return $this->each(function ($item) use ($cb) {
+    // 		if ($cb($item) === true) {
+    // 			return $item;
+    // 		}
+    // 		return null;
+    // 	});
+    // }
 
-		if ($this->current === $this->head) {
-			$this->head = $this->current->next;
-		}
-		if ($this->current === $this->tail) {
-			$this->tail = $this->current->prev;
-		}
+    public function rewind()
+    {
+        $this->advance = false;
+        $this->current = $this->head;
+    }
 
-		if ($this->current->prev) {
-			$this->current->prev->next = $this->current->next;
-		}
+    public function getCurrent()
+    {
+        $data = $this->current->data;
 
-		if ($this->current->next) {
-			$this->current->next->prev = $this->current->prev;
-		}
+        return $data;
+    }
 
-		$this->current = $this->current->next;
-		$this->advance = false;
-	}
+    public function getNext()
+    {
+        if ($this->advance) {
+            $this->advanceCurrent();
+        }
 
-	public function remove(callable $filterCallback, $removeOnlyOne = false)
-	{
-		$prev = null;
-		$node = $this->head;
-		while ($node !== null) {
-			$mustRemove = $filterCallback($node->data);
-			if ($mustRemove) {
-				if ($node === $this->head) {
-					$this->head = $node->next;
-				} elseif ($node === $this->tail) {
-					$this->tail = $prev;
-					if ($prev instanceof Node) {
-						$prev->next = $node->next;
-					}
-				} else {
-					if ($prev instanceof Node) {
-						$prev->next = $node->next;
-					}
-				}
-				if ($removeOnlyOne) {
-					return;
-				}
-				$node = $node->next;
-				$node = null;
+        $this->advance = true;
 
-				$this->decrementLength();
-			} else {
-				$prev = $node;
-				$node = $node->next;
-			}
-		}
-	}
-};
+        $data = $this->current->data;
+
+        return $data;
+    }
+
+    private function advanceCurrent()
+    {
+        $this->current = $this->current->next;
+    }
+
+    public function removeCurrent()
+    {
+        $this->decrementLength();
+
+        if ($this->current === $this->head) {
+            $this->head = $this->current->next;
+        }
+        if ($this->current === $this->tail) {
+            $this->tail = $this->current->prev;
+        }
+
+        if ($this->current->prev) {
+            $this->current->prev->next = $this->current->next;
+        }
+
+        if ($this->current->next) {
+            $this->current->next->prev = $this->current->prev;
+        }
+
+        $this->current = $this->current->next;
+        $this->advance = false;
+    }
+
+    public function remove(callable $filterCallback, $removeOnlyOne = false)
+    {
+        $prev = null;
+        $node = $this->head;
+        while ($node !== null) {
+            $mustRemove = $filterCallback($node->data);
+            if ($mustRemove) {
+                if ($node === $this->head) {
+                    $this->head = $node->next;
+                } elseif ($node === $this->tail) {
+                    $this->tail = $prev;
+                    if ($prev instanceof Node) {
+                        $prev->next = $node->next;
+                    }
+                } else {
+                    if ($prev instanceof Node) {
+                        $prev->next = $node->next;
+                    }
+                }
+                if ($removeOnlyOne) {
+                    return;
+                }
+                $node = $node->next;
+                $node = null;
+
+                $this->decrementLength();
+            } else {
+                $prev = $node;
+                $node = $node->next;
+            }
+        }
+    }
+}

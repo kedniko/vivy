@@ -3,7 +3,6 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Plugins\Builtin;
 use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
@@ -12,7 +11,7 @@ class Helpers
 {
     public static function isNotUndefined($value)
     {
-        return !self::isUndefined($value);
+        return ! self::isUndefined($value);
     }
 
     public static function isUndefined($value)
@@ -21,9 +20,8 @@ class Helpers
     }
 
     /**
-     * @param string $ruleID
-     * @param TypeProxy $typeProxy
-     * @param Context $c Context passed to the user if the default value is a function
+     * @param  string  $ruleID
+     * @param  Context  $c Context passed to the user if the default value is a function
      */
     public static function tryToGetDefault($ruleID, TypeProxy $typeProxy, Context $c)
     {
@@ -105,12 +103,13 @@ class Helpers
         if ($options instanceof Options) {
             return $options;
         }
+
         return new Options();
     }
 
     /**
-     * @param mixed|callable $value
-     * @param mixed $arg
+     * @param  mixed|callable  $value
+     * @param  mixed  $arg
      */
     public static function valueOrFunction($value, $arg)
     {
@@ -120,12 +119,13 @@ class Helpers
         if (Helpers::isUndefined($value)) {
             throw new \Exception('You cannot return Undefined');
         }
+
         return $value;
     }
 
     public static function issetOrFail(&$variable, $message_or_var = null)
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             if ($message_or_var === null) {
                 $message_or_var = 'Variable not set';
             } elseif ($message_or_var !== null && strpos($message_or_var, '$') === 0) {
@@ -139,7 +139,7 @@ class Helpers
 
     public static function issetOrDefault(&$variable, $defaultValue)
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             return $defaultValue;
         }
 
@@ -148,7 +148,7 @@ class Helpers
 
     public static function assertTrueOrFail($bool, $message_or_var = null)
     {
-        if (!$bool) {
+        if (! $bool) {
             $default = 'Assertion failed';
             throw new \Exception("{$default}: {$message_or_var}" ?: $default, 1);
         }
@@ -175,7 +175,7 @@ class Helpers
 
         if (is_array($value)) {
             if (count($value) === 2 && (is_string($value[0]) || is_object($value[0]))) {
-                if (is_string($value[1]) && !empty($value[1])) {
+                if (is_string($value[1]) && ! empty($value[1])) {
                     $class = $value[0];
                     $method = $value[1];
                 } elseif (is_string($value[0])) {
@@ -185,7 +185,7 @@ class Helpers
             }
         }
 
-        if (!$class && !$method && is_string($value)) {
+        if (! $class && ! $method && is_string($value)) {
             if (strpos($value, '@') !== false) {
                 $parts = explode('@', $value);
                 $class = $parts[0];
@@ -206,10 +206,10 @@ class Helpers
         }
 
         if (is_string($class)) {
-            $class = '\\' . ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
+            $class = '\\'.ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
         }
 
-        if (!method_exists($class, $method)) {
+        if (! method_exists($class, $method)) {
             return false;
         }
 

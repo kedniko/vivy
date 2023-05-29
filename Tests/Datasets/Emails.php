@@ -1,6 +1,6 @@
 <?php
 
 dataset('emails', [
-	'enunomaduro@gmail.com',
-	'other@example.com',
+    'enunomaduro@gmail.com',
+    'other@example.com',
 ]);

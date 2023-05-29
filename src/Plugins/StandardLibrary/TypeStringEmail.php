@@ -5,86 +5,95 @@ namespace Kedniko\Vivy\Plugins\StandardLibrary;
 use Kedniko\Vivy\Context;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeString;
 use Kedniko\Vivy\V;
 
 class TypeStringEmail extends TypeString
 {
-	public function checkValidDomain($record = 'MX', Options $options = null)
-	{
-		$record = Helpers::notNullOrDefault($record, 'MX');
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Questo dominio non esiste';
+    public function checkValidDomain($record = 'MX', Options $options = null)
+    {
+        $record = Helpers::notNullOrDefault($record, 'MX');
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Questo dominio non esiste';
 
-		$rule = V::rule('domain-exists', function (Context $c) use ($record) {
-			$email = $c->value ?: '';
-			$domain = explode('@', $email)[1];
+        $rule = V::rule('domain-exists', function (Context $c) use ($record) {
+            $email = $c->value ?: '';
+            $domain = explode('@', $email)[1];
 
-			$bool = checkdnsrr($domain, $record);
-			return $bool;
-		}, $errormessage);
+            $bool = checkdnsrr($domain, $record);
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+            return $bool;
+        }, $errormessage);
 
-	public function domainIs($domain, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
+        $this->addRule($rule, $options);
 
-		$rule = V::rule('invalid-domain', function (Context $c) use ($domain) {
-			$email = $c->value ?: '';
-			$valuedomain = explode('@', $email)[1];
-			return $domain === $valuedomain;
-		}, $errormessage);
+        return $this;
+    }
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+    public function domainIs($domain, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
 
-	public function domainInArray($domainArray, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
+        $rule = V::rule('invalid-domain', function (Context $c) use ($domain) {
+            $email = $c->value ?: '';
+            $valuedomain = explode('@', $email)[1];
 
-		$rule = V::rule('invalid-domain', function (Context $c) use ($domainArray) {
-			$email = $c->value ?: '';
-			$valuedomain = explode('@', $email)[1];
-			return in_array($valuedomain, $domainArray, true);
-		}, $errormessage);
+            return $domain === $valuedomain;
+        }, $errormessage);
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+        $this->addRule($rule, $options);
 
-	public function tldIs($tld, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
+        return $this;
+    }
 
-		$rule = V::rule('invalid-domain', function (Context $c) use ($tld) {
-			$email = $c->value ?: '';
-			$tldvalue = explode('.', explode('@', $email)[1])[1];
-			return $tld === $tldvalue;
-		}, $errormessage);
+    public function domainInArray($domainArray, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+        $rule = V::rule('invalid-domain', function (Context $c) use ($domainArray) {
+            $email = $c->value ?: '';
+            $valuedomain = explode('@', $email)[1];
 
-	public function tldInArray($tldArray, Options $options = null)
-	{
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
+            return in_array($valuedomain, $domainArray, true);
+        }, $errormessage);
 
-		$rule = V::rule('invalid-domain', function (Context $c) use ($tldArray) {
-			$email = $c->value ?: '';
-			$tldvalue = explode('.', explode('@', $email)[1])[1];
-			return in_array($tldvalue, $tldArray, true);
-		}, $errormessage);
+        $this->addRule($rule, $options);
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+        return $this;
+    }
+
+    public function tldIs($tld, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
+
+        $rule = V::rule('invalid-domain', function (Context $c) use ($tld) {
+            $email = $c->value ?: '';
+            $tldvalue = explode('.', explode('@', $email)[1])[1];
+
+            return $tld === $tldvalue;
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function tldInArray($tldArray, Options $options = null)
+    {
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
+
+        $rule = V::rule('invalid-domain', function (Context $c) use ($tldArray) {
+            $email = $c->value ?: '';
+            $tldvalue = explode('.', explode('@', $email)[1])[1];
+
+            return in_array($tldvalue, $tldArray, true);
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
 }

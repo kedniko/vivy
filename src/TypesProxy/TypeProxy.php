@@ -3,7 +3,6 @@
 namespace Kedniko\Vivy\TypesProxy;
 
 use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Core\Options;
@@ -15,322 +14,325 @@ use Kedniko\Vivy\Types\Type;
 
 class TypeProxy extends Type
 {
-	/**
-	 * @var Type
-	 */
-	public $type;
+    /**
+     * @var Type
+     */
+    public $type;
 
-	public function __construct($type)
-	{
-		$this->type = $type;
-	}
+    public function __construct($type)
+    {
+        $this->type = $type;
+    }
 
-	public function setName($name)
-	{
-		return $this->type->state->setName($name);
-	}
+    public function setName($name)
+    {
+        return $this->type->state->setName($name);
+    }
 
-	public function getName(): string|Undefined
-	{
-		return $this->type->state->getName();
-	}
+    public function getName(): string|Undefined
+    {
+        return $this->type->state->getName();
+    }
 
-	public function hasCustomErrorMessage($ruleID)
-	{
-		return isset($this->type->state->getCustomErrMessages()[$ruleID]);
-	}
+    public function hasCustomErrorMessage($ruleID)
+    {
+        return isset($this->type->state->getCustomErrMessages()[$ruleID]);
+    }
 
-	public function getCustomErrorMessage($ruleID)
-	{
-		if (isset($this->type->state->getCustomErrMessages()[$ruleID])) {
-			return $this->type->state->getCustomErrMessages()[$ruleID];
-		}
+    public function getCustomErrorMessage($ruleID)
+    {
+        if (isset($this->type->state->getCustomErrMessages()[$ruleID])) {
+            return $this->type->state->getCustomErrMessages()[$ruleID];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function hasDefaultValue($ruleID)
-	{
-		$array = $this->type->state->getDefaultValues();
-		return array_key_exists($ruleID, $array);
-	}
+    public function hasDefaultValue($ruleID)
+    {
+        $array = $this->type->state->getDefaultValues();
 
-	public function getDefaultValue($ruleID)
-	{
-		return $this->hasDefaultValue($ruleID) ? $this->type->state->getDefaultValues()[$ruleID] : null;
-	}
+        return array_key_exists($ruleID, $array);
+    }
 
-	public function hasDefaultValueAny()
-	{
-		return $this->type->state->hasDefaultValuesAny();
-	}
+    public function getDefaultValue($ruleID)
+    {
+        return $this->hasDefaultValue($ruleID) ? $this->type->state->getDefaultValues()[$ruleID] : null;
+    }
 
-	public function getDefaultValueAny()
-	{
-		return $this->type->state->getDefaultValueAny();
-	}
+    public function hasDefaultValueAny()
+    {
+        return $this->type->state->hasDefaultValuesAny();
+    }
 
-	public function hasErrorMessageEmpty()
-	{
-		return $this->type->state->hasErrorMessageEmpty();
-	}
+    public function getDefaultValueAny()
+    {
+        return $this->type->state->getDefaultValueAny();
+    }
 
-	public function getErrorMessageEmpty()
-	{
-		return $this->type->state->getErrorMessageEmpty();
-	}
+    public function hasErrorMessageEmpty()
+    {
+        return $this->type->state->hasErrorMessageEmpty();
+    }
 
-	public function hasErrorMessageAny()
-	{
-		return $this->type->state->hasErrorMessageAny();
-	}
+    public function getErrorMessageEmpty()
+    {
+        return $this->type->state->getErrorMessageEmpty();
+    }
 
-	public function getErrorMessageAny()
-	{
-		return $this->type->state->getErrorMessageAny();
-	}
+    public function hasErrorMessageAny()
+    {
+        return $this->type->state->hasErrorMessageAny();
+    }
 
-	public function hasValueIfOptionalNotExists()
-	{
-		return $this->type->state->hasValueIfOptionalNotExists();
-	}
+    public function getErrorMessageAny()
+    {
+        return $this->type->state->getErrorMessageAny();
+    }
 
-	public function getValueIfOptionalNotExists()
-	{
-		return $this->type->state->getValueIfOptionalNotExists();
-	}
+    public function hasValueIfOptionalNotExists()
+    {
+        return $this->type->state->hasValueIfOptionalNotExists();
+    }
 
-	/**
-	 * @return LinkedList
-	 */
-	public function getMiddlewares()
-	{
-		// if($this->field instanceof BasicGroup){
-		// 	return $this->field->groupBuilder->fields
-		// }
-		/** @var LinkedList $linkedList */
-		$linkedList = $this->type->state->getMiddlewares();
-		$linkedList->rewind();
-		return $linkedList;
-	}
+    public function getValueIfOptionalNotExists()
+    {
+        return $this->type->state->getValueIfOptionalNotExists();
+    }
 
-	public function getMiddlewaresIds()
-	{
-		return $this->type->state->getMiddlewaresIds();
-	}
+    /**
+     * @return LinkedList
+     */
+    public function getMiddlewares()
+    {
+        // if($this->field instanceof BasicGroup){
+        // 	return $this->field->groupBuilder->fields
+        // }
+        /** @var LinkedList $linkedList */
+        $linkedList = $this->type->state->getMiddlewares();
+        $linkedList->rewind();
 
-	public function hasMiddlewares()
-	{
-		return $this->type->state->hasMiddlewares();
-	}
+        return $linkedList;
+    }
 
-	// public function getMiddleware($id)
-	// {
-	// 	// if($this->field instanceof BasicGroup){
-	// 	// 	return $this->field->groupBuilder->fields
-	// 	// }
-	// 	/** @var LinkedList $linkedList */
-	// 	$linkedList = $this->type->state->getMiddlewares();
-	// 	$linkedList->rewind();
-	// 	$linkedList->find(function (Middleware $item) {
-	// 		return true;
-	// 	});
-	// 	return $linkedList;
-	// }
+    public function getMiddlewaresIds()
+    {
+        return $this->type->state->getMiddlewaresIds();
+    }
 
-	public function getRules()
-	{
-		return array_filter($this->type->state->getMiddlewares()->toArray(), function ($e) {
-			return $e instanceof Rule;
-		});
-	}
+    public function hasMiddlewares()
+    {
+        return $this->type->state->hasMiddlewares();
+    }
 
-	// public function isDefaultValueEnabled(){
-	// 	return $this->field->state->getEnableDefaultValueIfOptional();
-	// }
-	// public function getDefaultValue(){
-	// 	return $this->field->state->getDefaultValueIfOptional();
-	// }
+    // public function getMiddleware($id)
+    // {
+    // 	// if($this->field instanceof BasicGroup){
+    // 	// 	return $this->field->groupBuilder->fields
+    // 	// }
+    // 	/** @var LinkedList $linkedList */
+    // 	$linkedList = $this->type->state->getMiddlewares();
+    // 	$linkedList->rewind();
+    // 	$linkedList->find(function (Middleware $item) {
+    // 		return true;
+    // 	});
+    // 	return $linkedList;
+    // }
 
-	/**
-	 * @param mixed $ruleID
-	 *
-	 * @return Rule|null
-	 */
-	public function getRule($ruleID)
-	{
-		/** @var LinkedList $middlewares */
-		$middlewares = $this->type->state->getMiddlewares();
+    public function getRules()
+    {
+        return array_filter($this->type->state->getMiddlewares()->toArray(), function ($e) {
+            return $e instanceof Rule;
+        });
+    }
 
-		$middlewares->rewind();
-		while ($middlewares->hasNext()) {
-			$middleware = $middlewares->getNext();
-			if ($middleware instanceof Rule) {
-				if ($middleware->getID() === $ruleID) {
-					$middlewares->rewind();
-					return $middleware;
-				}
-			}
-		}
-		$middlewares->rewind();
+    // public function isDefaultValueEnabled(){
+    // 	return $this->field->state->getEnableDefaultValueIfOptional();
+    // }
+    // public function getDefaultValue(){
+    // 	return $this->field->state->getDefaultValueIfOptional();
+    // }
 
-		return null;
-	}
+    /**
+     * @param  mixed  $ruleID
+     * @return Rule|null
+     */
+    public function getRule($ruleID)
+    {
+        /** @var LinkedList $middlewares */
+        $middlewares = $this->type->state->getMiddlewares();
 
-	public function hasRule($ruleID)
-	{
-		return isset($this->type->state->getMiddlewaresIds()[$ruleID]);
-	}
+        $middlewares->rewind();
+        while ($middlewares->hasNext()) {
+            $middleware = $middlewares->getNext();
+            if ($middleware instanceof Rule) {
+                if ($middleware->getID() === $ruleID) {
+                    $middlewares->rewind();
 
-	public function isRequired(Context $gc)
-	{
-		$state = $this->type->state;
-		if (!($state->requiredIf instanceof Undefined)) {
-			$value = $state->requiredIf;
-			if (is_callable($value)) {
-				$value = $value($gc);
-			}
-			return !!$value;
-		}
+                    return $middleware;
+                }
+            }
+        }
+        $middlewares->rewind();
 
-		if (!($state->requiredIfField instanceof Undefined)) {
-			$requiredIfField = $state->requiredIfField;
-			$c = $requiredIfField['getContextFn']($gc);
-			$value = $requiredIfField['value'];
-			if (is_callable($value)) {
-				$value = $value($c);
-			} else {
-				$value = $c->value === $value;
-			}
-			return !!$value;
-		}
+        return null;
+    }
 
-		return $state->isRequired();
-	}
+    public function hasRule($ruleID)
+    {
+        return isset($this->type->state->getMiddlewaresIds()[$ruleID]);
+    }
 
-	/**
-	 * @param Rule $rule
-	 * @param bool|null $stopOnFailure
-	 * @param array|null $args
-	 *
-	 */
-	public function prependRule(Rule $rule, Options $options = null)
-	{
-		// return parent::prependRule($rule, $options);
+    public function isRequired(Context $gc)
+    {
+        $state = $this->type->state;
+        if (! ($state->requiredIf instanceof Undefined)) {
+            $value = $state->requiredIf;
+            if (is_callable($value)) {
+                $value = $value($gc);
+            }
 
-		$rule = $this->prepareRule($rule, $options);
-		$this->type->prependMiddleware($rule);
-		return $this;
-	}
+            return (bool) $value;
+        }
 
-	// public function checkRequired($fieldname, $body)
-	// {
-	// 	$rule = $this->getRule(Rules::ID_REQUIRED);
+        if (! ($state->requiredIfField instanceof Undefined)) {
+            $requiredIfField = $state->requiredIfField;
+            $c = $requiredIfField['getContextFn']($gc);
+            $value = $requiredIfField['value'];
+            if (is_callable($value)) {
+                $value = $value($c);
+            } else {
+                $value = $c->value === $value;
+            }
 
-	// 	if (!$rule) {
-	// 		return;
-	// 	}
+            return (bool) $value;
+        }
 
-	// 	$rule = $rule->getCallback();
+        return $state->isRequired();
+    }
 
-	// 	if (!$rule || !is_callable($rule)) {
-	// 		return;
-	// 	}
+    /**
+     * @param  bool|null  $stopOnFailure
+     * @param  array|null  $args
+     */
+    public function prependRule(Rule $rule, Options $options = null)
+    {
+        // return parent::prependRule($rule, $options);
 
-	// 	return $rule($fieldname, $body);
-	// }
+        $rule = $this->prepareRule($rule, $options);
+        $this->type->prependMiddleware($rule);
 
-	public function checkNotNull($fieldname, $body)
-	{
-		$rule = $this->getRule(Rules::ID_NOT_NULL);
+        return $this;
+    }
 
-		if (!$rule) {
-			return;
-		}
+    // public function checkRequired($fieldname, $body)
+    // {
+    // 	$rule = $this->getRule(Rules::ID_REQUIRED);
 
-		$rule = $rule->getCallback();
+    // 	if (!$rule) {
+    // 		return;
+    // 	}
 
-		if (!$rule || !is_callable($rule)) {
-			return;
-		}
+    // 	$rule = $rule->getCallback();
 
-		return $rule($fieldname, $body);
-	}
+    // 	if (!$rule || !is_callable($rule)) {
+    // 		return;
+    // 	}
 
-	public function checkNotEmptyString($fieldname, $body)
-	{
-		$rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
+    // 	return $rule($fieldname, $body);
+    // }
 
-		if (!$rule) {
-			return;
-		}
+    public function checkNotNull($fieldname, $body)
+    {
+        $rule = $this->getRule(Rules::ID_NOT_NULL);
 
-		$rule = $rule->getCallback();
+        if (! $rule) {
+            return;
+        }
 
-		if (!$rule || !is_callable($rule)) {
-			return;
-		}
+        $rule = $rule->getCallback();
 
-		return $rule($fieldname, $body);
-	}
+        if (! $rule || ! is_callable($rule)) {
+            return;
+        }
 
-	public function canBeNull()
-	{
-		return $this->type->state->canBeNull();
-		// return !$this->hasRule(Rules::ID_NOT_NULL);
-	}
+        return $rule($fieldname, $body);
+    }
 
-	public function canBeEmptyString()
-	{
-		return $this->type->state->canBeEmptyString();
-		// return !$this->hasRule(Rules::ID_NOT_EMPTY_STRING);
-	}
+    public function checkNotEmptyString($fieldname, $body)
+    {
+        $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
 
-	// public function hasTransformCallback()
-	// {
-	// 	return property_exists($this, 'transformCallback') && is_array($this->transformCallback) && count($this->transformCallback) > 0;
-	// }
-	// public function getTransformCallbackArray()
-	// {
-	// 	return $this->transformCallback;
-	// }
+        if (! $rule) {
+            return;
+        }
 
-	/**
-	 * @param string $propertyName
-	 * @param mixed $value
-	 */
-	public function setChildStateProperty($propertyName, $value)
-	{
-		$parts = explode('.', $propertyName);
-		$propertyName = array_shift($parts);
-		$path = implode('.', $parts);
-		$arr = Arr::set($this->type->state->{$propertyName}, $path, $value);
-		$this->type->state->{$propertyName} = $arr;
+        $rule = $rule->getCallback();
 
-		// $this->type->state->{$propertyName} = $value;
-		// Arr::set($this->field->state, $propertyName, $value);
-	}
+        if (! $rule || ! is_callable($rule)) {
+            return;
+        }
 
-	public function setData($value)
-	{
-		$this->type->state->setData($value);
-	}
+        return $rule($fieldname, $body);
+    }
 
-	public function setChildState($state)
-	{
-		$this->type->state = $state;
-	}
+    public function canBeNull()
+    {
+        return $this->type->state->canBeNull();
+        // return !$this->hasRule(Rules::ID_NOT_NULL);
+    }
 
-	public function getState()
-	{
-		return $this->type->state;
-	}
+    public function canBeEmptyString()
+    {
+        return $this->type->state->canBeEmptyString();
+        // return !$this->hasRule(Rules::ID_NOT_EMPTY_STRING);
+    }
 
-	/**
-	 * Used in orProxy
-	 */
-	public function getChildrenErrors()
-	{
-		return $this->type->state->_extra['or_errors'] ?? [];
-	}
+    // public function hasTransformCallback()
+    // {
+    // 	return property_exists($this, 'transformCallback') && is_array($this->transformCallback) && count($this->transformCallback) > 0;
+    // }
+    // public function getTransformCallbackArray()
+    // {
+    // 	return $this->transformCallback;
+    // }
+
+    /**
+     * @param  string  $propertyName
+     * @param  mixed  $value
+     */
+    public function setChildStateProperty($propertyName, $value)
+    {
+        $parts = explode('.', $propertyName);
+        $propertyName = array_shift($parts);
+        $path = implode('.', $parts);
+        $arr = Arr::set($this->type->state->{$propertyName}, $path, $value);
+        $this->type->state->{$propertyName} = $arr;
+
+        // $this->type->state->{$propertyName} = $value;
+        // Arr::set($this->field->state, $propertyName, $value);
+    }
+
+    public function setData($value)
+    {
+        $this->type->state->setData($value);
+    }
+
+    public function setChildState($state)
+    {
+        $this->type->state = $state;
+    }
+
+    public function getState()
+    {
+        return $this->type->state;
+    }
+
+    /**
+     * Used in orProxy
+     */
+    public function getChildrenErrors()
+    {
+        return $this->type->state->_extra['or_errors'] ?? [];
+    }
 }

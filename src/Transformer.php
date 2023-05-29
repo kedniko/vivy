@@ -6,33 +6,33 @@ use Kedniko\Vivy\Core\Middleware;
 
 class Transformer extends Middleware
 {
-	public function getID()
-	{
-		return $this->id;
-	}
+    public function getID()
+    {
+        return $this->id;
+    }
 
-	public function getCallback()
-	{
-		return $this->callback;
-	}
+    public function getCallback()
+    {
+        return $this->callback;
+    }
 
-	public function getErrorMessage()
-	{
-		return $this->errormessage;
-	}
+    public function getErrorMessage()
+    {
+        return $this->errormessage;
+    }
 
-	public function setErrorMessage($errmessage)
-	{
-		$this->errormessage = $errmessage;
-	}
+    public function setErrorMessage($errmessage)
+    {
+        $this->errormessage = $errmessage;
+    }
 
-	public function setStopOnFailure($stopOnFailure)
-	{
-		$this->stopOnFailure = $stopOnFailure;
-	}
+    public function setStopOnFailure($stopOnFailure)
+    {
+        $this->stopOnFailure = $stopOnFailure;
+    }
 
-	public function getStopOnFailure()
-	{
-		return $this->stopOnFailure !== false;
-	}
+    public function getStopOnFailure()
+    {
+        return $this->stopOnFailure !== false;
+    }
 }

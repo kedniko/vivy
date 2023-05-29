@@ -12,189 +12,192 @@ use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\V;
-use ReflectionMethod;
 
 class Util
 {
-	public static function runFunction($fn, $parameters = [])
-	{
-		if (!$fn) {
-			throw new \Exception('Invalid register function', 1);
-		}
-		if (is_callable($fn)) {
-			return call_user_func_array($fn, $parameters);
-		} else {
-			$result = Helpers::getClassAndMethod($fn);
-			if (!$result) {
-				throw new \Exception('Invalid register function', 1);
-			}
+    public static function runFunction($fn, $parameters = [])
+    {
+        if (! $fn) {
+            throw new \Exception('Invalid register function', 1);
+        }
+        if (is_callable($fn)) {
+            return call_user_func_array($fn, $parameters);
+        } else {
+            $result = Helpers::getClassAndMethod($fn);
+            if (! $result) {
+                throw new \Exception('Invalid register function', 1);
+            }
 
-			$class = $result[0];
-			$method = $result[1];
+            $class = $result[0];
+            $method = $result[1];
 
-			if (is_string($class) && class_exists($class)) {
-				$class = ltrim($class, '\\');
-				$reflection = new \ReflectionClass($class);
+            if (is_string($class) && class_exists($class)) {
+                $class = ltrim($class, '\\');
+                $reflection = new \ReflectionClass($class);
 
-				$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-				foreach ($methods as $a) {
-					if (ltrim($a->class, '\\') === $class && $a->name === $method) {
-						try {
-							return $a->invoke(null);
-						} catch (\ReflectionException $e) {
-							return $a->invoke(new $class(), ...$parameters);
-						}
-						break;
-					}
-				}
-			} elseif (class_exists($class)) {
-				return $class->$method(...$parameters);
-			}
-		}
-	}
+                $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+                foreach ($methods as $a) {
+                    if (ltrim($a->class, '\\') === $class && $a->name === $method) {
+                        try {
+                            return $a->invoke(null);
+                        } catch (\ReflectionException $e) {
+                            return $a->invoke(new $class(), ...$parameters);
+                        }
+                        break;
+                    }
+                }
+            } elseif (class_exists($class)) {
+                return $class->$method(...$parameters);
+            }
+        }
+    }
 
-	private static function getParentClasses($class)
-	{
-		$classes = [];
-		$reflection = new \ReflectionClass($class);
-		while ($reflection = $reflection->getParentClass()) {
-			$classes[] = $reflection->getName();
-		}
-		return $classes;
-	}
+    private static function getParentClasses($class)
+    {
+        $classes = [];
+        $reflection = new \ReflectionClass($class);
+        while ($reflection = $reflection->getParentClass()) {
+            $classes[] = $reflection->getName();
+        }
 
-	public static function getMethodParameters($class, $method)
-	{
-		$method = new \ReflectionMethod($class, $method);
-		$parameters = $method->getParameters();
-		return array_map(function ($parameter) {
-			$parameterType = $parameter->getType();
-			$parameterTypeName = $parameterType->getName();
-			return [
-				'name'       => $parameter->getName(),
-				'type'       => $parameterTypeName,
-				'isBuiltin'  => $parameterType->isBuiltin(),
-				'allowsNull' => $parameter->allowsNull(),
-			];
-		}, $parameters);
-	}
+        return $classes;
+    }
 
-	public static function handleUserDefinedCall($className, $methodName, $callerObj, $parameters)
-	{
-		$classMethod = $className . '::' . $methodName;
-		$registered = V::$registeredMiddlewares;
+    public static function getMethodParameters($class, $method)
+    {
+        $method = new \ReflectionMethod($class, $method);
+        $parameters = $method->getParameters();
 
-		if (!array_key_exists($classMethod, $registered)) {
-			$classes = self::getParentClasses($className);
-			$found = false;
-			foreach ($classes as $classnameparent) {
-				$tryClassMethod = $classnameparent . '::' . $methodName;
-				if (array_key_exists($tryClassMethod, $registered)) {
-					$found = true;
-					$classMethod = $tryClassMethod;
-					break;
-				}
-			}
-			if (!$found) {
-				throw new \Exception('Method "' . $classMethod . '" does not exists in ' . get_called_class(), 1);
-			}
-		}
+        return array_map(function ($parameter) {
+            $parameterType = $parameter->getType();
+            $parameterTypeName = $parameterType->getName();
 
-		$setup = $registered[$classMethod];
-		$returntype = $setup['returnType'];
-		$availableForType = $setup['availableForType'];
+            return [
+                'name' => $parameter->getName(),
+                'type' => $parameterTypeName,
+                'isBuiltin' => $parameterType->isBuiltin(),
+                'allowsNull' => $parameter->allowsNull(),
+            ];
+        }, $parameters);
+    }
 
-		// $parameters_for_callback = [$callerObj ?? null, ...$parameters];
-		// if ($callerObj) {
-		// 	$closure = \Closure::fromCallable($setup['function']);
-		// 	$result = \Closure::bind($closure, $callerObj)();
-		// // $result = call_user_func_array([$callerObj, $setup['function'][1]], $parameters_for_callback);
-		// } else {
-		// 	$result = call_user_func_array($setup['function'], $parameters_for_callback);
-		// }
+    public static function handleUserDefinedCall($className, $methodName, $callerObj, $parameters)
+    {
+        $classMethod = $className.'::'.$methodName;
+        $registered = V::$registeredMiddlewares;
 
-		$result = Util::runFunction($setup['function'], $parameters);
-		// $result = call_user_func_array($setup['function'], $parameters);
-		$isCallable = is_callable($result);
+        if (! array_key_exists($classMethod, $registered)) {
+            $classes = self::getParentClasses($className);
+            $found = false;
+            foreach ($classes as $classnameparent) {
+                $tryClassMethod = $classnameparent.'::'.$methodName;
+                if (array_key_exists($tryClassMethod, $registered)) {
+                    $found = true;
+                    $classMethod = $tryClassMethod;
+                    break;
+                }
+            }
+            if (! $found) {
+                throw new \Exception('Method "'.$classMethod.'" does not exists in '.get_called_class(), 1);
+            }
+        }
 
-		if (!$callerObj && !($result instanceof Type)) {
-			if ($availableForType === V::class) {
-				//
-			} else {
-				/** @var Type */
-				$callerObj = new $returntype();
-			}
-		}
+        $setup = $registered[$classMethod];
+        $returntype = $setup['returnType'];
+        $availableForType = $setup['availableForType'];
 
-		if ($isCallable) {
-			// $c = new Context();
-			// (new ContextProxy($c))->setField($callerObj);
-			$result = $result($callerObj);
-		}
+        // $parameters_for_callback = [$callerObj ?? null, ...$parameters];
+        // if ($callerObj) {
+        // 	$closure = \Closure::fromCallable($setup['function']);
+        // 	$result = \Closure::bind($closure, $callerObj)();
+        // // $result = call_user_func_array([$callerObj, $setup['function'][1]], $parameters_for_callback);
+        // } else {
+        // 	$result = call_user_func_array($setup['function'], $parameters_for_callback);
+        // }
 
-		if ($result instanceof Middleware) {
-			$middleware = $result;
-			$options = $middleware->getOptions();
+        $result = Util::runFunction($setup['function'], $parameters);
+        // $result = call_user_func_array($setup['function'], $parameters);
+        $isCallable = is_callable($result);
 
-			$args = [];
-			foreach ($parameters as $arg) {
-				$args[] = $arg;
-				if ($arg instanceof Options) {
-					$options = $arg; // override old options
-					break; // options must be the last argument
-				}
-			}
+        if (! $callerObj && ! ($result instanceof Type)) {
+            if ($availableForType === V::class) {
+                //
+            } else {
+                /** @var Type */
+                $callerObj = new $returntype();
+            }
+        }
 
-			$options = Helpers::getOptions($options);
+        if ($isCallable) {
+            // $c = new Context();
+            // (new ContextProxy($c))->setField($callerObj);
+            $result = $result($callerObj);
+        }
 
-			if ($options->getErrorMessage()) {
-				$middleware->setErrorMessage($options->getErrorMessage());
-			}
+        if ($result instanceof Middleware) {
+            $middleware = $result;
+            $options = $middleware->getOptions();
 
-			$options->setArgs($args);
-			if ($middleware instanceof Rule) {
-				$type = $callerObj->addRule($middleware, $options);
-			} elseif ($middleware instanceof Transformer) {
-				$type = $callerObj->addTransformer($middleware, $options);
-			} elseif ($middleware instanceof Callback) {
-				$type = $callerObj->addCallback($middleware, $options);
-			} else {
-				throw new \Exception('Unknown middleware type', 1);
-			}
+            $args = [];
+            foreach ($parameters as $arg) {
+                $args[] = $arg;
+                if ($arg instanceof Options) {
+                    $options = $arg; // override old options
+                    break; // options must be the last argument
+                }
+            }
 
-			/** @var Type */
-			$newField = new $returntype();
-			$newField->state = $type->state;
-		} elseif ($result instanceof Type) {
-			$newField = $result;
-			// if ($callerObj) {
-			// 	$newField->state = $callerObj->state;
-			// }
-		}
-		// continua
-		// elseif ($result === null) {
-		// 	$returntype = $setup['returnType'];
-		// 	/** @var Type */
-		// 	$newField = new $returntype();
-		// 	$newField->state = $type->state;
-		// }
+            $options = Helpers::getOptions($options);
 
-		$newField->state->_extra = $newField->state->_extra ?? [];
-		$newField->state->_extra['caller'] = $className;
+            if ($options->getErrorMessage()) {
+                $middleware->setErrorMessage($options->getErrorMessage());
+            }
 
-		return $newField;
+            $options->setArgs($args);
+            if ($middleware instanceof Rule) {
+                $type = $callerObj->addRule($middleware, $options);
+            } elseif ($middleware instanceof Transformer) {
+                $type = $callerObj->addTransformer($middleware, $options);
+            } elseif ($middleware instanceof Callback) {
+                $type = $callerObj->addCallback($middleware, $options);
+            } else {
+                throw new \Exception('Unknown middleware type', 1);
+            }
 
-		// throw new \Exception('Invalid return type', 1);
-	}
+            /** @var Type */
+            $newField = new $returntype();
+            $newField->state = $type->state;
+        } elseif ($result instanceof Type) {
+            $newField = $result;
+            // if ($callerObj) {
+            // 	$newField->state = $callerObj->state;
+            // }
+        }
+        // continua
+        // elseif ($result === null) {
+        // 	$returntype = $setup['returnType'];
+        // 	/** @var Type */
+        // 	$newField = new $returntype();
+        // 	$newField->state = $type->state;
+        // }
 
-	public static function clone($var)
-	{
-		return is_array($var) ? array_map([self::class, 'clone'], $var) : (is_object($var) ? clone $var : $var);
-	}
+        $newField->state->_extra = $newField->state->_extra ?? [];
+        $newField->state->_extra['caller'] = $className;
 
-	public static function classImplements(string $classname, string $interface)
-	{
-		$interfaces = class_implements($classname);
-		return in_array($interface, $interfaces);
-	}
+        return $newField;
+
+        // throw new \Exception('Invalid return type', 1);
+    }
+
+    public static function clone($var)
+    {
+        return is_array($var) ? array_map([self::class, 'clone'], $var) : (is_object($var) ? clone $var : $var);
+    }
+
+    public static function classImplements(string $classname, string $interface)
+    {
+        $interfaces = class_implements($classname);
+
+        return in_array($interface, $interfaces);
+    }
 }

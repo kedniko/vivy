@@ -1,5 +1,5 @@
 <?php
 
 return [
-	// ... copia da 'it/rules.php'
+    // ... copia da 'it/rules.php'
 ];

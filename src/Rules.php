@@ -6,60 +6,90 @@ use Brick\Math\BigDecimal;
 use DateTime;
 use Kedniko\Vivy\Core\Constants;
 use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\LinkedList;
-use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Undefined;
-use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Exceptions\VivyMiddlewareNotFoundException;
 use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Rules\RuleFunctions;
 use Kedniko\Vivy\Support\Str;
-use Kedniko\Vivy\Types\Type;
-use Kedniko\Vivy\V;
 
 class Rules
 {
     const ID_REQUIRED = 'required';
+
     const ID_NOT_EMPTY_STRING = 'notEmptyString';
+
     const ID_NOT_NULL = 'notNull';
+
     const ID_NULL = 'null';
+
     const ID_GROUP = 'group';
+
     const ID_EACH = 'each';
+
     const ID_OR = 'or';
+
     const ID_AND = 'and';
 
     const ID_NOT_FALSY = 'notFalsy';
+
     const ID_EMPTY_STRING = 'emptyString';
+
     const ID_MIN_DATE = 'minDate';
+
     const ID_MAX_DATE = 'maxDate';
+
     const ID_DATE_BETWEEN = 'dateBetween';
+
     const ID_DATE_NOT_BETWEEN = 'dateNotBetween';
 
     const ID_STRING = 'string';
+
     const ID_INTSTRING = 'intString';
+
     const ID_DIGITS_STRING = 'digitsString';
+
     const ID_INTBOOL = 'intBool';
+
     const ID_FILE = 'file';
+
     const ID_INT = 'int';
+
     const ID_FLOAT = 'float';
+
     const ID_NUMBER = 'number';
+
     const ID_FLOAT_OR_INT = 'floatOrInt';
+
     const ID_FLOAT_STRING = 'floatString';
+
     const ID_BOOL = 'bool';
+
     const ID_BOOL_STRING = 'boolString';
+
     const ID_EMAIL = 'email';
+
     const ID_PHONE = 'phone';
+
     const ID_DATE = 'date';
+
     const ID_MIN = 'min';
+
     const ID_MAX = 'max';
+
     const ID_ARRAY = 'array';
+
     const ID_SCALAR = 'scalar';
+
     const ID_IN_ARRAY = 'inArray';
+
     const ID_NOT_IN_ARRAY = 'notInArray';
+
     const ID_UNDEFINED = 'undefined';
+
     const ID_SET_VALUE = 'setValue';
+
     const ID_INT_STRING = 'intString';
 
     public static function getInvisibleKeys()
@@ -71,7 +101,7 @@ class Rules
     }
 
     /**
-     * @param string $id
+     * @param  string  $id
      */
     public static function call($id)
     {
@@ -88,7 +118,7 @@ class Rules
 
         $options = Helpers::getOptions($options);
 
-        if (!array_key_exists($id, V::$registeredMiddlewares)) {
+        if (! array_key_exists($id, V::$registeredMiddlewares)) {
             throw new VivyMiddlewareNotFoundException("Middleware \"{$id}\" not found", 1);
         }
 
@@ -98,6 +128,7 @@ class Rules
             $rule->setErrorMessage($options->getErrorMessage());
         }
         $rule->setStopOnFailure($options->getStopOnFailure());
+
         return $rule;
     }
 
@@ -105,7 +136,8 @@ class Rules
     {
         $ruleID = Rules::ID_REQUIRED;
         $ruleFn = null;
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -115,7 +147,8 @@ class Rules
         $ruleFn = function (Context $c) {
             return $c->value ? true : false;
         };
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -126,7 +159,7 @@ class Rules
             return $c->value !== null;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -138,7 +171,7 @@ class Rules
             return $c->value === null;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -152,9 +185,10 @@ class Rules
             if (is_string($value) && $trim) {
                 $value = trim($value);
             }
+
             return $c->value !== '';
         };
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -168,9 +202,10 @@ class Rules
             if (is_string($value) && $trim) {
                 $value = trim($value);
             }
+
             return $c->value === '';
         };
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -185,7 +220,7 @@ class Rules
             $toTrim = Helpers::valueOrFunction($toTrim, $c);
             $trimBeforeCheckEmpty = Helpers::valueOrFunction($trimBeforeCheckEmpty, $c);
 
-            if (!is_string($value)) {
+            if (! is_string($value)) {
                 return false;
             }
 
@@ -193,7 +228,7 @@ class Rules
                 $value = trim($value);
             }
 
-            if (!$allowEmpty && $value === '') {
+            if (! $allowEmpty && $value === '') {
                 return false;
             }
 
@@ -204,7 +239,7 @@ class Rules
             return true;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -215,17 +250,18 @@ class Rules
         $ruleFn = function (Context $c) use ($trim) {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
-            if (!is_string($value)) {
+            if (! is_string($value)) {
                 return false;
             }
 
             if ($trim) {
                 $value = trim($value);
             }
+
             return preg_match(Constants::REGEX_DIGITS, strval($value), $matches) === 1;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -237,10 +273,11 @@ class Rules
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
             $isTypeIntString = self::isTypeIntString($trim, $value);
+
             return $isTypeIntString;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -251,7 +288,8 @@ class Rules
         $ruleFn = function (Context $c) {
             return in_array($c->value, ['true', 'false'], true);
         };
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -267,7 +305,7 @@ class Rules
             }
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -285,14 +323,14 @@ class Rules
                 isset($value['error']) &&
                 isset($value['size']);
 
-            if (!$isOfTypeFile) {
+            if (! $isOfTypeFile) {
                 return false;
             }
 
             return true;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -304,7 +342,7 @@ class Rules
             return is_int($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -329,7 +367,7 @@ class Rules
             return is_float($c->value) || is_int($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -338,9 +376,10 @@ class Rules
     {
         $ruleID = self::ID_NUMBER;
         $ruleFn = function (Context $c) {
-            return !is_string($c->value) && is_numeric($c->value);
+            return ! is_string($c->value) && is_numeric($c->value);
         };
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -352,10 +391,11 @@ class Rules
             if ($strictFloat) {
                 return is_float($c->value);
             }
+
             return is_float($c->value) || is_int($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -367,17 +407,18 @@ class Rules
             $strictFloat = Helpers::valueOrFunction($strictFloat, $c);
             $trim = Helpers::valueOrFunction($trim, $c);
             $isTypeFloatString = self::isTypeFloatString($trim, $strictFloat, $c->value);
+
             return $isTypeFloatString;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
     private static function isTypeIntString($trim, $value)
     {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             return false;
         }
 
@@ -386,12 +427,13 @@ class Rules
         }
 
         $isTypeIntString = preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, strval($value), $matches) === 1;
+
         return $isTypeIntString;
     }
 
     private static function isTypeFloatString($trim, $strictFloat, $value)
     {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             return false;
         }
 
@@ -417,7 +459,7 @@ class Rules
         $ruleID = self::ID_FLOAT_STRING;
         $ruleFn = function (Context $c) use ($trim) {
             $trim = Helpers::valueOrFunction($trim, $c);
-            if (!is_string($c->value)) {
+            if (! is_string($c->value)) {
                 return false;
             }
             $isTypeIntString = self::isTypeIntString($trim, $c->value);
@@ -427,7 +469,7 @@ class Rules
             return $isTypeIntString || $isTypeFloatString;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -437,7 +479,7 @@ class Rules
         $ruleID = self::ID_UNDEFINED;
         $ruleFn = fn () => Undefined::instance();
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -449,7 +491,7 @@ class Rules
             return is_bool($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -461,13 +503,14 @@ class Rules
     {
         $ruleID = self::ID_EMAIL;
         $ruleFn = function (Context $c) {
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return preg_match(Constants::REGEX_MAIL, $c->value) === 1;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -478,10 +521,12 @@ class Rules
         $ruleFn = function (Context $c) use ($value, $strict) {
             $value = Helpers::valueOrFunction($value, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
+
             return $strict === true ? $c->value === $value : $c->value == $value;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -491,10 +536,12 @@ class Rules
         $ruleFn = function (Context $c) use ($value, $strict) {
             $value = Helpers::valueOrFunction($value, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
+
             return $strict === true ? $c->value !== $value : $c->value != $value;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
+
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
@@ -502,38 +549,39 @@ class Rules
     {
         $ruleID = self::ID_PHONE;
         $ruleFn = function (Context $c) {
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return preg_match(Constants::REGEX_CELLPHONE_WITH_OPTIONAL_PREFIX, $c->value) === 1;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
     /**
-     * @param string $format https://www.php.net/manual/en/datetime.format.php
-     * @param string|callable|null $errormessage
-     *
+     * @param  string  $format https://www.php.net/manual/en/datetime.format.php
+     * @param  string|callable|null  $errormessage
      */
     public static function date($format = 'Y-m-d', $errormessage = null)
     {
         $ruleID = self::ID_DATE;
         $ruleFn = function (Context $c) use ($format) {
             $format = Helpers::valueOrFunction($format, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
 
             $date = $c->value;
 
             $d = DateTime::createFromFormat($format, $date);
+
             return $d && $d->format($format) === $date;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -544,13 +592,14 @@ class Rules
         $ruleFn = function (Context $c) use ($min) {
             try {
                 $min = Helpers::valueOrFunction($min, $c);
+
                 return BigDecimal::of($c->value)->isGreaterThanOrEqualTo(BigDecimal::of($min));
             } catch (\Throwable $th) {
                 return false;
             }
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -561,13 +610,14 @@ class Rules
         $ruleFn = function (Context $c) use ($max) {
             try {
                 $max = Helpers::valueOrFunction($max, $c);
+
                 return BigDecimal::of($c->value)->isLessThanOrEqualTo(BigDecimal::of($max));
             } catch (\Throwable $th) {
                 return false;
             }
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -587,7 +637,7 @@ class Rules
             return $date <= $given;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -607,7 +657,7 @@ class Rules
             return $given <= $date;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -625,10 +675,10 @@ class Rules
                 $given = (new DateTime())->createFromFormat($sourceFormat, $c->value)->setTime(0, 0, 0, 0);
             }
 
-            return  $minDate <= $given && $given <= $maxDate;
+            return $minDate <= $given && $given <= $maxDate;
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -646,10 +696,10 @@ class Rules
                 $given = (new DateTime())->createFromFormat($sourceFormat, $c->value)->setTime(0, 0, 0, 0);
             }
 
-            return  !($minDate <= $given && $given <= $maxDate);
+            return ! ($minDate <= $given && $given <= $maxDate);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -661,7 +711,7 @@ class Rules
             return is_array($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -673,7 +723,7 @@ class Rules
             return is_scalar($c->value);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -684,10 +734,11 @@ class Rules
         $ruleFn = function (Context $c) use ($array, $strict) {
             $array = Helpers::valueOrFunction($array, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
+
             return in_array($c->value, $array, $strict);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -697,10 +748,11 @@ class Rules
         $ruleID = self::ID_NOT_IN_ARRAY;
         $ruleFn = function (Context $c) use ($array) {
             $array = Helpers::valueOrFunction($array, $c);
-            return !in_array($c->value, $array, true);
+
+            return ! in_array($c->value, $array, true);
         };
 
-        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+        $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -711,9 +763,10 @@ class Rules
         $ruleFn = function (Context $c) use ($endsWith, $ignoreCase) {
             $endsWith = Helpers::valueOrFunction($endsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return Str::endsWith($c->value, $endsWith, $ignoreCase);
         };
 
@@ -728,9 +781,10 @@ class Rules
         $ruleFn = function (Context $c) use ($startsWith, $ignoreCase) {
             $startsWith = Helpers::valueOrFunction($startsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return Str::startsWith($c->value, $startsWith, $ignoreCase);
         };
 
@@ -745,9 +799,10 @@ class Rules
         $ruleFn = function (Context $c) use ($contains, $ignoreCase) {
             $contains = Helpers::valueOrFunction($contains, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return Str::contains($c->value, $contains, $ignoreCase);
         };
 
@@ -761,9 +816,10 @@ class Rules
         $ruleID = 'minLength';
         $ruleFn = function (Context $c) use ($length) {
             $length = Helpers::valueOrFunction($length, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return strlen($c->value) >= $length;
         };
 
@@ -777,9 +833,10 @@ class Rules
         $ruleID = 'maxLength';
         $ruleFn = function (Context $c) use ($length) {
             $length = Helpers::valueOrFunction($length, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return strlen($c->value) <= $length;
         };
 
@@ -793,9 +850,10 @@ class Rules
         $ruleID = 'length';
         $ruleFn = function (Context $c) use ($length) {
             $length = Helpers::valueOrFunction($length, $c);
-            if (!$c->value || !is_string($c->value)) {
+            if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
+
             return strlen($c->value) === $length;
         };
 

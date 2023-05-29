@@ -4,168 +4,186 @@ namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
 use Brick\Math\BigDecimal;
 use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Transformers;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Messages\TransformerMessage;
-use Kedniko\Vivy\O;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeScalar;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeString;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\V;
 
 class TypeNumber extends TypeScalar
 {
-	const ID_MAX = 'numberMax';
-	const ID_MIN = 'numberMin';
-	const ID_NUMBER_DECIMAL_PART_MAX = 'numberDecimalPartMax';
-	const ID_NUMBER_DECIMAL_PART_MIN = 'numberDecimalPartMin';
-	const ID_NUMBER_DECIMAL_PART_IS = 'numberDecimalPartIs';
-	const ID_NUMBER_MULTIPLE_OF = 'numberMultipleOf';
-	const ID_NUMBER_BETWEEN = 'numberBetween';
-	const ID_NUMBER_NOT_BETWEEN = 'numberNotBetween';
-	const ID_NUMBER_TO_STRING = 'numberToString';
+    const ID_MAX = 'numberMax';
 
-	public function min($min, Options $options = null)
-	{
-		$ruleid = self::ID_MIN;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-		$this->addRule(Rules::min($min, $errormessage), $options);
-		return $this;
-	}
+    const ID_MIN = 'numberMin';
 
-	public function max($max, Options $options = null)
-	{
-		$ruleid = self::ID_MAX;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-		$this->addRule(Rules::max($max, $errormessage), $options);
-		return $this;
-	}
+    const ID_NUMBER_DECIMAL_PART_MAX = 'numberDecimalPartMax';
 
-	public function decimalPartIs($number, Options $options = null)
-	{
-		$ruleID = self::ID_NUMBER_DECIMAL_PART_IS;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+    const ID_NUMBER_DECIMAL_PART_MIN = 'numberDecimalPartMin';
 
-		$rule = V::rule($ruleID, function (Context $c) use ($number) {
-			try {
-				$srcFractionalPart = BigDecimal::of('0.' . BigDecimal::of($c->value)->getFractionalPart());
-				$destfractionalPart = BigDecimal::of('0.' . BigDecimal::of($number)->getFractionalPart());
-				return $srcFractionalPart->isEqualTo($destfractionalPart);
-			} catch (\Throwable $th) {
-				return false;
-			}
-		}, $errormessage);
+    const ID_NUMBER_DECIMAL_PART_IS = 'numberDecimalPartIs';
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+    const ID_NUMBER_MULTIPLE_OF = 'numberMultipleOf';
 
-	public function multipleOf($number, Options $options = null)
-	{
-		$ruleID = self::ID_NUMBER_MULTIPLE_OF;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+    const ID_NUMBER_BETWEEN = 'numberBetween';
 
-		$rule = V::rule($ruleID, function (Context $c) use ($number) {
-			try {
-				$result = BigDecimal::of($c->value)->remainder($number);
-				return $result->isEqualTo(BigDecimal::of(0));
-			} catch (\Throwable $th) {
-				return false;
-			}
-		}, $errormessage);
+    const ID_NUMBER_NOT_BETWEEN = 'numberNotBetween';
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+    const ID_NUMBER_TO_STRING = 'numberToString';
 
-	public function decimalPartMin($min, Options $options = null)
-	{
-		$ruleID = self::ID_NUMBER_DECIMAL_PART_MIN;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+    public function min($min, Options $options = null)
+    {
+        $ruleid = self::ID_MIN;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+        $this->addRule(Rules::min($min, $errormessage), $options);
 
-		$rule = V::rule($ruleID, function (Context $c) use ($min) {
-			try {
-				$srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
-				$destfractionalPart = BigDecimal::of($min)->getFractionalPart();
-				$src = BigDecimal::of("0.$srcFractionalPart");
-				$dest = BigDecimal::of("0.$destfractionalPart");
-				return $src->isGreaterThanOrEqualTo($dest);
-			} catch (\Throwable $th) {
-				return false;
-			}
-		}, $errormessage);
+        return $this;
+    }
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+    public function max($max, Options $options = null)
+    {
+        $ruleid = self::ID_MAX;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+        $this->addRule(Rules::max($max, $errormessage), $options);
 
-	public function fractionalPartMax($max, Options $options = null)
-	{
-		$ruleID = self::ID_NUMBER_DECIMAL_PART_MAX;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+        return $this;
+    }
 
-		$rule = V::rule($ruleID, function (Context $c) use ($max) {
-			try {
-				$srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
-				$destfractionalPart = BigDecimal::of($max)->getFractionalPart();
-				$src = BigDecimal::of("0.$srcFractionalPart");
-				$dest = BigDecimal::of("0.$destfractionalPart");
-				return $src->isLessThanOrEqualTo($dest);
-			} catch (\Throwable $th) {
-				return false;
-			}
-		}, $errormessage);
+    public function decimalPartIs($number, Options $options = null)
+    {
+        $ruleID = self::ID_NUMBER_DECIMAL_PART_IS;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+        $rule = V::rule($ruleID, function (Context $c) use ($number) {
+            try {
+                $srcFractionalPart = BigDecimal::of('0.'.BigDecimal::of($c->value)->getFractionalPart());
+                $destfractionalPart = BigDecimal::of('0.'.BigDecimal::of($number)->getFractionalPart());
 
-	public function between($min, $max, Options $options = null)
-	{
-		$ruleid = self::ID_NUMBER_BETWEEN;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-		$rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
-			$value = $c->value;
-			return $value >= $min && $value <= $max;
-		}, $errormessage);
+                return $srcFractionalPart->isEqualTo($destfractionalPart);
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }, $errormessage);
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+        $this->addRule($rule, $options);
 
-	public function notBetween($min, $max, Options $options = null)
-	{
-		$ruleid = self::ID_NUMBER_NOT_BETWEEN;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-		$rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
-			$value = $c->value;
-			return !($value >= $min && $value <= $max);
-		}, $errormessage);
+        return $this;
+    }
 
-		$this->addRule($rule, $options);
-		return $this;
-	}
+    public function multipleOf($number, Options $options = null)
+    {
+        $ruleID = self::ID_NUMBER_MULTIPLE_OF;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-	public function toString($errormessage = null, Options $options = null)
-	{
-		$ruleid = self::ID_NUMBER_TO_STRING;
-		$options = Options::build($options, func_get_args());
-		$errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+        $rule = V::rule($ruleID, function (Context $c) use ($number) {
+            try {
+                $result = BigDecimal::of($c->value)->remainder($number);
 
-		$transformer = Transformers::numberToString($errormessage);
-		$this->addTransformer($transformer);
-		$type = (new TypeString())->from($this);
-		return $type;
-	}
+                return $result->isEqualTo(BigDecimal::of(0));
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function decimalPartMin($min, Options $options = null)
+    {
+        $ruleID = self::ID_NUMBER_DECIMAL_PART_MIN;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+
+        $rule = V::rule($ruleID, function (Context $c) use ($min) {
+            try {
+                $srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
+                $destfractionalPart = BigDecimal::of($min)->getFractionalPart();
+                $src = BigDecimal::of("0.$srcFractionalPart");
+                $dest = BigDecimal::of("0.$destfractionalPart");
+
+                return $src->isGreaterThanOrEqualTo($dest);
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function fractionalPartMax($max, Options $options = null)
+    {
+        $ruleID = self::ID_NUMBER_DECIMAL_PART_MAX;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
+
+        $rule = V::rule($ruleID, function (Context $c) use ($max) {
+            try {
+                $srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
+                $destfractionalPart = BigDecimal::of($max)->getFractionalPart();
+                $src = BigDecimal::of("0.$srcFractionalPart");
+                $dest = BigDecimal::of("0.$destfractionalPart");
+
+                return $src->isLessThanOrEqualTo($dest);
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function between($min, $max, Options $options = null)
+    {
+        $ruleid = self::ID_NUMBER_BETWEEN;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+        $rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
+            $value = $c->value;
+
+            return $value >= $min && $value <= $max;
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function notBetween($min, $max, Options $options = null)
+    {
+        $ruleid = self::ID_NUMBER_NOT_BETWEEN;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+        $rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
+            $value = $c->value;
+
+            return ! ($value >= $min && $value <= $max);
+        }, $errormessage);
+
+        $this->addRule($rule, $options);
+
+        return $this;
+    }
+
+    public function toString($errormessage = null, Options $options = null)
+    {
+        $ruleid = self::ID_NUMBER_TO_STRING;
+        $options = Options::build($options, func_get_args());
+        $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
+
+        $transformer = Transformers::numberToString($errormessage);
+        $this->addTransformer($transformer);
+        $type = (new TypeString())->from($this);
+
+        return $type;
+    }
 }

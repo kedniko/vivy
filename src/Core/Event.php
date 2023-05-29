@@ -4,22 +4,22 @@ namespace Kedniko\Vivy\Core;
 
 class Event
 {
-	protected static $eventListeners = [];
+    protected static $eventListeners = [];
 
-	public static function listen($name, $callable)
-	{
-		static::$eventListeners[$name][] = $callable;
-	}
+    public static function listen($name, $callable)
+    {
+        static::$eventListeners[$name][] = $callable;
+    }
 
-	public static function dispatch($name, $payload = [])
-	{
-		if (!isset(static::$eventListeners[$name])) {
-			return;
-		}
+    public static function dispatch($name, $payload = [])
+    {
+        if (! isset(static::$eventListeners[$name])) {
+            return;
+        }
 
-		$callbacks = static::$eventListeners[$name];
-		foreach ($callbacks as $cb) {
-			$cb($payload);
-		}
-	}
+        $callbacks = static::$eventListeners[$name];
+        foreach ($callbacks as $cb) {
+            $cb($payload);
+        }
+    }
 }
