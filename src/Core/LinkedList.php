@@ -5,16 +5,16 @@ namespace Kedniko\Vivy\Core;
 final class LinkedList
 {
     /** @var Node|null */
-    public $head = null;
+    public $head;
 
     /** @var Node|null */
-    public $tail = null;
+    public $tail;
 
     /** @var Node|null */
-    public $current = null;
+    public $current;
 
     /** @var Node|null */
-    public $prev = null;
+    public $prev;
 
     /**
      * @var int
@@ -197,9 +197,7 @@ final class LinkedList
 
     public function getCurrent()
     {
-        $data = $this->current->data;
-
-        return $data;
+        return $this->current->data;
     }
 
     public function getNext()
@@ -210,9 +208,7 @@ final class LinkedList
 
         $this->advance = true;
 
-        $data = $this->current->data;
-
-        return $data;
+        return $this->current->data;
     }
 
     private function advanceCurrent(): void
@@ -265,7 +261,6 @@ final class LinkedList
                 if ($removeOnlyOne) {
                     return;
                 }
-                $node = $node->next;
                 $node = null;
 
                 $this->decrementLength();

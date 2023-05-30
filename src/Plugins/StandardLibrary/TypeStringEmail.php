@@ -19,9 +19,7 @@ final class TypeStringEmail extends TypeString
             $email = $c->value ?: '';
             $domain = explode('@', $email)[1];
 
-            $bool = checkdnsrr($domain, $record);
-
-            return $bool;
+            return checkdnsrr($domain, $record);
         }, $errormessage);
 
         $this->addRule($rule, $options);

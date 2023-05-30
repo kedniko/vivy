@@ -87,9 +87,7 @@ final class StandardLibrary implements VivyPlugin
     public static function any()
     {
         return function (Type|null $obj) {
-            $type = (new Type())->from($obj);
-
-            return $type;
+            return (new Type())->from($obj);
         };
     }
 
@@ -149,9 +147,8 @@ final class StandardLibrary implements VivyPlugin
     {
         return function (Type|null $obj) use ($options, $types) {
             $options = Options::build($options, func_get_args());
-            $type = (new TypeOr($types, true, $options))->from($obj);
 
-            return $type;
+            return (new TypeOr($types, true, $options))->from($obj);
         };
     }
 
@@ -301,9 +298,8 @@ final class StandardLibrary implements VivyPlugin
     {
         return function (Type|null $obj) use ($options) {
             $options = Options::build($options, func_get_args());
-            $type = (new Type())->from($obj);
 
-            return $type;
+            return (new Type())->from($obj);
         };
     }
 
@@ -335,9 +331,8 @@ final class StandardLibrary implements VivyPlugin
     {
         return function (Type|null $obj) use ($options) {
             $options = Options::build($options, func_get_args());
-            $type = (new Type())->from($obj);
 
-            return $type;
+            return (new Type())->from($obj);
         };
     }
 
@@ -412,9 +407,8 @@ final class StandardLibrary implements VivyPlugin
     {
         return function (Type|null $obj) use ($options) {
             $options = Options::build($options, func_get_args());
-            $type = (new TypeFiles())->from($obj);
 
-            return $type;
+            return (new TypeFiles())->from($obj);
         };
     }
 
@@ -442,36 +436,28 @@ final class StandardLibrary implements VivyPlugin
     public static function asFile()
     {
         return function (Type|null $obj) {
-            $type = (new TypeFile())->from($obj);
-
-            return $type;
+            return (new TypeFile())->from($obj);
         };
     }
 
     public static function asArray()
     {
         return function (Type|null $obj) {
-            $type = (new TypeArray())->from($obj);
-
-            return $type;
+            return (new TypeArray())->from($obj);
         };
     }
 
     public static function asBool()
     {
         return function (Type|null $obj) {
-            $type = (new TypeBool())->from($obj);
-
-            return $type;
+            return (new TypeBool())->from($obj);
         };
     }
 
     public static function asAny()
     {
         return function (Type|null $obj) {
-            $type = (new TypeAny())->from($obj);
-
-            return $type;
+            return (new TypeAny())->from($obj);
         };
     }
 
@@ -488,72 +474,56 @@ final class StandardLibrary implements VivyPlugin
     public static function asEmail()
     {
         return function (Type|null $obj) {
-            $type = (new TypeStringEmail())->from($obj);
-
-            return $type;
+            return (new TypeStringEmail())->from($obj);
         };
     }
 
     public static function asScalar()
     {
         return function (Type|null $obj) {
-            $type = (new TypeScalar())->from($obj);
-
-            return $type;
+            return (new TypeScalar())->from($obj);
         };
     }
 
     public static function asFloat()
     {
         return function (Type|null $obj) {
-            $type = (new TypeFloat())->from($obj);
-
-            return $type;
+            return (new TypeFloat())->from($obj);
         };
     }
 
     public static function asGroup()
     {
         return function (Type|null $obj) {
-            $type = (new TypeGroup())->from($obj);
-
-            return $type;
+            return (new TypeGroup())->from($obj);
         };
     }
 
     public static function asInt()
     {
         return function (Type|null $obj) {
-            $type = (new TypeInt())->from($obj);
-
-            return $type;
+            return (new TypeInt())->from($obj);
         };
     }
 
     public static function asIntString()
     {
         return function (Type|null $obj) {
-            $type = (new TypeStringInt())->from($obj);
-
-            return $type;
+            return (new TypeStringInt())->from($obj);
         };
     }
 
     public static function asNumber()
     {
         return function (Type|null $obj) {
-            $type = (new TypeNumber())->from($obj);
-
-            return $type;
+            return (new TypeNumber())->from($obj);
         };
     }
 
     public static function asString()
     {
         return function (Type|null $obj) {
-            $type = (new TypeString())->from($obj);
-
-            return $type;
+            return (new TypeString())->from($obj);
         };
     }
 }

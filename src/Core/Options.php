@@ -8,22 +8,13 @@ final class Options
 {
     private bool $stopOnFailure = true;
 
-    private bool $stopOnSuccess = false;
-
-    private $errormessage = null;
-
-    private ?string $errormessageDefault = null;
+    private $errormessage;
 
     private bool $once = false;
 
     private $if;
 
     private ?bool $appendAfterCurrent = null;
-
-    /**
-     * @var bool Optimization
-     */
-    private bool $withContext = true;
 
     private array $args = [];
 
@@ -46,8 +37,7 @@ final class Options
         if (!($options instanceof Options)) {
             $options = new Options();
         }
-        $options->setArgs($args);
-        $options->errormessageDefault = $errormessage; // TODO: not implemented
+        $options->setArgs($args); // TODO: not implemented
 
         return $options;
     }
@@ -64,8 +54,6 @@ final class Options
      */
     public function ignoreContext()
     {
-        $this->withContext = false;
-
         return $this;
     }
 
@@ -96,8 +84,6 @@ final class Options
     // TODO
     public function stopOnSuccess()
     {
-        $this->stopOnSuccess = true;
-
         return $this;
     }
 
@@ -124,8 +110,7 @@ final class Options
      */
     public function setArgs($args)
     {
-        $args = array_filter($args, fn ($arg): bool => !($arg instanceof Options));
-        $this->args = $args;
+        $this->args = array_filter($args, fn ($arg): bool => !($arg instanceof Options));
 
         return $this;
     }

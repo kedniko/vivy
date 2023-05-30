@@ -298,8 +298,7 @@ final class TypeProxy extends Type
         $parts = explode('.', $propertyName);
         $propertyName = array_shift($parts);
         $path = implode('.', $parts);
-        $arr = Arr::set($this->type->state->{$propertyName}, $path, $value);
-        $this->type->state->{$propertyName} = $arr;
+        $this->type->state->{$propertyName} = Arr::set($this->type->state->{$propertyName}, $path, $value);
 
         // $this->type->state->{$propertyName} = $value;
         // Arr::set($this->field->state, $propertyName, $value);

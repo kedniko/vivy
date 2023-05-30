@@ -5,10 +5,10 @@ namespace Kedniko\Vivy\Core;
 final class Node
 {
     /** @var Node|null */
-    public $next = null;
+    public $next;
 
     /** @var Node|null */
-    public $prev = null;
+    public $prev;
 
     public function __construct(public $data)
     {

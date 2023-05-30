@@ -182,8 +182,7 @@ class TypeNumber extends TypeScalar
 
         $transformer = Transformers::numberToString($errormessage);
         $this->addTransformer($transformer);
-        $type = (new TypeString())->from($this);
 
-        return $type;
+        return (new TypeString())->from($this);
     }
 }

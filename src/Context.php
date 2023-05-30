@@ -47,7 +47,7 @@ class Context
 
     public $extra;
 
-    public function __construct(Context $cloneFrom = null, Context $fatherContext = null, array $childrenContext = [])
+    public function __construct(Context $cloneFrom = null, Context $fatherContext = null)
     {
         if ($cloneFrom) {
             $this->value = $cloneFrom->value;

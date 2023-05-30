@@ -103,7 +103,7 @@ final class TypeArray extends TypeCompound
                 throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value, JSON_THROW_ON_ERROR), 1);
             }
 
-            $contextProxy = new ContextProxy($c);
+            new ContextProxy($c);
 
             $arrayContext = new ArrayContext();
             $arrayContextProxy = new ContextProxy($arrayContext);

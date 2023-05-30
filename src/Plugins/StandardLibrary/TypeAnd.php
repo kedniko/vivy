@@ -61,8 +61,7 @@ final class TypeAnd extends Type
                     if ($isNot) {
                         return false;
                     }
-                    $newValue = $validated->value();
-                    $c->value = $newValue;
+                    $c->value = $validated->value();
                     $c->errors = [];
                     break;
                 }

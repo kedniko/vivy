@@ -32,16 +32,16 @@ class Type
     use TraitUserDefinedCallBasic;
 
     /** @var State */
-    public $state = null;
+    public $state;
 
     /** @var Context */
-    protected $context = null;
+    protected $context;
 
     /** @var Validated */
-    protected $validated = null;
+    protected $validated;
 
     /** @var TypeProxy */
-    protected $typeProxy = null;
+    protected $typeProxy;
 
     /** @var bool */
     protected $skipOtherMiddlewares = false;
@@ -49,7 +49,7 @@ class Type
     /** @var bool */
     protected $skipOtherRules = false;
 
-    protected $value = null;
+    protected $value;
 
     protected $errors = [];
 
@@ -62,7 +62,7 @@ class Type
     /**
      * @var TypeProxy
      */
-    protected $fieldProxy = null;
+    protected $fieldProxy;
 
     public $_extra;
 
@@ -343,9 +343,7 @@ class Type
         if ($stopOnFailure !== null) {
             $transformer->setStopOnFailure($stopOnFailure);
         }
-        if ($args !== null) {
-            $transformer->setArgs($args);
-        }
+        $transformer->setArgs($args);
 
         if ($errormessage) {
             $transformer->setErrorMessage($errormessage);
@@ -736,8 +734,7 @@ class Type
 
                 if ($validated_or_bool instanceof Validated) {
                     if ($this instanceof TypeOr) {
-                        $childrenAreValid = ! ($this->state->_extra['or_errors'] ?? []);
-                        $isvalid = $childrenAreValid;
+                        $isvalid = ! ($this->state->_extra['or_errors'] ?? []);
                     } else {
                         $isvalid = $validated_or_bool->isValid();
                     }
@@ -803,9 +800,7 @@ class Type
             }
         }
 
-        $isvalid = ! $errors;
-
-        return $isvalid;
+        return ! $errors;
     }
 
     private function getArrayContext($index, $failsCount)

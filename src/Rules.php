@@ -108,7 +108,7 @@ final class Rules
         $options = null;
         $args = [];
 
-        foreach (array_slice(func_get_args(), 1) as $index => $arg) {
+        foreach (array_slice(func_get_args(), 1) as $arg) {
             if ($arg instanceof Options) {
                 $options = $arg;
             } else {
@@ -272,9 +272,8 @@ final class Rules
         $ruleFn = function (Context $c) use ($trim) {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
-            $isTypeIntString = self::isTypeIntString($trim, $value);
 
-            return $isTypeIntString;
+            return self::isTypeIntString($trim, $value);
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -397,9 +396,8 @@ final class Rules
         $ruleFn = function (Context $c) use ($strictFloat, $trim) {
             $strictFloat = Helpers::valueOrFunction($strictFloat, $c);
             $trim = Helpers::valueOrFunction($trim, $c);
-            $isTypeFloatString = self::isTypeFloatString($trim, $strictFloat, $c->value);
 
-            return $isTypeFloatString;
+            return self::isTypeFloatString($trim, $strictFloat, $c->value);
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -417,9 +415,7 @@ final class Rules
             $value = trim($value);
         }
 
-        $isTypeIntString = preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, strval($value), $matches) === 1;
-
-        return $isTypeIntString;
+        return preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, strval($value), $matches) === 1;
     }
 
     private static function isTypeFloatString($trim, $strictFloat, $value)

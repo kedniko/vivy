@@ -8,8 +8,6 @@ final class State
 
     private string|\Kedniko\Vivy\Core\Undefined $name;
 
-    private $types;
-
 
     private bool|Undefined $required;
 
@@ -20,13 +18,10 @@ final class State
     private bool|Undefined $notNull;
 
     /** @var Rule */
-    private $requiredRule = null;
+    private $requiredRule;
 
     /** @var Rule */
     private $emptyStringRule;
-
-    /** @var Rule */
-    private $notEmptyStringRule;
 
     /** @var Rule */
     private $notNullRule;
@@ -173,9 +168,7 @@ final class State
 
     public function issetRequired()
     {
-        $isset = !$this->isUndefined($this->required);
-
-        return $isset;
+        return !$this->isUndefined($this->required);
     }
 
     /**
@@ -221,8 +214,6 @@ final class State
 
     public function setNotEmptyStringRule($rule)
     {
-        $this->notEmptyStringRule = $rule;
-
         return $this;
     }
 

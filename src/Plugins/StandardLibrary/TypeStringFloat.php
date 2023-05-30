@@ -24,8 +24,6 @@ final class TypeStringFloat extends TypeStringNumber
         $transformer = Transformers::stringToInt($errormessage);
         $this->addTransformer($transformer, $options);
 
-        $type = (new TypeInt())->from($this);
-
-        return $type;
+        return (new TypeInt())->from($this);
     }
 }

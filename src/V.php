@@ -26,19 +26,12 @@ final class V
     /**
      * @var callable
      */
-    public static $failHandler = null;
-
-    private const BOOTSTRAPPED = false;
+    public static $failHandler;
 
     /**
      * @var array
      */
     public static $registeredMiddlewares = [];
-
-    private static array $registered = [];
-
-    /** @var Type */
-    private const CURRENT_TYPE = null;
 
     /**
      * Private constructor
@@ -195,14 +188,6 @@ final class V
         }
     }
 
-    private static function registerClass($class): void
-    {
-        self::register($class);
-        self::$registered = [
-            'email' => [Builtin::class, 'email'],
-        ];
-    }
-
     /**
      * @param  Middleware|Middleware[]  $middlewares
      */
@@ -255,9 +240,7 @@ final class V
 
     public static function setFailHandler(string $id, callable $handler): void
     {
-        if (is_callable($handler)) {
-            self::$failHandler[$id] = $handler;
-        }
+        self::$failHandler[$id] = $handler;
     }
 
     public static function issetVar(&$variable, $varname, $errormessage = null): \Kedniko\Vivy\Core\Validated
@@ -335,42 +318,6 @@ final class V
         return $bool === true ? true : $defaultValue;
     }
 
-    // /**
-    //  * @param string $methodName
-    //  * @param mixed ...$args — [optional]
-    //  */
-    // public static function call($methodName, $args = null)
-    // {
-    //     $args = func_get_args();
-
-    //     // remove methodName
-    //     array_shift($args);
-
-    //     return self::handleUserDefinedCall($methodName, $args);
-    // }
-
-    private static function addRule(Rule $rule, Options $options): \Kedniko\Vivy\Types\Type
-    {
-        if ($options->getStopOnFailure() !== null && !is_bool($options->getStopOnFailure())) {
-            throw new \InvalidArgumentException('$stopOnFailure must be of type bool|null in rule "' . $rule->getID() . '"', 1);
-        }
-
-        if ($options->getStopOnFailure() !== null) {
-            $rule->setStopOnFailure($options->getStopOnFailure());
-        } else {
-            $rule->setStopOnFailure(true);
-        }
-
-        if ($options->getArgs() !== null) {
-            $rule->setArgs($options->getArgs());
-        }
-
-        $type = new Type();
-        $type->addRule($rule, $options);
-
-        return $type;
-    }
-
     /**
      * Remove this rule after it has been used the first time
      */
@@ -394,9 +341,7 @@ final class V
     {
         $type = new TypeAny();
         $getContextFn = function (Context $c) use ($fieldname) {
-            $fieldContext = $c->fatherContext->getFieldContext($fieldname);
-
-            return $fieldContext;
+            return $c->fatherContext->getFieldContext($fieldname);
         };
         $type->state->requiredIfField = [
             'fieldname' => $fieldname,

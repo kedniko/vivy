@@ -41,7 +41,6 @@ final class Util
                     } catch (\ReflectionException) {
                         return $a->invoke(new $class(), ...$parameters);
                     }
-                    break;
                 }
             }
         } elseif (class_exists($class)) {
@@ -124,7 +123,6 @@ final class Util
             if ($availableForType === V::class) {
                 //
             } else {
-                /** @var Type */
                 $callerObj = new $returntype();
             }
         }
@@ -165,7 +163,6 @@ final class Util
                 throw new \Exception('Unknown middleware type', 1);
             }
 
-            /** @var Type */
             $newField = new $returntype();
             $newField->state = $type->state;
         } elseif ($result instanceof Type) {

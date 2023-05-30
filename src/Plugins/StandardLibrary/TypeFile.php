@@ -54,7 +54,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Estensione non corretta';
 
-        $middleware = new Rule('extension', fn(Context $c): bool => in_array(pathinfo((string) $c->value['tmp_name'], PATHINFO_EXTENSION), (array) $extensions), $errormessage);
+        $middleware = new Rule('extension', fn(Context $c): bool => in_array(pathinfo((string) $c->value['tmp_name'], PATHINFO_EXTENSION), $extensions), $errormessage);
 
         $this->addRule($middleware, $options);
 

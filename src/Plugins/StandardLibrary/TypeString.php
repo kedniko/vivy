@@ -162,9 +162,7 @@ class TypeString extends TypeScalar
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('boolString.type');
         $this->addRule(Rules::boolString($errormessage), $options);
 
-        $type = (new TypeStringBool())->from($this);
-
-        return $type;
+        return (new TypeStringBool())->from($this);
     }
 
     // Rules

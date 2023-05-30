@@ -58,7 +58,6 @@ final class TypeGroup extends TypeCompound
 
             $typeFields->rewind();
             while ($typeFields->hasNext() && $continueLoopFields) {
-                /** @var Type */
                 $type = $typeFields->getNext();
                 $fieldname = $type->getName();
 
@@ -135,9 +134,7 @@ final class TypeGroup extends TypeCompound
             }
             $typeFields->rewind();
 
-            $validated = new Validated($c->value, $c->errors);
-
-            return $validated;
+            return new Validated($c->value, $c->errors);
         };
 
         if ($errormessage === null) {
@@ -181,9 +178,7 @@ final class TypeGroup extends TypeCompound
 
     private function buildFieldFromArray(array $setup)
     {
-        $type = V::group($setup);
-
-        return $type;
+        return V::group($setup);
     }
 
     private function getFieldsFromAssociativeArraySetup($setupArray): \Kedniko\Vivy\Core\LinkedList
@@ -257,9 +252,7 @@ final class TypeGroup extends TypeCompound
 
     private function getNewUnkownEmptyField(): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
-        $type = new TypeAny();
-
-        return $type;
+        return new TypeAny();
     }
 
     // public function addField($name, BasicField $type, Options $options = null)

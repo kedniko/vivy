@@ -43,10 +43,6 @@ final class TypeOr extends Type
         return $this;
     }
 
-    public function canBeNull(): void
-    {
-    }
-
     /**
      * @param  Type[]  $types
      * @param  bool  $isNot - true = all rule false. false = any rule true
@@ -77,8 +73,7 @@ final class TypeOr extends Type
                     if ($isNot) {
                         return false;
                     }
-                    $newValue = $validated->value();
-                    $c->value = $newValue;
+                    $c->value = $validated->value();
                     $c->errors = [];
                     $isValid = true;
                     break;

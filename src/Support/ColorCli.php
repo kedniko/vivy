@@ -24,9 +24,6 @@ final class ColorCli
 
     public static function color($value, $colorText = self::C_DEFAULT, $colorBack = self::C_DEFAULT)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            return $value;
-        }
         $color = self::getColorString($colorText, $colorBack);
 
         return "{$color}{$value}\033[0m";

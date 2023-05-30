@@ -67,7 +67,7 @@ final class Str
             if ($ignoreCase) {
                 $needle = mb_strtolower($needle);
             }
-            if ((string) $needle === '') {
+            if ($needle === '') {
                 continue;
             }
             if (!str_ends_with($haystack, $needle)) {

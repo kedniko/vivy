@@ -9,8 +9,6 @@ final class Validated
 {
     public $chain;
 
-    private const OR_FAIL = false;
-
     /**
      * @param  array  $errors
      */
