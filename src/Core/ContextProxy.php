@@ -9,7 +9,7 @@ final class ContextProxy extends Context
     public $field;
 
     /**
-     * @param Context $context
+     * @param  Context  $context
      */
     public function __construct(private $context)
     {

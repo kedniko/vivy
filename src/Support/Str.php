@@ -22,9 +22,10 @@ final class Str
             if ($needle === '') {
                 continue;
             }
-            if (!strpos($haystack, $needle)) {
+            if (! strpos($haystack, $needle)) {
                 continue;
             }
+
             return true;
         }
 
@@ -43,9 +44,10 @@ final class Str
             if ($needle === '') {
                 continue;
             }
-            if (!str_starts_with($haystack, $needle)) {
+            if (! str_starts_with($haystack, $needle)) {
                 continue;
             }
+
             return true;
         }
 
@@ -70,9 +72,10 @@ final class Str
             if ($needle === '') {
                 continue;
             }
-            if (!str_ends_with($haystack, $needle)) {
+            if (! str_ends_with($haystack, $needle)) {
                 continue;
             }
+
             return true;
         }
 

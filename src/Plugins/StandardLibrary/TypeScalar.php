@@ -47,6 +47,7 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
             if (! is_string($c->value)) {
                 return false;
             }
+
             return preg_match($regex, $c->value, $matches) === 1;
         }, $errormessage);
 
@@ -66,6 +67,7 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
             if (! is_string($c->value)) {
                 return false;
             }
+
             return preg_match($regex, $c->value, $matches) !== 1;
         }, $errormessage);
 

@@ -26,7 +26,7 @@ final class TypeBool extends TypeScalar
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('bool.isTrue');
-        $rule = new Rule('bool-is-true', fn(Context $c): bool => $c->value === true, $errormessage);
+        $rule = new Rule('bool-is-true', fn (Context $c): bool => $c->value === true, $errormessage);
 
         $this->addRule($rule, $options);
 
@@ -37,7 +37,7 @@ final class TypeBool extends TypeScalar
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('bool.isFalse');
-        $rule = new Rule('bool-is-false', fn(Context $c): bool => $c->value === false, $errormessage);
+        $rule = new Rule('bool-is-false', fn (Context $c): bool => $c->value === false, $errormessage);
 
         $this->addRule($rule, $options);
 
@@ -46,10 +46,10 @@ final class TypeBool extends TypeScalar
 
     // Rules
 
-    private static function ruleBooeanIs($bool, $errormessage = null): \Kedniko\Vivy\Core\Rule
+    private static function ruleBooeanIs($bool, $errormessage = null): Rule
     {
         $ruleID = 'boolIs';
-        $ruleFn = fn(Context $c): bool => $c->value === $bool;
+        $ruleFn = fn (Context $c): bool => $c->value === $bool;
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage("default.{$ruleID}");
 

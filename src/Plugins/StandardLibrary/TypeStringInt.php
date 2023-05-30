@@ -18,7 +18,7 @@ final class TypeStringInt extends TypeStringNumber
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.min');
-        $this->addRule(V::rule('min', fn(Context $c): bool => (int) $c->value >= $min, $errormessage), $options);
+        $this->addRule(V::rule('min', fn (Context $c): bool => (int) $c->value >= $min, $errormessage), $options);
 
         return $this;
     }
@@ -27,7 +27,7 @@ final class TypeStringInt extends TypeStringNumber
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.max');
-        $this->addRule(V::rule('max', fn(Context $c): bool => (int) $c->value <= $max, $errormessage), $options);
+        $this->addRule(V::rule('max', fn (Context $c): bool => (int) $c->value <= $max, $errormessage), $options);
 
         return $this;
     }

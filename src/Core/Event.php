@@ -8,16 +8,16 @@ final class Event
 
     public static function listen($name, $callable): void
     {
-        static::$eventListeners[$name][] = $callable;
+        self::$eventListeners[$name][] = $callable;
     }
 
     public static function dispatch($name, $payload = []): void
     {
-        if (! isset(static::$eventListeners[$name])) {
+        if (! isset(self::$eventListeners[$name])) {
             return;
         }
 
-        $callbacks = static::$eventListeners[$name];
+        $callbacks = self::$eventListeners[$name];
         foreach ($callbacks as $cb) {
             $cb($payload);
         }

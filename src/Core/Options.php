@@ -34,7 +34,7 @@ final class Options
 
     public static function build(Options $options = null, array $args = [], string $errormessage = null)
     {
-        if (!($options instanceof Options)) {
+        if (! ($options instanceof Options)) {
             $options = new Options();
         }
         $options->setArgs($args); // TODO: not implemented
@@ -110,7 +110,7 @@ final class Options
      */
     public function setArgs($args)
     {
-        $this->args = array_filter($args, fn ($arg): bool => !($arg instanceof Options));
+        $this->args = array_filter($args, fn ($arg): bool => ! ($arg instanceof Options));
 
         return $this;
     }
@@ -163,7 +163,7 @@ final class Options
 
     public function hasIf()
     {
-        return !($this->if instanceof Undefined);
+        return ! ($this->if instanceof Undefined);
     }
 
     /**

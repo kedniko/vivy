@@ -17,7 +17,7 @@ final class Arr
     /**
      * Determine if the given key exists in the provided array.
      */
-    public static function exists(\ArrayAccess|array $array, string|int $key): bool
+    public static function exists(ArrayAccess|array $array, string|int $key): bool
     {
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
@@ -33,7 +33,7 @@ final class Arr
     /**
      * Check if an item or items exist in an array using "dot" notation.
      */
-    public static function has(\ArrayAccess|array $array, string|array $keys): bool
+    public static function has(ArrayAccess|array $array, string|array $keys): bool
     {
         $keys = (array) $keys;
         if (! $array) {
@@ -46,12 +46,12 @@ final class Arr
         foreach ($keys as $key) {
             $subKeyArray = $array;
 
-            if (static::exists($array, $key)) {
+            if (self::exists($array, $key)) {
                 continue;
             }
 
             foreach (explode('.', (string) $key) as $segment) {
-                if (static::accessible($subKeyArray) && static::exists($subKeyArray, $segment)) {
+                if (self::accessible($subKeyArray) && self::exists($subKeyArray, $segment)) {
                     $subKeyArray = $subKeyArray[$segment];
                 } else {
                     return false;
@@ -67,13 +67,13 @@ final class Arr
      *
      * @return mixed
      */
-    public static function get(\ArrayAccess|array $array, string|int|null $key, mixed $default = null)
+    public static function get(ArrayAccess|array $array, string|int|null $key, mixed $default = null)
     {
         if (is_null($key)) {
             return $array;
         }
 
-        if (static::exists($array, $key)) {
+        if (self::exists($array, $key)) {
             return $array[$key];
         }
 
@@ -82,7 +82,7 @@ final class Arr
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (static::accessible($array) && static::exists($array, $segment)) {
+            if (self::accessible($array) && self::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
                 return $default;
@@ -98,8 +98,6 @@ final class Arr
      * If no key is given to the method, the entire array will be replaced.
      *
      * @param  array  $array
-     * @param  string|int|null  $key
-     * @param  mixed  $value
      * @return array
      */
     public static function set($array, string|int|null $key, mixed $value)

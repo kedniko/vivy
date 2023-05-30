@@ -12,7 +12,6 @@ use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Plugins\Builtin;
 use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
 use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Types\Type;
@@ -58,7 +57,7 @@ final class V
     // 	return self::$currentType;
     // }
 
-    public static function rule($ruleID, callable $ruleFn, $errormessage = null): \Kedniko\Vivy\Core\Rule
+    public static function rule($ruleID, callable $ruleFn, $errormessage = null): Rule
     {
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -66,21 +65,21 @@ final class V
     /**
      * @param  callable  $transformerFn `fn(Context){...}`
      */
-    public static function transformer(mixed $transformerID, callable $transformerFn, Options $options = null): \Kedniko\Vivy\Transformer
+    public static function transformer(mixed $transformerID, callable $transformerFn, Options $options = null): Transformer
     {
         $options = Options::build($options, func_get_args());
 
         return new Transformer($transformerID, $transformerFn, $options->getErrorMessage());
     }
 
-    public static function callback($id, callable $callbackFn, Options $options = null): \Kedniko\Vivy\Callback
+    public static function callback($id, callable $callbackFn, Options $options = null): Callback
     {
         $options = Options::build($options, func_get_args());
 
         return new Callback($id, $callbackFn, $options->getErrorMessage());
     }
 
-    public static function args(array $args = []): \Kedniko\Vivy\Core\Args
+    public static function args(array $args = []): Args
     {
         return new Args($args);
     }
@@ -130,14 +129,13 @@ final class V
         self::registerOne($methodName, $function_or_class, $availableForTypes, $returnType);
     }
 
-
     private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null): void
     {
         if ($middleware instanceof Middleware) {
-            $function_or_class = fn(): \Kedniko\Vivy\Core\Middleware => $middleware;
+            $function_or_class = fn (): \Kedniko\Vivy\Core\Middleware => $middleware;
         } elseif (is_bool($middleware)) {
             $bool = $middleware;
-            $function_or_class = fn(): \Kedniko\Vivy\Core\Rule => self::rule('::', fn(): bool => $bool);
+            $function_or_class = fn (): \Kedniko\Vivy\Core\Rule => self::rule('::', fn (): bool => $bool);
         } else {
             $function_or_class = $middleware;
         }
@@ -154,12 +152,12 @@ final class V
         //     throw new \Exception('This is not a midleware', 1);
         // }
 
-        if (!$returnType) {
+        if (! $returnType) {
             $returnType ??= Type::class;
         }
 
         foreach ($availableForTypes as $avForType) {
-            $classMethod = $avForType . '::' . $methodName;
+            $classMethod = $avForType.'::'.$methodName;
             self::$registeredMiddlewares[$classMethod] = [
                 'methodName' => $methodName,
                 'function' => $function_or_class,
@@ -191,20 +189,20 @@ final class V
     /**
      * @param  Middleware|Middleware[]  $middlewares
      */
-    public static function registerMiddleware(\Kedniko\Vivy\Core\Middleware|array $middlewares, $overwriteExisting = false)
+    public static function registerMiddleware(Middleware|array $middlewares, $overwriteExisting = false)
     {
-        if (!is_array($middlewares)) {
+        if (! is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (!$middleware instanceof Middleware) {
+            if (! $middleware instanceof Middleware) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
+            if (! $overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
             self::$registeredMiddlewares[$id] = $middleware;
@@ -243,9 +241,9 @@ final class V
         self::$failHandler[$id] = $handler;
     }
 
-    public static function issetVar(&$variable, $varname, $errormessage = null): \Kedniko\Vivy\Core\Validated
+    public static function issetVar(&$variable, $varname, $errormessage = null): Validated
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
@@ -266,16 +264,16 @@ final class V
      * @param  mixed  $path dot.separated.path
      * @param  null  $errormessage
      */
-    public static function issetVarPath($array, mixed $path, $errormessage = null): \Kedniko\Vivy\Core\Validated
+    public static function issetVarPath($array, mixed $path, $errormessage = null): Validated
     {
-        if (!Arr::get($array, $path)) {
+        if (! Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -302,9 +300,9 @@ final class V
      * @param  string  $name
      * @param  null  $errormessage
      */
-    public static function assertTrue($bool, $name, $errormessage = null): \Kedniko\Vivy\Core\Validated
+    public static function assertTrue($bool, $name, $errormessage = null): Validated
     {
-        if (!$bool) {
+        if (! $bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);
@@ -321,7 +319,7 @@ final class V
     /**
      * Remove this rule after it has been used the first time
      */
-    public static function optional(): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
+    public static function optional(): TypeAny
     {
         $type = new TypeAny();
         $type->state->requiredIf = false;
@@ -329,7 +327,7 @@ final class V
         return $type;
     }
 
-    public static function requiredIf($value): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
+    public static function requiredIf($value): TypeAny
     {
         $type = new TypeAny();
         $type->state->requiredIf = $value;
@@ -337,10 +335,10 @@ final class V
         return $type;
     }
 
-    public static function requiredIfField(string $fieldname, $value): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
+    public static function requiredIfField(string $fieldname, $value): TypeAny
     {
         $type = new TypeAny();
-        $getContextFn = fn(Context $c) => $c->fatherContext->getFieldContext($fieldname);
+        $getContextFn = fn (Context $c) => $c->fatherContext->getFieldContext($fieldname);
         $type->state->requiredIfField = [
             'fieldname' => $fieldname,
             'value' => $value,

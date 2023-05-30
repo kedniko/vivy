@@ -144,7 +144,7 @@ class Type
     /**
      * @param  Rule|Transformer|callable  $middleware
      */
-    private function addMiddleware($middleware, ?\Kedniko\Vivy\Core\Options $options = null): void
+    private function addMiddleware($middleware, ?Options $options = null): void
     {
         $_this = $this->get_this();
 
@@ -163,7 +163,7 @@ class Type
         return $this instanceof TypeProxy ? $this->field : $this;
     }
 
-    protected function prependMiddleware(\Kedniko\Vivy\Core\Rule|\Kedniko\Vivy\Transformer|callable $middleware)
+    protected function prependMiddleware(Rule|Transformer|callable $middleware)
     {
         $_this = $this->get_this();
 
@@ -184,7 +184,7 @@ class Type
         if ($hardRemove) {
             /** @var LinkedList $linkedlist */
             $linkedlist = $type->state->getMiddlewares();
-            $linkedlist->remove(fn(Middleware $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
+            $linkedlist->remove(fn (Middleware $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
         }
 
         /** @var Type $type */
@@ -242,7 +242,6 @@ class Type
     // }
 
     /**
-     * @param  mixed  $ruleID
      * @param  bool  $hardRemove
      * HARD REMOVE: Remove from list and cache
      * SOFT REMOVE: remove only from cache (better performance)
@@ -555,13 +554,14 @@ class Type
 
     public function getStopOnFailure()
     {
-        if (!$this->state->hasStopOnFailure()) {
+        if (! $this->state->hasStopOnFailure()) {
             return false;
         }
+
         return $this->state->getStopOnFailure() === true;
     }
 
-    private function setName(string|\Kedniko\Vivy\Core\Undefined $name): void
+    private function setName(string|Undefined $name): void
     {
         $this->state->setName($name);
     }
@@ -580,7 +580,7 @@ class Type
     \$$$  / $$  __$$ |$$ |$$ |$$ |  $$ |$$  __$$ | $$ |$$\ $$ |$$ |  $$ |$$ |  $$ |
     \$  /  \$$$$$$$ |$$ |$$ |\$$$$$$$ |\$$$$$$$ | \$$$$  |$$ |\$$$$$$  |$$ |  $$ |
     \_/    \_______|\__|\__| \_______| \_______|  \____/ \__| \______/ \__|  \__|
-    */
+     */
     /**
      * @return Validated
      */
@@ -887,10 +887,10 @@ class Type
                 $fnAll($this->context);
             }
         }
-        if (!isset($fns['rules'])) {
+        if (! isset($fns['rules'])) {
             return;
         }
-        if (!($fnsRules = $fns['rules'])) {
+        if (! ($fnsRules = $fns['rules'])) {
             return;
         }
         foreach ($fnsRules as $ruleKey => $fnRuleArray) {
@@ -928,7 +928,7 @@ class Type
     }
 
     /**
-     * @param mixed $value Overrides the old one if exists
+     * @param  mixed  $value Overrides the old one if exists
      * @return array
      */
     public function errors(mixed $value = null)
@@ -1027,7 +1027,7 @@ class Type
      */
     public function setValue($callback_or_value)
     {
-        $callback = is_callable($callback_or_value) ? $callback_or_value : fn() => $callback_or_value;
+        $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
         $transformer = new Transformer(Rules::ID_SET_VALUE, $callback);
         $type = (new \Kedniko\Vivy\Types\Type())->from($this);
         $type->addTransformer($transformer);

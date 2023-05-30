@@ -8,12 +8,9 @@ final class State
 
     private string|\Kedniko\Vivy\Core\Undefined $name;
 
-
     private bool|Undefined $required;
 
-
     private bool|Undefined $notEmptyString;
-
 
     private bool|Undefined $notNull;
 
@@ -94,7 +91,7 @@ final class State
 
     public function hasData()
     {
-        return !$this->isUndefined($this->data);
+        return ! $this->isUndefined($this->data);
     }
 
     /**
@@ -119,21 +116,22 @@ final class State
 
     public function canBeEmptyString(): bool
     {
-        if (!$this->hasNotEmptyString()) {
+        if (! $this->hasNotEmptyString()) {
             return false;
         }
+
         return $this->notEmptyString === false;
     }
 
     public function hasNotEmptyString()
     {
-        return !$this->isUndefined($this->notEmptyString);
+        return ! $this->isUndefined($this->notEmptyString);
     }
 
     /**
      * Get the value of notEmptyString
      */
-    public function getNotEmptyString(): bool|\Kedniko\Vivy\Core\Undefined
+    public function getNotEmptyString(): bool|Undefined
     {
         return $this->notEmptyString;
     }
@@ -143,7 +141,7 @@ final class State
      *
      * @return  self
      */
-    public function setNotEmptyString(bool|\Kedniko\Vivy\Core\Undefined $notEmptyString, $rule = null)
+    public function setNotEmptyString(bool|Undefined $notEmptyString, $rule = null)
     {
         $this->notEmptyString = $notEmptyString;
         if ($rule instanceof Rule) {
@@ -161,21 +159,21 @@ final class State
     /**
      * Get the value of required
      */
-    public function getRequired(): bool|\Kedniko\Vivy\Core\Undefined
+    public function getRequired(): bool|Undefined
     {
         return $this->required;
     }
 
     public function issetRequired()
     {
-        return !$this->isUndefined($this->required);
+        return ! $this->isUndefined($this->required);
     }
 
     /**
      * @param  bool  $required
      * @param  Rule  $rule
      */
-    public function setRequired(bool|\Kedniko\Vivy\Core\Undefined $required, $rule = null)
+    public function setRequired(bool|Undefined $required, $rule = null)
     {
         $this->required = $required;
         if ($rule instanceof Rule) {
@@ -233,21 +231,22 @@ final class State
 
     public function canBeNull(): bool
     {
-        if (!$this->hasNotNull()) {
+        if (! $this->hasNotNull()) {
             return false;
         }
+
         return $this->notNull === false;
     }
 
     public function hasNotNull()
     {
-        return !$this->isUndefined($this->notNull);
+        return ! $this->isUndefined($this->notNull);
     }
 
     /**
      * Get the value of notNull
      */
-    public function getNotNull(): bool|\Kedniko\Vivy\Core\Undefined
+    public function getNotNull(): bool|Undefined
     {
         return $this->notNull;
     }
@@ -257,7 +256,7 @@ final class State
      *
      * @return  self
      */
-    public function setNotNull(bool|\Kedniko\Vivy\Core\Undefined $notNull)
+    public function setNotNull(bool|Undefined $notNull)
     {
         $this->notNull = $notNull;
 
@@ -277,7 +276,7 @@ final class State
 
     public function hasMiddlewares()
     {
-        return !$this->middlewares->isEmpty();
+        return ! $this->middlewares->isEmpty();
     }
 
     /**
@@ -312,7 +311,7 @@ final class State
      */
     public function addMiddlewareId($middlewaresid)
     {
-        if (!isset($this->middlewaresid[$middlewaresid])) {
+        if (! isset($this->middlewaresid[$middlewaresid])) {
             $this->middlewaresid[$middlewaresid] = 0;
         }
         $this->middlewaresid[$middlewaresid]++;
@@ -329,7 +328,7 @@ final class State
 
     public function hasValueIfOptionalNotExists()
     {
-        return !$this->isUndefined($this->valueIfOptionalNotExists);
+        return ! $this->isUndefined($this->valueIfOptionalNotExists);
     }
 
     /**
@@ -355,7 +354,7 @@ final class State
 
     public function hasName()
     {
-        return !$this->isUndefined($this->name);
+        return ! $this->isUndefined($this->name);
     }
 
     /**
@@ -371,7 +370,7 @@ final class State
      *
      * @return  self
      */
-    public function setName(string|\Kedniko\Vivy\Core\Undefined $name)
+    public function setName(string|Undefined $name)
     {
         $this->name = $name;
 
@@ -380,7 +379,7 @@ final class State
 
     public function hasStopOnFailure()
     {
-        return !$this->isUndefined($this->stopOnFailure);
+        return ! $this->isUndefined($this->stopOnFailure);
     }
 
     /**
@@ -445,7 +444,7 @@ final class State
 
     public function hasErrorMessageAny()
     {
-        return !$this->isUndefined($this->errorMessageAny);
+        return ! $this->isUndefined($this->errorMessageAny);
     }
 
     /**
@@ -528,7 +527,7 @@ final class State
 
     public function hasErrorMessageEmpty()
     {
-        return !$this->isUndefined($this->errorMessageEmpty);
+        return ! $this->isUndefined($this->errorMessageEmpty);
     }
 
     /**
@@ -573,7 +572,7 @@ final class State
 
     public function hasDefaultValuesAny()
     {
-        return !$this->isUndefined($this->defaultValuesAny);
+        return ! $this->isUndefined($this->defaultValuesAny);
     }
 
     /**

@@ -14,6 +14,7 @@ final class TypeInt extends TypeNumber
      * @var string
      */
     private const TRANSFORMER_ID = 'intToBool';
+
     public function toBool($strict = true, $errormessage = null)
     {
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage('intToBool');
@@ -36,6 +37,7 @@ final class TypeInt extends TypeNumber
             if ($strict) {
                 return $value === 1;
             }
+
             return (bool) $value;
         }, $errormessage);
 

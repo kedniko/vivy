@@ -17,7 +17,6 @@ final class TypeOr extends Type
 {
     /**
      * @param  Type[]  $types
-     * @param Options|null $options
      */
     public function init(array $types, $isNot = false, Options $options = null)
     {
@@ -47,7 +46,7 @@ final class TypeOr extends Type
      * @param  Type[]  $types
      * @param  bool  $isNot - true = all rule false. false = any rule true
      */
-    private function getOrRule(array $types, $isNot, mixed $errormessage = null): \Kedniko\Vivy\Core\Rule
+    private function getOrRule(array $types, $isNot, mixed $errormessage = null): Rule
     {
         $ruleID = Rules::ID_OR;
         $types = new LinkedList($types);
@@ -81,7 +80,7 @@ final class TypeOr extends Type
             }
             $types->rewind();
 
-            if (!$isValid) {
+            if (! $isValid) {
                 $this->state->_extra['or_errors'] = $all_errors;
                 // $c->errors = [1];
                 // $middleware = $this->state->getMiddlewares()->getCurrent();

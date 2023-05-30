@@ -17,7 +17,7 @@ final class GroupContext extends Context
         $this->fieldname = $fieldname ?? Undefined::instance();
     }
 
-    public static function build($fieldname, $fatherContext, $value, Context $cloneFrom = null): \Kedniko\Vivy\Core\GroupContext
+    public static function build($fieldname, $fatherContext, $value, Context $cloneFrom = null): GroupContext
     {
         $gc = new GroupContext($fieldname, $cloneFrom);
         $gc->fatherContext = $fatherContext;

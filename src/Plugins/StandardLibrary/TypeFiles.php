@@ -18,10 +18,12 @@ final class TypeFiles extends TypeCompound
      * @var string
      */
     private const RULE_ID = 'each';
+
     /**
      * @var string[]
      */
     private const UNITS = ['B', 'KB', 'MB', 'GB'];
+
     public function count($count, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
@@ -183,11 +185,11 @@ final class TypeFiles extends TypeCompound
         return $this;
     }
 
-    private function getEachRule(Type $type, bool|callable $stopOnItemFailure, $errormessage): \Kedniko\Vivy\Core\Rule
+    private function getEachRule(Type $type, bool|callable $stopOnItemFailure, $errormessage): Rule
     {
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
-            if (!is_array($c->value)) {
-                throw new \Exception('This is not an array. Got [' . gettype($c->value) . ']: ' . json_encode($c->value, JSON_THROW_ON_ERROR), 1);
+            if (! is_array($c->value)) {
+                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value, JSON_THROW_ON_ERROR), 1);
             }
 
             new ContextProxy($c);

@@ -108,7 +108,7 @@ final class LinkedList
             $node = new Node($node);
         }
 
-        if (!$this->tail instanceof \Kedniko\Vivy\Core\Node) {
+        if (! $this->tail instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -121,7 +121,7 @@ final class LinkedList
 
         $this->tail = $node;
 
-        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
+        if (! $this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->current = $node;
         }
     }
@@ -136,7 +136,7 @@ final class LinkedList
         if (! $node instanceof Node) {
             $node = new Node($node);
         }
-        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
+        if (! $this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -160,7 +160,7 @@ final class LinkedList
 
     public function hasNext(): bool
     {
-        if (!$this->advance) {
+        if (! $this->advance) {
             return $this->current instanceof \Kedniko\Vivy\Core\Node;
         }
 

@@ -11,7 +11,7 @@ final class RuleMessage extends Messages
         $key = 'rules';
         [];
 
-        $messagesLang = isset(static::$messages[$lang][$key]);
+        $messagesLang = isset(self::$messages[$lang][$key]);
 
         // read and cache
         if (! $messagesLang) {
@@ -21,7 +21,7 @@ final class RuleMessage extends Messages
             if (file_exists($filename)) {
                 $messages = require $filename;
             } else {
-                $langFallback = static::$langFallback;
+                $langFallback = self::$langFallback;
                 $filenameFallback = __DIR__."/../lang/{$langFallback}/{$key}.php";
 
                 if (file_exists($filenameFallback)) {
@@ -29,9 +29,9 @@ final class RuleMessage extends Messages
                 }
             }
 
-            static::$messages[$lang][$key] = $messages ?: [];
+            self::$messages[$lang][$key] = $messages ?: [];
         }
 
-        return static::$messages[$lang][$key];
+        return self::$messages[$lang][$key];
     }
 }

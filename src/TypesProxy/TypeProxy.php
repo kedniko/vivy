@@ -15,7 +15,7 @@ use Kedniko\Vivy\Types\Type;
 final class TypeProxy extends Type
 {
     /**
-     * @param Type $type
+     * @param  Type  $type
      */
     public function __construct(public $type)
     {
@@ -138,7 +138,7 @@ final class TypeProxy extends Type
 
     public function getRules(): ?array
     {
-        return array_filter($this->type->state->getMiddlewares()->toArray(), fn($e): bool => $e instanceof Rule);
+        return array_filter($this->type->state->getMiddlewares()->toArray(), fn ($e): bool => $e instanceof Rule);
     }
 
     // public function isDefaultValueEnabled(){
@@ -147,7 +147,7 @@ final class TypeProxy extends Type
     // public function getDefaultValue(){
     // 	return $this->field->state->getDefaultValueIfOptional();
     // }
-    public function getRule(mixed $ruleID): ?\Kedniko\Vivy\Core\Rule
+    public function getRule(mixed $ruleID): ?Rule
     {
         /** @var LinkedList $middlewares */
         $middlewares = $this->type->state->getMiddlewares();
@@ -157,6 +157,7 @@ final class TypeProxy extends Type
             $middleware = $middlewares->getNext();
             if ($middleware instanceof Rule && $middleware->getID() === $ruleID) {
                 $middlewares->rewind();
+
                 return $middleware;
             }
         }
@@ -229,7 +230,7 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_NULL);
 
-        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
@@ -248,7 +249,7 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
 
-        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 

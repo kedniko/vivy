@@ -75,13 +75,13 @@ final class TypeArray extends TypeCompound
     public function toJson(Options $options = null)
     {
         $errormessage = $options->getErrorMessage() ?: 'TRANSFORMER: toJson';
-        $transformer = new Transformer('toJson', fn(Context $c): string => json_encode($c->value, JSON_THROW_ON_ERROR), $errormessage);
+        $transformer = new Transformer('toJson', fn (Context $c): string => json_encode($c->value, JSON_THROW_ON_ERROR), $errormessage);
         $this->addTransformer($transformer, $options);
 
         return $this;
     }
 
-    public function each(\Kedniko\Vivy\Plugins\StandardLibrary\Type|array $type, bool|callable $stopOnItemFailure = false, Options $options = null)
+    public function each(Type|array $type, bool|callable $stopOnItemFailure = false, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
 
@@ -95,7 +95,7 @@ final class TypeArray extends TypeCompound
         return $this;
     }
 
-    private function getEachRule(Type $type, bool|callable $stopOnItemFailure, $errormessage): \Kedniko\Vivy\Core\Rule
+    private function getEachRule(Type $type, bool|callable $stopOnItemFailure, $errormessage): Rule
     {
         $ruleID = Rules::ID_EACH;
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
@@ -151,7 +151,7 @@ final class TypeArray extends TypeCompound
         };
 
         if ($errormessage === null) {
-            $errormessage = fn(Context $c) => $c->errors;
+            $errormessage = fn (Context $c) => $c->errors;
         }
 
         return new Rule($ruleID, $ruleFn, $errormessage);

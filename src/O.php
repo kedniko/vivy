@@ -6,7 +6,7 @@ use Kedniko\Vivy\Core\Options;
 
 final class O
 {
-    public static function options($options = []): \Kedniko\Vivy\Core\Options
+    public static function options($options = []): Options
     {
         if (is_array($options)) {
             $o = new Options();
@@ -59,6 +59,6 @@ final class O
 
     public static function ifArrayIndex($index)
     {
-        return self::options()->ifRule(fn(ArrayContext $ac): bool => $ac->getIndex() === $index);
+        return self::options()->ifRule(fn (ArrayContext $ac): bool => $ac->getIndex() === $index);
     }
 }

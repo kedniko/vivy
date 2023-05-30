@@ -17,14 +17,14 @@ final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {
-        if (!$fn) {
+        if (! $fn) {
             throw new \Exception('Invalid register function', 1);
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
         }
         $result = Helpers::getClassAndMethod($fn);
-        if (!$result) {
+        if (! $result) {
             throw new \Exception('Invalid register function', 1);
         }
         $class = $result[0];
@@ -83,22 +83,22 @@ final class Util
     public static function handleUserDefinedCall($className, $methodName, $callerObj, $parameters)
     {
         $newField = null;
-        $classMethod = $className . '::' . $methodName;
+        $classMethod = $className.'::'.$methodName;
         $registered = V::$registeredMiddlewares;
 
-        if (!array_key_exists($classMethod, $registered)) {
+        if (! array_key_exists($classMethod, $registered)) {
             $classes = self::getParentClasses($className);
             $found = false;
             foreach ($classes as $classnameparent) {
-                $tryClassMethod = $classnameparent . '::' . $methodName;
+                $tryClassMethod = $classnameparent.'::'.$methodName;
                 if (array_key_exists($tryClassMethod, $registered)) {
                     $found = true;
                     $classMethod = $tryClassMethod;
                     break;
                 }
             }
-            if (!$found) {
-                throw new \Exception('Method "' . $classMethod . '" does not exists in ' . self::class, 1);
+            if (! $found) {
+                throw new \Exception('Method "'.$classMethod.'" does not exists in '.self::class, 1);
             }
         }
 
@@ -119,7 +119,7 @@ final class Util
         // $result = call_user_func_array($setup['function'], $parameters);
         $isCallable = is_callable($result);
 
-        if (!$callerObj && !($result instanceof Type)) {
+        if (! $callerObj && ! ($result instanceof Type)) {
             if ($availableForType === V::class) {
                 //
             } else {
@@ -189,7 +189,7 @@ final class Util
 
     public static function clone($var)
     {
-        return is_array($var) ? array_map(fn($var) => self::clone($var), $var) : (is_object($var) ? clone $var : $var);
+        return is_array($var) ? array_map(fn ($var) => self::clone($var), $var) : (is_object($var) ? clone $var : $var);
     }
 
     public static function classImplements(string $classname, string $interface): bool
