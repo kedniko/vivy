@@ -47,8 +47,10 @@ final class Arr
     public static function has($array, $keys): bool
     {
         $keys = (array) $keys;
-
-        if (! $array || $keys === []) {
+        if (! $array) {
+            return false;
+        }
+        if ($keys === []) {
             return false;
         }
 
@@ -153,7 +155,7 @@ final class Arr
     public static function wrap($arr)
     {
         if (! is_array($arr)) {
-            $arr = [$arr];
+            return [$arr];
         }
 
         return $arr;

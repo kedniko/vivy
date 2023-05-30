@@ -116,31 +116,26 @@ final class V
                 self::registerMany($args[0]);
 
                 return;
-            } else {
-                $obj = $args[0];
-                self::registerPlugin($obj);
             }
-        } else {
-            // one setup
-            $availableForTypes = isset($args[0]) ? $args[0] : [];
-            $availableForTypes = Arr::wrap($availableForTypes);
-
-            // V::BASE experiment
-            // foreach ($availableForTypes as $i => $availableForType) {
-            // 	if ($availableForType === V::BASE) {
-            // 		$availableForTypes[] = \Kedniko\Vivy\V::class;
-            // 		$availableForTypes[] = \Kedniko\Vivy\Types\Type::class;
-            // 		unset($availableForTypes[$i]);
-            // 	}
-            // }
-
-            $availableForTypes = array_values(array_unique($availableForTypes));
-
-            $methodName = $args[1];
-            $function_or_class = isset($args[2]) ? $args[2] : null;
-            $returnType = isset($args[3]) ? $args[3] : null;
-            self::registerOne($methodName, $function_or_class, $availableForTypes, $returnType);
+            $obj = $args[0];
+            self::registerPlugin($obj);
         }
+        // one setup
+        $availableForTypes = isset($args[0]) ? $args[0] : [];
+        $availableForTypes = Arr::wrap($availableForTypes);
+        // V::BASE experiment
+        // foreach ($availableForTypes as $i => $availableForType) {
+        // 	if ($availableForType === V::BASE) {
+        // 		$availableForTypes[] = \Kedniko\Vivy\V::class;
+        // 		$availableForTypes[] = \Kedniko\Vivy\Types\Type::class;
+        // 		unset($availableForTypes[$i]);
+        // 	}
+        // }
+        $availableForTypes = array_values(array_unique($availableForTypes));
+        $methodName = $args[1];
+        $function_or_class = isset($args[2]) ? $args[2] : null;
+        $returnType = isset($args[3]) ? $args[3] : null;
+        self::registerOne($methodName, $function_or_class, $availableForTypes, $returnType);
     }
 
 

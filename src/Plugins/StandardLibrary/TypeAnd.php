@@ -61,15 +61,13 @@ final class TypeAnd extends Type
                 if (! $errors) {
                     if ($isNot) {
                         return false;
-                    } else {
-                        $newValue = $validated->value();
-                        $c->value = $newValue;
-                        $c->errors = [];
-                        break;
                     }
-                } else {
-                    $c->value = $clonedValue;
+                    $newValue = $validated->value();
+                    $c->value = $newValue;
+                    $c->errors = [];
+                    break;
                 }
+                $c->value = $clonedValue;
             }
             $types->rewind();
 

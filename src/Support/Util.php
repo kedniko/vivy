@@ -22,33 +22,30 @@ final class Util
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
-        } else {
-            $result = Helpers::getClassAndMethod($fn);
-            if (! $result) {
-                throw new \Exception('Invalid register function', 1);
-            }
+        }
+        $result = Helpers::getClassAndMethod($fn);
+        if (! $result) {
+            throw new \Exception('Invalid register function', 1);
+        }
+        $class = $result[0];
+        $method = $result[1];
+        if (is_string($class) && class_exists($class)) {
+            $class = ltrim($class, '\\');
+            $reflection = new \ReflectionClass($class);
 
-            $class = $result[0];
-            $method = $result[1];
-
-            if (is_string($class) && class_exists($class)) {
-                $class = ltrim($class, '\\');
-                $reflection = new \ReflectionClass($class);
-
-                $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-                foreach ($methods as $a) {
-                    if (ltrim($a->class, '\\') === $class && $a->name === $method) {
-                        try {
-                            return $a->invoke(null);
-                        } catch (\ReflectionException $e) {
-                            return $a->invoke(new $class(), ...$parameters);
-                        }
-                        break;
+            $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+            foreach ($methods as $a) {
+                if (ltrim($a->class, '\\') === $class && $a->name === $method) {
+                    try {
+                        return $a->invoke(null);
+                    } catch (\ReflectionException $e) {
+                        return $a->invoke(new $class(), ...$parameters);
                     }
+                    break;
                 }
-            } elseif (class_exists($class)) {
-                return $class->$method(...$parameters);
             }
+        } elseif (class_exists($class)) {
+            return $class->$method(...$parameters);
         }
     }
 

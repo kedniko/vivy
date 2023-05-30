@@ -567,7 +567,10 @@ class Type
 
     public function getStopOnFailure()
     {
-        return $this->state->hasStopOnFailure() && $this->state->getStopOnFailure() === true;
+        if (!$this->state->hasStopOnFailure()) {
+            return false;
+        }
+        return $this->state->getStopOnFailure() === true;
     }
 
     private function setName($name): void
@@ -901,13 +904,16 @@ class Type
                 $fnAll($this->context);
             }
         }
-
-        if (isset($fns['rules']) && $fnsRules = $fns['rules']) {
-            foreach ($fnsRules as $ruleKey => $fnRuleArray) {
-                if (array_key_exists($ruleKey, $this->context->errors)) {
-                    foreach ($fnRuleArray as $fnRule) {
-                        $fnRule($this->context);
-                    }
+        if (!isset($fns['rules'])) {
+            return;
+        }
+        if (!($fnsRules = $fns['rules'])) {
+            return;
+        }
+        foreach ($fnsRules as $ruleKey => $fnRuleArray) {
+            if (array_key_exists($ruleKey, $this->context->errors)) {
+                foreach ($fnRuleArray as $fnRule) {
+                    $fnRule($this->context);
                 }
             }
         }

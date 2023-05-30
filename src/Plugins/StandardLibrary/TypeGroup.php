@@ -160,12 +160,10 @@ final class TypeGroup extends TypeCompound
         if (isset($this->state->setupFn) && is_callable($this->state->setupFn)) {
             $fn = $this->state->setupFn;
             $arraySetup = $fn($c);
-            $types = $this->getFieldsFromAssociativeArraySetup($arraySetup);
-        } else {
-            $types = $this->state->getFields();
+            return $this->getFieldsFromAssociativeArraySetup($arraySetup);
         }
 
-        return $types;
+        return $this->state->getFields();
     }
 
     private function buildFieldFromString(string $setup)

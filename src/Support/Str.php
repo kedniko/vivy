@@ -20,9 +20,13 @@ final class Str
         }
 
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && strpos($haystack, $needle)) {
-                return true;
+            if ($needle === '') {
+                continue;
             }
+            if (!strpos($haystack, $needle)) {
+                continue;
+            }
+            return true;
         }
 
         return false;
@@ -38,9 +42,13 @@ final class Str
     public static function startsWith($haystack, $needles, $ignoreCase = true): bool
     {
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && substr($haystack, 0, strlen($needle)) === $needle) {
-                return true;
+            if ($needle === '') {
+                continue;
             }
+            if (substr($haystack, 0, strlen($needle)) !== $needle) {
+                continue;
+            }
+            return true;
         }
 
         return false;
@@ -62,11 +70,13 @@ final class Str
             if ($ignoreCase) {
                 $needle = mb_strtolower($needle);
             }
-            if (
-                (string) $needle !== '' && substr($haystack, -strlen($needle)) === $needle
-            ) {
-                return true;
+            if ((string) $needle === '') {
+                continue;
             }
+            if (substr($haystack, -strlen($needle)) !== $needle) {
+                continue;
+            }
+            return true;
         }
 
         return false;

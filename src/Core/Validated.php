@@ -38,11 +38,12 @@ final class Validated
     {
         if ($handler && is_callable($handler)) {
             return $handler($this);
-        } elseif (V::getFailHandler()) {
+        }
+        if (V::getFailHandler()) {
             $handler = V::getFailHandler();
-
             return $handler($this);
-        } else {
+        }
+        else {
             throw new VivyValidationFailedException();
         }
     }

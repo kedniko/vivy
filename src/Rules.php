@@ -182,10 +182,13 @@ final class Rules
         $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
-            if (is_string($value) && $trim) {
-                $value = trim($value);
+            if (!is_string($value)) {
+                return $c->value !== '';
             }
-
+            if (!$trim) {
+                return $c->value !== '';
+            }
+            $value = trim($value);
             return $c->value !== '';
         };
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -199,10 +202,13 @@ final class Rules
         $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
-            if (is_string($value) && $trim) {
-                $value = trim($value);
+            if (!is_string($value)) {
+                return $c->value === '';
             }
-
+            if (!$trim) {
+                return $c->value === '';
+            }
+            $value = trim($value);
             return $c->value === '';
         };
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -300,9 +306,8 @@ final class Rules
             $strict = Helpers::valueOrFunction($strict, $c);
             if ($strict) {
                 return in_array($c->value, [0, 1], true);
-            } else {
-                return is_int($c->value);
             }
+            return is_int($c->value);
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -503,10 +508,12 @@ final class Rules
     {
         $ruleID = self::ID_EMAIL;
         $ruleFn = function (Context $c): bool {
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
                 return false;
             }
-
+            if (! is_string($c->value)) {
+                return false;
+            }
             return preg_match(Constants::REGEX_MAIL, $c->value) === 1;
         };
 
@@ -549,10 +556,12 @@ final class Rules
     {
         $ruleID = self::ID_PHONE;
         $ruleFn = function (Context $c): bool {
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
                 return false;
             }
-
+            if (! is_string($c->value)) {
+                return false;
+            }
             return preg_match(Constants::REGEX_CELLPHONE_WITH_OPTIONAL_PREFIX, $c->value) === 1;
         };
 
@@ -570,7 +579,10 @@ final class Rules
         $ruleID = self::ID_DATE;
         $ruleFn = function (Context $c) use ($format): bool {
             $format = Helpers::valueOrFunction($format, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -763,7 +775,10 @@ final class Rules
         $ruleFn = function (Context $c) use ($endsWith, $ignoreCase): bool {
             $endsWith = Helpers::valueOrFunction($endsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -781,7 +796,10 @@ final class Rules
         $ruleFn = function (Context $c) use ($startsWith, $ignoreCase): bool {
             $startsWith = Helpers::valueOrFunction($startsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -799,7 +817,10 @@ final class Rules
         $ruleFn = function (Context $c) use ($contains, $ignoreCase): bool {
             $contains = Helpers::valueOrFunction($contains, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -816,7 +837,10 @@ final class Rules
         $ruleID = 'minLength';
         $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -833,7 +857,10 @@ final class Rules
         $ruleID = 'maxLength';
         $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 
@@ -850,7 +877,10 @@ final class Rules
         $ruleID = 'length';
         $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
-            if (! $c->value || ! is_string($c->value)) {
+            if (! $c->value) {
+                return false;
+            }
+            if (! is_string($c->value)) {
                 return false;
             }
 

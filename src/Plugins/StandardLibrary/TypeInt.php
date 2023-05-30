@@ -35,9 +35,8 @@ final class TypeInt extends TypeNumber
 
             if ($strict) {
                 return $value === 1;
-            } else {
-                return boolval($value);
             }
+            return boolval($value);
         }, $errormessage);
 
         $type->addTransformer($transformer);

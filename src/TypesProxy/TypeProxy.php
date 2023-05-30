@@ -251,8 +251,10 @@ final class TypeProxy extends Type
         }
 
         $rule = $rule->getCallback();
-
-        if (! $rule || ! is_callable($rule)) {
+        if (! $rule) {
+            return;
+        }
+        if (! is_callable($rule)) {
             return;
         }
 
@@ -268,8 +270,10 @@ final class TypeProxy extends Type
         }
 
         $rule = $rule->getCallback();
-
-        if (! $rule || ! is_callable($rule)) {
+        if (! $rule) {
+            return;
+        }
+        if (! is_callable($rule)) {
             return;
         }
 

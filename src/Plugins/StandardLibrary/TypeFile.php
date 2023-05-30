@@ -249,11 +249,13 @@ final class TypeFile extends TypeCompound
         $diff = $toIndex - $index;
         if ($diff === 0) {
             return $value;
-        } elseif ($diff > 0) {
+        }
+        if ($diff > 0) {
             for ($i = 0; $i < $diff; $i++) {
                 $value /= 1024;
             }
-        } else {
+        }
+        else {
             for ($i = 0; $i < abs($diff); $i++) {
                 $value *= 1024;
             }

@@ -77,13 +77,12 @@ final class TypeOr extends Type
                 } else {
                     if ($isNot) {
                         return false;
-                    } else {
-                        $newValue = $validated->value();
-                        $c->value = $newValue;
-                        $c->errors = [];
-                        $isValid = true;
-                        break;
                     }
+                    $newValue = $validated->value();
+                    $c->value = $newValue;
+                    $c->errors = [];
+                    $isValid = true;
+                    break;
                 }
             }
             $types->rewind();

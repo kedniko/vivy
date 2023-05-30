@@ -200,8 +200,10 @@ final class Helpers
                 $method = $parts[1];
             }
         }
-
-        if ($class === null || $method === null) {
+        if ($class === null) {
+            return false;
+        }
+        if ($method === null) {
             return false;
         }
 

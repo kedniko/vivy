@@ -124,7 +124,10 @@ final class State
 
     public function canBeEmptyString(): bool
     {
-        return $this->hasNotEmptyString() && $this->notEmptyString === false;
+        if (!$this->hasNotEmptyString()) {
+            return false;
+        }
+        return $this->notEmptyString === false;
     }
 
     public function hasNotEmptyString()
@@ -239,7 +242,10 @@ final class State
 
     public function canBeNull(): bool
     {
-        return $this->hasNotNull() && $this->notNull === false;
+        if (!$this->hasNotNull()) {
+            return false;
+        }
+        return $this->notNull === false;
     }
 
     public function hasNotNull()
