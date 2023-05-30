@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "481e2b49011dbbcb572ea0641dbf7371",
+    "content-hash": "d4007f91dc53d2521b6413376237c59d",
     "packages": [
         {
             "name": "brick/math",
@@ -63,16 +63,16 @@
         },
         {
             "name": "kedniko/php-ide-helper",
-            "version": "v0.0.2",
+            "version": "v0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kedniko/php-ide-helper.git",
-                "reference": "87edb310f8c868988e6d64884ddf28d314a117ff"
+                "reference": "f1eab20f52ff85e78dfb3dcdd934d66c1d3cb423"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kedniko/php-ide-helper/zipball/87edb310f8c868988e6d64884ddf28d314a117ff",
-                "reference": "87edb310f8c868988e6d64884ddf28d314a117ff",
+                "url": "https://api.github.com/repos/kedniko/php-ide-helper/zipball/f1eab20f52ff85e78dfb3dcdd934d66c1d3cb423",
+                "reference": "f1eab20f52ff85e78dfb3dcdd934d66c1d3cb423",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kedniko/php-ide-helper/issues",
-                "source": "https://github.com/kedniko/php-ide-helper/tree/v0.0.2"
+                "source": "https://github.com/kedniko/php-ide-helper/tree/v0.0.3"
             },
-            "time": "2023-05-29T23:20:46+00:00"
+            "time": "2023-05-30T01:52:16+00:00"
         },
         {
             "name": "nikic/php-parser",

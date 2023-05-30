@@ -14,16 +14,16 @@
 	"require": {
 		"php": "^8.2.0",
 		"brick/math": "^0.11.0",
-		"kedniko/php-ide-helper": "^0.0.2",
-		"nikic/php-parser": "^4.15"
+		"kedniko/php-ide-helper": "^0.0.3",
+		"nikic/php-parser": "^4.15.5"
 	},
 	"require-dev": {
-		"pestphp/pest": "^2.3",
-		"fakerphp/faker": "^1.21",
-		"laravel/pint": "^1.8",
-		"phpstan/phpstan": "^1.10.13",
-		"rector/rector": "^0.15.24",
-		"symfony/var-dumper": "^6.2.8"
+		"pestphp/pest": "^2.6.1",
+		"fakerphp/faker": "^1.22",
+		"laravel/pint": "^1.10",
+		"phpstan/phpstan": "^1.10.15",
+		"rector/rector": "^0.15.25",
+		"symfony/var-dumper": "^6.2.11"
 	},
 	"config": {
 		"sort-packages": true,
