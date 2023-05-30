@@ -10,14 +10,14 @@ class State
 
     protected $types;
 
-    /** @var bool */
-    protected $required;
 
-    /** @var bool */
-    protected $notEmptyString;
+    protected bool|Undefined $required;
 
-    /** @var bool */
-    protected $notNull;
+
+    protected bool|Undefined $notEmptyString;
+
+
+    protected bool|Undefined $notNull;
 
     /** @var Rule */
     protected $requiredRule;
@@ -110,7 +110,7 @@ class State
 
     public function hasData()
     {
-        return ! $this->isUndefined($this->data);
+        return !$this->isUndefined($this->data);
     }
 
     /**
@@ -140,7 +140,7 @@ class State
 
     public function hasNotEmptyString()
     {
-        return ! $this->isUndefined($this->notEmptyString);
+        return !$this->isUndefined($this->notEmptyString);
     }
 
     /**
@@ -181,7 +181,7 @@ class State
 
     public function issetRequired()
     {
-        $isset = ! $this->isUndefined($this->required);
+        $isset = !$this->isUndefined($this->required);
 
         return $isset;
     }
@@ -255,7 +255,7 @@ class State
 
     public function hasNotNull()
     {
-        return ! $this->isUndefined($this->notNull);
+        return !$this->isUndefined($this->notNull);
     }
 
     /**
@@ -291,7 +291,7 @@ class State
 
     public function hasMiddlewares()
     {
-        return ! $this->middlewares->isEmpty();
+        return !$this->middlewares->isEmpty();
     }
 
     /**
@@ -326,7 +326,7 @@ class State
      */
     public function addMiddlewareId($middlewaresid)
     {
-        if (! isset($this->middlewaresid[$middlewaresid])) {
+        if (!isset($this->middlewaresid[$middlewaresid])) {
             $this->middlewaresid[$middlewaresid] = 0;
         }
         $this->middlewaresid[$middlewaresid]++;
@@ -343,7 +343,7 @@ class State
 
     public function hasValueIfOptionalNotExists()
     {
-        return ! $this->isUndefined($this->valueIfOptionalNotExists);
+        return !$this->isUndefined($this->valueIfOptionalNotExists);
     }
 
     /**
@@ -369,7 +369,7 @@ class State
 
     public function hasName()
     {
-        return ! $this->isUndefined($this->name);
+        return !$this->isUndefined($this->name);
     }
 
     /**
@@ -394,7 +394,7 @@ class State
 
     public function hasStopOnFailure()
     {
-        return ! $this->isUndefined($this->stopOnFailure);
+        return !$this->isUndefined($this->stopOnFailure);
     }
 
     /**
@@ -459,7 +459,7 @@ class State
 
     public function hasErrorMessageAny()
     {
-        return ! $this->isUndefined($this->errorMessageAny);
+        return !$this->isUndefined($this->errorMessageAny);
     }
 
     /**
@@ -542,7 +542,7 @@ class State
 
     public function hasErrorMessageEmpty()
     {
-        return ! $this->isUndefined($this->errorMessageEmpty);
+        return !$this->isUndefined($this->errorMessageEmpty);
     }
 
     /**
@@ -587,7 +587,7 @@ class State
 
     public function hasDefaultValuesAny()
     {
-        return ! $this->isUndefined($this->defaultValuesAny);
+        return !$this->isUndefined($this->defaultValuesAny);
     }
 
     /**

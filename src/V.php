@@ -104,7 +104,7 @@ class V
     public static function register($setups)
     {
         $args = func_get_args();
-        if (! count($args)) {
+        if (!count($args)) {
             return;
         }
 
@@ -143,11 +143,7 @@ class V
         }
     }
 
-    /**
-     * @param  Middleware|callable  $middleware
-     * @param  string  $returnType Class
-     * @param  string[]  $availableForTypes Classes
-     */
+
     protected static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null)
     {
         if ($middleware instanceof Middleware) {
@@ -177,12 +173,12 @@ class V
         //     throw new \Exception('This is not a midleware', 1);
         // }
 
-        if (! $returnType) {
+        if (!$returnType) {
             $returnType = $returnType ?? Type::class;
         }
 
         foreach ($availableForTypes as $avForType) {
-            $classMethod = $avForType.'::'.$methodName;
+            $classMethod = $avForType . '::' . $methodName;
             self::$registeredMiddlewares[$classMethod] = [
                 'methodName' => $methodName,
                 'function' => $function_or_class,
@@ -224,18 +220,18 @@ class V
      */
     public static function registerMiddleware($middlewares, $overwriteExisting = false)
     {
-        if (! is_array($middlewares)) {
+        if (!is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (! $middleware instanceof Middleware) {
+            if (!$middleware instanceof Middleware) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (! $overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
+            if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
             self::$registeredMiddlewares[$id] = $middleware;
@@ -278,7 +274,7 @@ class V
 
     public static function issetVar(&$variable, $varname, $errormessage = null)
     {
-        if (! isset($variable)) {
+        if (!isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
@@ -302,14 +298,14 @@ class V
      */
     public static function issetVarPath($array, $path, $errormessage = null)
     {
-        if (! Arr::get($array, $path)) {
+        if (!Arr::get($array, $path)) {
             $chunks = explode('.', $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -340,7 +336,7 @@ class V
      */
     public static function assertTrue($bool, $name, $errormessage = null)
     {
-        if (! $bool) {
+        if (!$bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);
@@ -370,8 +366,8 @@ class V
 
     private static function addRule(Rule $rule, Options $options)
     {
-        if ($options->getStopOnFailure() !== null && ! is_bool($options->getStopOnFailure())) {
-            throw new \InvalidArgumentException('$stopOnFailure must be of type bool|null in rule "'.$rule->getID().'"', 1);
+        if ($options->getStopOnFailure() !== null && !is_bool($options->getStopOnFailure())) {
+            throw new \InvalidArgumentException('$stopOnFailure must be of type bool|null in rule "' . $rule->getID() . '"', 1);
         }
 
         if ($options->getStopOnFailure() !== null) {
