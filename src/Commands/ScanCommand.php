@@ -10,7 +10,7 @@ final class ScanCommand
 {
     public function handle($exportPath = null): void
     {
-        $exportPath = $exportPath ?? 'ide-helper.rules.php';
+        $exportPath ??= 'ide-helper.rules.php';
         $registered = array_map(function ($item): \Kedniko\PhpIdeHelper\Register {
             $r = new Register();
 

@@ -15,13 +15,10 @@ use Kedniko\Vivy\Types\Type;
 final class TypeProxy extends Type
 {
     /**
-     * @var Type
+     * @param Type $type
      */
-    public $type;
-
-    public function __construct($type)
+    public function __construct(public $type)
     {
-        $this->type = $type;
     }
 
     public function setName($name)
@@ -141,9 +138,7 @@ final class TypeProxy extends Type
 
     public function getRules(): ?array
     {
-        return array_filter($this->type->state->getMiddlewares()->toArray(), function ($e): bool {
-            return $e instanceof Rule;
-        });
+        return array_filter($this->type->state->getMiddlewares()->toArray(), fn($e): bool => $e instanceof Rule);
     }
 
     // public function isDefaultValueEnabled(){
@@ -152,12 +147,7 @@ final class TypeProxy extends Type
     // public function getDefaultValue(){
     // 	return $this->field->state->getDefaultValueIfOptional();
     // }
-
-    /**
-     * @param  mixed  $ruleID
-     * @return Rule|null
-     */
-    public function getRule($ruleID)
+    public function getRule(mixed $ruleID): ?\Kedniko\Vivy\Core\Rule
     {
         /** @var LinkedList $middlewares */
         $middlewares = $this->type->state->getMiddlewares();
@@ -300,12 +290,10 @@ final class TypeProxy extends Type
     // {
     // 	return $this->transformCallback;
     // }
-
     /**
      * @param  string  $propertyName
-     * @param  mixed  $value
      */
-    public function setChildStateProperty($propertyName, $value): void
+    public function setChildStateProperty($propertyName, mixed $value): void
     {
         $parts = explode('.', $propertyName);
         $propertyName = array_shift($parts);

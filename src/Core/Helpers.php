@@ -55,7 +55,7 @@ final class Helpers
 
     public static function getErrors(Rule $middleware, TypeProxy $typeProxy, Context $c, $errors = null)
     {
-        $errors = $errors ?? $c->errors;
+        $errors ??= $c->errors;
         $ruleID = $middleware->getID();
 
         if ($typeProxy->type instanceof TypeOr) {
@@ -109,9 +109,8 @@ final class Helpers
 
     /**
      * @param  mixed|callable  $value
-     * @param  mixed  $arg
      */
-    public static function valueOrFunction($value, $arg)
+    public static function valueOrFunction($value, mixed $arg)
     {
         if (is_callable($value)) {
             $value = $value($arg);
@@ -128,7 +127,7 @@ final class Helpers
         if (! isset($variable)) {
             if ($message_or_var === null) {
                 $message_or_var = 'Variable not set';
-            } elseif ($message_or_var !== null && strpos($message_or_var, '$') === 0) {
+            } elseif ($message_or_var !== null && str_starts_with((string) $message_or_var, '$')) {
                 $message_or_var = "{$message_or_var} is not set";
             }
             throw new \Exception($message_or_var, 1);
@@ -186,15 +185,15 @@ final class Helpers
         }
 
         if (! $class && ! $method && is_string($value)) {
-            if (strpos($value, '@') !== false) {
+            if (str_contains($value, '@')) {
                 $parts = explode('@', $value);
                 $class = $parts[0];
                 $method = $parts[1];
-            } elseif (strpos($value, '::') !== false) {
+            } elseif (str_contains($value, '::')) {
                 $parts = explode('::', $value);
                 $class = $parts[0];
                 $method = $parts[1];
-            } elseif (strpos($value, ',') !== false) {
+            } elseif (str_contains($value, ',')) {
                 $parts = explode(',', $value);
                 $class = $parts[0];
                 $method = $parts[1];

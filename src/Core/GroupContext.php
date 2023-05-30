@@ -14,7 +14,7 @@ final class GroupContext extends Context
     public function __construct($fieldname, Context $cloneFrom = null)
     {
         parent::__construct($cloneFrom);
-        $this->fieldname = $fieldname !== null ? $fieldname : Undefined::instance();
+        $this->fieldname = $fieldname ?? Undefined::instance();
     }
 
     public static function build($fieldname, $fatherContext, $value, Context $cloneFrom = null): \Kedniko\Vivy\Core\GroupContext
@@ -37,11 +37,10 @@ final class GroupContext extends Context
     /**
      * Appends field at the end
      *
-     * @param  mixed  $fieldname
      * @param  Type  $type
      * @param  mixed  $permanent Mutate the setup permanently
      */
-    public function appendField($fieldname, $type, $permanent = false)
+    public function appendField(mixed $fieldname, $type, mixed $permanent = false)
     {
         // setup field
 

@@ -4,23 +4,23 @@ namespace Kedniko\Vivy\Support;
 
 final class ColorCli
 {
-    const C_DEFAULT = 'default';
+    public const C_DEFAULT = 'default';
 
-    const BLACK = 'black';
+    public const BLACK = 'black';
 
-    const RED = 'red';
+    public const RED = 'red';
 
-    const GREEN = 'green';
+    public const GREEN = 'green';
 
-    const YELLOW = 'yellow';
+    public const YELLOW = 'yellow';
 
-    const BLUE = 'blue';
+    public const BLUE = 'blue';
 
-    const PURPLE = 'purple';
+    public const PURPLE = 'purple';
 
-    const CYAN = 'cyan';
+    public const CYAN = 'cyan';
 
-    const WHITE = 'white';
+    public const WHITE = 'white';
 
     public static function color($value, $colorText = self::C_DEFAULT, $colorBack = self::C_DEFAULT)
     {
@@ -57,8 +57,8 @@ final class ColorCli
             self::WHITE => '47',
         ];
 
-        $front = isset($frontArray[$front]) ? $frontArray[$front] : $frontArray[self::C_DEFAULT];
-        $back = isset($backArray[$back]) ? $backArray[$back] : $backArray[self::C_DEFAULT];
+        $front = $frontArray[$front] ?? $frontArray[self::C_DEFAULT];
+        $back = $backArray[$back] ?? $backArray[self::C_DEFAULT];
 
         return "\033[{$front};{$back}m";
     }

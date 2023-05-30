@@ -8,23 +8,16 @@ final class Arr
 {
     /**
      * Determine whether the given value is array accessible.
-     *
-     * @param  mixed  $value
-     * @return bool
      */
-    public static function accessible($value): bool
+    public static function accessible(mixed $value): bool
     {
         return is_array($value) || $value instanceof ArrayAccess;
     }
 
     /**
      * Determine if the given key exists in the provided array.
-     *
-     * @param  \ArrayAccess|array  $array
-     * @param  string|int  $key
-     * @return bool
      */
-    public static function exists($array, $key): bool
+    public static function exists(\ArrayAccess|array $array, string|int $key): bool
     {
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
@@ -39,12 +32,8 @@ final class Arr
 
     /**
      * Check if an item or items exist in an array using "dot" notation.
-     *
-     * @param  \ArrayAccess|array  $array
-     * @param  string|array  $keys
-     * @return bool
      */
-    public static function has($array, $keys): bool
+    public static function has(\ArrayAccess|array $array, string|array $keys): bool
     {
         $keys = (array) $keys;
         if (! $array) {
@@ -61,7 +50,7 @@ final class Arr
                 continue;
             }
 
-            foreach (explode('.', $key) as $segment) {
+            foreach (explode('.', (string) $key) as $segment) {
                 if (static::accessible($subKeyArray) && static::exists($subKeyArray, $segment)) {
                     $subKeyArray = $subKeyArray[$segment];
                 } else {
@@ -76,12 +65,9 @@ final class Arr
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
-     * @param  string|int|null  $key
-     * @param  mixed  $default
      * @return mixed
      */
-    public static function get($array, $key, $default = null)
+    public static function get(\ArrayAccess|array $array, string|int|null $key, mixed $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -92,7 +78,7 @@ final class Arr
         }
 
         if (! Str::contains($key, '.')) {
-            return isset($array[$key]) ? $array[$key] : $default;
+            return $array[$key] ?? $default;
         }
 
         foreach (explode('.', $key) as $segment) {
@@ -116,8 +102,9 @@ final class Arr
      * @param  mixed  $value
      * @return array
      */
-    public static function set($array, $key, $value)
+    public static function set($array, string|int|null $key, mixed $value)
     {
+        $keys = [];
         if (is_null($key)) {
             return $array = $value;
         }

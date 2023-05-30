@@ -5,12 +5,9 @@ namespace Kedniko\Vivy\Core;
 final class Args
 {
     /**
-     * @var array
+     * @param mixed[] $args
      */
-    public $args;
-
-    public function __construct($args = [])
+    public function __construct(public $args = [])
     {
-        $this->args = $args;
     }
 }

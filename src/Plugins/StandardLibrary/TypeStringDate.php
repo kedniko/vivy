@@ -33,10 +33,7 @@ final class TypeStringDate extends TypeString
         return $this;
     }
 
-    /**
-     * @param  Datetime|string  $date
-     */
-    public function minDate($date, Options $options = null)
+    public function minDate(\Datetime|string $date, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('date.min');
@@ -49,10 +46,7 @@ final class TypeStringDate extends TypeString
         return $this;
     }
 
-    /**
-     * @param  Datetime|string  $date
-     */
-    public function maxDate($date, Options $options = null)
+    public function maxDate(\Datetime|string $date, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage();
@@ -65,11 +59,7 @@ final class TypeStringDate extends TypeString
         return $this;
     }
 
-    /**
-     * @param  Datetime|string  $minDate
-     * @param  Datetime|string  $maxDate
-     */
-    public function between($minDate, $maxDate, Options $options = null)
+    public function between(\Datetime|string $minDate, \Datetime|string $maxDate, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('date.between');

@@ -4,11 +4,8 @@ namespace Kedniko\Vivy\Core;
 
 final class FieldMiddleware extends Middleware
 {
-    private $type;
-
-    public function __construct($type)
+    public function __construct(private $type)
     {
-        $this->type = $type;
     }
 
     public function getField()

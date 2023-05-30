@@ -7,28 +7,15 @@ use Kedniko\Vivy\V;
 
 final class Validated
 {
-    /**
-     * @var mixed|Ref
-     */
-    private $value;
-
-    /**
-     * @var array|Ref
-     */
-    private $errors;
-
     public $chain;
 
     private const OR_FAIL = false;
 
     /**
-     * @param  mixed  $value
      * @param  array  $errors
      */
-    public function __construct($value, $errors)
+    public function __construct(private readonly mixed $value, private $errors)
     {
-        $this->value = $value;
-        $this->errors = $errors;
     }
 
     /**
@@ -48,10 +35,7 @@ final class Validated
         }
     }
 
-    /**
-     * @param  string|callable  $handler
-     */
-    public function forceFailWith($handler)
+    public function forceFailWith(string|callable $handler)
     {
         if (is_string($handler)) {
             $handler = V::getFailHandler($handler);
@@ -62,10 +46,8 @@ final class Validated
 
     /**
      * Handler can be set with `V::setFailHandler()`
-     *
-     * @param  string|callable  $handler
      */
-    public function orFailWith($handler)
+    public function orFailWith(string|callable $handler)
     {
         if ($this->fails()) {
             if (is_string($handler)) {
@@ -79,14 +61,14 @@ final class Validated
 
     public function fails(): bool
     {
-        return $this->errors && count($this->errors);
+        return $this->errors && (is_countable($this->errors) ? count($this->errors) : 0);
     }
 
     public function isValid(): bool
     {
         $errors = $this->errors;
 
-        return count($errors) === 0;
+        return (is_countable($errors) ? count($errors) : 0) === 0;
     }
 
     public function errors()

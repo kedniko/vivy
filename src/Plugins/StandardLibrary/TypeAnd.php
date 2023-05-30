@@ -34,9 +34,8 @@ final class TypeAnd extends Type
     /**
      * @param  Type[]  $types
      * @param  bool  $isNot - true = all rule false. false = any rule true
-     * @param  string|null  $errormessage
      */
-    private function getAndRule(array $types, $isNot, $errormessage = null): \Kedniko\Vivy\Core\Rule
+    private function getAndRule(array $types, $isNot, ?string $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_AND;
         $types = new LinkedList($types);
@@ -56,7 +55,7 @@ final class TypeAnd extends Type
 
                 $clonedValue = Util::clone($c->value);
                 $validated = $type->validate($c->value, $c);
-                $errors = isset($type->_extra['or_errors']) ? $type->_extra['or_errors'] : [];
+                $errors = $type->_extra['or_errors'] ?? [];
 
                 if (! $errors) {
                     if ($isNot) {

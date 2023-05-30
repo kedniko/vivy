@@ -22,7 +22,7 @@ final class TypeGroup extends TypeCompound
     /**
      * @param  array|callable  $setup function(GroupBuilder $type)
      */
-    public function init($setup = null)
+    public function init(array|callable $setup = null)
     {
         if (! $setup) {
             return;
@@ -43,15 +43,12 @@ final class TypeGroup extends TypeCompound
     // 	$options = Options::build($options, func_get_args());
     // 	Helpers::assertTrueOrFail(is_bool($stopOnFieldFailure), '$stopOnFieldFailure is not a bool');
     // 	$this->addRule($this->groupRule($stopOnFieldFailure, $options->getErrorMessage()), $options);
-
     // 	return $this;
     // }
-
     /**
      * @param  LinkedList|callable  $types
-     * @param  mixed  $errormessage
      */
-    public function getGroupRule(bool $stopOnFieldFailure, $errormessage): \Kedniko\Vivy\Core\Rule
+    public function getGroupRule(bool $stopOnFieldFailure, mixed $errormessage): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_GROUP;
         $ruleFn = function (Context $c) use ($stopOnFieldFailure): \Kedniko\Vivy\Core\Validated {
@@ -144,9 +141,7 @@ final class TypeGroup extends TypeCompound
         };
 
         if ($errormessage === null) {
-            $errormessage = function (Context $c) {
-                return $c->errors;
-            };
+            $errormessage = fn(Context $c) => $c->errors;
         }
 
         return new Rule($ruleID, $ruleFn, $errormessage);
@@ -246,7 +241,6 @@ final class TypeGroup extends TypeCompound
 
     /**
      * @param  mixed  $name
-     * @return TypeAny
      */
     private function getNewUnkownField(Options $options = null): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {

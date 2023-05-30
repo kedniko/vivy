@@ -71,10 +71,9 @@ final class V
     }
 
     /**
-     * @param  mixed  $transformerID
      * @param  callable  $transformerFn `fn(Context){...}`
      */
-    public static function transformer($transformerID, callable $transformerFn, Options $options = null): \Kedniko\Vivy\Transformer
+    public static function transformer(mixed $transformerID, callable $transformerFn, Options $options = null): \Kedniko\Vivy\Transformer
     {
         $options = Options::build($options, func_get_args());
 
@@ -121,7 +120,7 @@ final class V
             self::registerPlugin($obj);
         }
         // one setup
-        $availableForTypes = isset($args[0]) ? $args[0] : [];
+        $availableForTypes = $args[0] ?? [];
         $availableForTypes = Arr::wrap($availableForTypes);
         // V::BASE experiment
         // foreach ($availableForTypes as $i => $availableForType) {
@@ -133,8 +132,8 @@ final class V
         // }
         $availableForTypes = array_values(array_unique($availableForTypes));
         $methodName = $args[1];
-        $function_or_class = isset($args[2]) ? $args[2] : null;
-        $returnType = isset($args[3]) ? $args[3] : null;
+        $function_or_class = $args[2] ?? null;
+        $returnType = $args[3] ?? null;
         self::registerOne($methodName, $function_or_class, $availableForTypes, $returnType);
     }
 
@@ -142,16 +141,10 @@ final class V
     private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null): void
     {
         if ($middleware instanceof Middleware) {
-            $function_or_class = function () use ($middleware): \Kedniko\Vivy\Core\Middleware {
-                return $middleware;
-            };
+            $function_or_class = fn(): \Kedniko\Vivy\Core\Middleware => $middleware;
         } elseif (is_bool($middleware)) {
             $bool = $middleware;
-            $function_or_class = function () use ($bool) {
-                return self::rule('::', function () use ($bool): bool {
-                    return $bool;
-                });
-            };
+            $function_or_class = fn() => self::rule('::', fn(): bool => $bool);
         } else {
             $function_or_class = $middleware;
         }
@@ -169,7 +162,7 @@ final class V
         // }
 
         if (!$returnType) {
-            $returnType = $returnType ?? Type::class;
+            $returnType ??= Type::class;
         }
 
         foreach ($availableForTypes as $avForType) {
@@ -186,16 +179,16 @@ final class V
     private static function registerMany($setups): void
     {
         foreach ($setups as $key => $setup) {
-            if (count($setup) === 3) {
+            if ((is_countable($setup) ? count($setup) : 0) === 3) {
                 $methodName = $key;
                 $callback = $setup[0];
-                $availableForType = isset($setup[1]) ? $setup[1] : [];
-                $returnType = isset($setup[2]) ? $setup[2] : null;
-            } elseif (count($setup) === 4) {
+                $availableForType = $setup[1] ?? [];
+                $returnType = $setup[2] ?? null;
+            } elseif ((is_countable($setup) ? count($setup) : 0) === 4) {
                 $methodName = $setup[0];
                 $callback = $setup[1];
-                $availableForType = isset($setup[2]) ? $setup[2] : [];
-                $returnType = isset($setup[3]) ? $setup[3] : null;
+                $availableForType = $setup[2] ?? [];
+                $returnType = $setup[3] ?? null;
             }
 
             V::register($methodName, $callback, $availableForType, $returnType);
@@ -213,7 +206,7 @@ final class V
     /**
      * @param  Middleware|Middleware[]  $middlewares
      */
-    public static function registerMiddleware($middlewares, $overwriteExisting = false)
+    public static function registerMiddleware(\Kedniko\Vivy\Core\Middleware|array $middlewares, $overwriteExisting = false)
     {
         if (!is_array($middlewares)) {
             $middlewares = [$middlewares];
@@ -289,12 +282,11 @@ final class V
      * @param  array  $array
      * @param  mixed  $path dot.separated.path
      * @param  null  $errormessage
-     * @return Validated
      */
-    public static function issetVarPath($array, $path, $errormessage = null): \Kedniko\Vivy\Core\Validated
+    public static function issetVarPath($array, mixed $path, $errormessage = null): \Kedniko\Vivy\Core\Validated
     {
         if (!Arr::get($array, $path)) {
-            $chunks = explode('.', $path);
+            $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new Context())->setArgs(func_get_args());
@@ -311,10 +303,9 @@ final class V
     /**
      * @param  array  $array
      * @param  mixed  $path dot.separated.path
-     * @param  mixed  $defaultValue
      * @return mixed
      */
-    public static function issetVarPathOrDefault($array, $path, $defaultValue)
+    public static function issetVarPathOrDefault($array, mixed $path, mixed $defaultValue)
     {
         if (Arr::get($array, $path)) {
             return $array;
@@ -327,7 +318,6 @@ final class V
      * @param  bool  $bool
      * @param  string  $name
      * @param  null  $errormessage
-     * @return Validated
      */
     public static function assertTrue($bool, $name, $errormessage = null): \Kedniko\Vivy\Core\Validated
     {

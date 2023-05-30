@@ -17,10 +17,10 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->sets([
-        // LevelSetList::UP_TO_PHP_82,
+        LevelSetList::UP_TO_PHP_82,
         // SetList::CODE_QUALITY,
         // SetList::DEAD_CODE,
-        SetList::EARLY_RETURN,
+        // SetList::EARLY_RETURN,
         // SetList::TYPE_DECLARATION,
         // SetList::PRIVATIZATION,
     ]);

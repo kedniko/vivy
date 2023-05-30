@@ -14,7 +14,7 @@ final class O
                 $o->message($options['message']);
             }
             if (isset($options['stopOnFailure'])) {
-                $o->stopOnFailure($options['stopOnFailure']);
+                $o->stopOnFailure();
             }
             $options = $o;
         }
@@ -22,7 +22,7 @@ final class O
         $options = Options::build($options, func_get_args());
         $o = new Options();
         $o->message($options->getErrorMessage());
-        $o->stopOnFailure($options->getStopOnFailure());
+        $o->stopOnFailure();
 
         return $o;
     }
@@ -59,8 +59,6 @@ final class O
 
     public static function ifArrayIndex($index)
     {
-        return self::options()->ifRule(function (ArrayContext $ac) use ($index): bool {
-            return $ac->getIndex() === $index;
-        });
+        return self::options()->ifRule(fn(ArrayContext $ac): bool => $ac->getIndex() === $index);
     }
 }

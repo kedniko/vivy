@@ -12,8 +12,6 @@ class Middleware
 
     protected $options;
 
-    protected $callback;
-
     protected $errormessage;
 
     protected $stopOnFailure;
@@ -24,7 +22,7 @@ class Middleware
      * @param  callable|null  $callback
      * @param  string|callable|null  $errormessage
      */
-    public function __construct($id, $callback, $errormessage = null)
+    public function __construct($id, protected $callback, $errormessage = null)
     {
         if ($errormessage === null) {
             $errormessage = RuleMessage::getErrorMessage();
@@ -34,7 +32,6 @@ class Middleware
         }
         $this->id = $id;
         $this->options = O::options();
-        $this->callback = $callback;
         $this->options->message($errormessage);
         $this->options->setArgs([]);
     }

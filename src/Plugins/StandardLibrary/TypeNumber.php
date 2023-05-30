@@ -13,23 +13,23 @@ use Kedniko\Vivy\V;
 
 class TypeNumber extends TypeScalar
 {
-    const ID_MAX = 'numberMax';
+    public const ID_MAX = 'numberMax';
 
-    const ID_MIN = 'numberMin';
+    public const ID_MIN = 'numberMin';
 
-    const ID_NUMBER_DECIMAL_PART_MAX = 'numberDecimalPartMax';
+    public const ID_NUMBER_DECIMAL_PART_MAX = 'numberDecimalPartMax';
 
-    const ID_NUMBER_DECIMAL_PART_MIN = 'numberDecimalPartMin';
+    public const ID_NUMBER_DECIMAL_PART_MIN = 'numberDecimalPartMin';
 
-    const ID_NUMBER_DECIMAL_PART_IS = 'numberDecimalPartIs';
+    public const ID_NUMBER_DECIMAL_PART_IS = 'numberDecimalPartIs';
 
-    const ID_NUMBER_MULTIPLE_OF = 'numberMultipleOf';
+    public const ID_NUMBER_MULTIPLE_OF = 'numberMultipleOf';
 
-    const ID_NUMBER_BETWEEN = 'numberBetween';
+    public const ID_NUMBER_BETWEEN = 'numberBetween';
 
-    const ID_NUMBER_NOT_BETWEEN = 'numberNotBetween';
+    public const ID_NUMBER_NOT_BETWEEN = 'numberNotBetween';
 
-    const ID_NUMBER_TO_STRING = 'numberToString';
+    public const ID_NUMBER_TO_STRING = 'numberToString';
 
     public function min($min, Options $options = null)
     {
@@ -63,7 +63,7 @@ class TypeNumber extends TypeScalar
                 $destfractionalPart = BigDecimal::of('0.'.BigDecimal::of($number)->getFractionalPart());
 
                 return $srcFractionalPart->isEqualTo($destfractionalPart);
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         }, $errormessage);
@@ -84,7 +84,7 @@ class TypeNumber extends TypeScalar
                 $result = BigDecimal::of($c->value)->remainder($number);
 
                 return $result->isEqualTo(BigDecimal::of(0));
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         }, $errormessage);
@@ -108,7 +108,7 @@ class TypeNumber extends TypeScalar
                 $dest = BigDecimal::of("0.$destfractionalPart");
 
                 return $src->isGreaterThanOrEqualTo($dest);
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         }, $errormessage);
@@ -132,7 +132,7 @@ class TypeNumber extends TypeScalar
                 $dest = BigDecimal::of("0.$destfractionalPart");
 
                 return $src->isLessThanOrEqualTo($dest);
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         }, $errormessage);

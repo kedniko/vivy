@@ -143,7 +143,6 @@ class Type
     // }
     /**
      * @param  Rule|Transformer|callable  $middleware
-     * @param Options|null $options
      */
     private function addMiddleware($middleware, ?\Kedniko\Vivy\Core\Options $options = null): void
     {
@@ -164,10 +163,7 @@ class Type
         return $this instanceof TypeProxy ? $this->field : $this;
     }
 
-    /**
-     * @param  Rule|Transformer|callable  $middleware
-     */
-    protected function prependMiddleware($middleware)
+    protected function prependMiddleware(\Kedniko\Vivy\Core\Rule|\Kedniko\Vivy\Transformer|callable $middleware)
     {
         $_this = $this->get_this();
 
@@ -188,9 +184,7 @@ class Type
         if ($hardRemove) {
             /** @var LinkedList $linkedlist */
             $linkedlist = $type->state->getMiddlewares();
-            $linkedlist->remove(function (Middleware $middleware) use ($middlewareid): bool {
-                return $middleware->getID() === $middlewareid;
-            }, $removeOnlyOne);
+            $linkedlist->remove(fn(Middleware $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
         }
 
         /** @var Type $type */
@@ -253,7 +247,7 @@ class Type
      * HARD REMOVE: Remove from list and cache
      * SOFT REMOVE: remove only from cache (better performance)
      */
-    public function removeRule($ruleID, $hardRemove = true)
+    public function removeRule(mixed $ruleID, $hardRemove = true)
     {
         $this->removeMiddleware($ruleID, false, $hardRemove);
 
@@ -408,12 +402,10 @@ class Type
     // 	$_this->state->getcustomErrMessages()[Rules::ID_REQUIRED] = $errormessage;
     // 	return $this;
     // }
-
     /**
      * @param  mixed|array  $rulesID
-     * @param  mixed  $errormessage
      */
-    public function setErrorMessage($rulesID, $errormessage)
+    public function setErrorMessage($rulesID, mixed $errormessage)
     {
         $_this = $this->get_this();
 
@@ -543,10 +535,8 @@ class Type
 
     /**
      * Catch all errors and set a default value
-     *
-     * @param  mixed  $value
      */
-    public function catchAll($value)
+    public function catchAll(mixed $value)
     {
         $this->state->setDefaultValuesAny($value);
 
@@ -584,21 +574,19 @@ class Type
     }
 
     /**
-     $$\    $$\          $$\ $$\       $$\            $$\     $$\
-     $$ |   $$ |         $$ |\__|      $$ |           $$ |    \__|
-     $$ |   $$ |$$$$$$\  $$ |$$\  $$$$$$$ | $$$$$$\ $$$$$$\   $$\  $$$$$$\  $$$$$$$\
-     \$$\  $$  |\____$$\ $$ |$$ |$$  __$$ | \____$$\\_$$  _|  $$ |$$  __$$\ $$  __$$\
-     \$$\$$  / $$$$$$$ |$$ |$$ |$$ /  $$ | $$$$$$$ | $$ |    $$ |$$ /  $$ |$$ |  $$ |
-     \$$$  / $$  __$$ |$$ |$$ |$$ |  $$ |$$  __$$ | $$ |$$\ $$ |$$ |  $$ |$$ |  $$ |
-     \$  /  \$$$$$$$ |$$ |$$ |\$$$$$$$ |\$$$$$$$ | \$$$$  |$$ |\$$$$$$  |$$ |  $$ |
-     \_/    \_______|\__|\__| \_______| \_______|  \____/ \__| \______/ \__|  \__|
-     */
-
+    $$\    $$\          $$\ $$\       $$\            $$\     $$\
+    $$ |   $$ |         $$ |\__|      $$ |           $$ |    \__|
+    $$ |   $$ |$$$$$$\  $$ |$$\  $$$$$$$ | $$$$$$\ $$$$$$\   $$\  $$$$$$\  $$$$$$$\
+    \$$\  $$  |\____$$\ $$ |$$ |$$  __$$ | \____$$\\_$$  _|  $$ |$$  __$$\ $$  __$$\
+    \$$\$$  / $$$$$$$ |$$ |$$ |$$ /  $$ | $$$$$$$ | $$ |    $$ |$$ /  $$ |$$ |  $$ |
+    \$$$  / $$  __$$ |$$ |$$ |$$ |  $$ |$$  __$$ | $$ |$$\ $$ |$$ |  $$ |$$ |  $$ |
+    \$  /  \$$$$$$$ |$$ |$$ |\$$$$$$$ |\$$$$$$$ | \$$$$  |$$ |\$$$$$$  |$$ |  $$ |
+    \_/    \_______|\__|\__| \_______| \_______|  \____/ \__| \______/ \__|  \__|
+    */
     /**
-     * @param  mixed  $value
      * @return Validated
      */
-    public function validate($value = null, Context $fatherContext = null)
+    public function validate(mixed $value = null, Context $fatherContext = null)
     {
         $this->skipOtherMiddlewares = false;
         $this->skipOtherRules = false;
@@ -778,7 +766,7 @@ class Type
                     $value = $value->value();
                 }
                 $this->context->value = $value;
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Event::dispatch('vivy-transformation-failed', $th);
 
                 $id = $middleware->getID();
@@ -948,7 +936,7 @@ class Type
      * @param  mixed  $value Overrides the old one if exists
      * @return array
      */
-    public function errors($value = null)
+    public function errors(mixed $value = null)
     {
         if (count(func_get_args())) {
             $dataToValidate = $value;
@@ -989,10 +977,9 @@ class Type
     }
 
     /**
-     * @param  mixed  $value
      * @return bool
      */
-    public function isValidWith($value)
+    public function isValidWith(mixed $value)
     {
         $dataToValidate = $value;
         $this->state->setData($dataToValidate);
@@ -1048,9 +1035,7 @@ class Type
         if (is_callable($callback_or_value)) {
             $callback = $callback_or_value;
         } else {
-            $callback = function () use ($callback_or_value) {
-                return $callback_or_value;
-            };
+            $callback = fn() => $callback_or_value;
         }
         $transformer = new Transformer(Rules::ID_SET_VALUE, $callback);
         $type = (new \Kedniko\Vivy\Types\Type())->from($this);

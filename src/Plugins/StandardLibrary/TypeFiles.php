@@ -30,12 +30,12 @@ final class TypeFiles extends TypeCompound
         $middleware = new Rule('count', function (Context $c) use ($count): bool {
             $value = $c->value;
 
-            return count($value['name']) === $count &&
-                count($value['full_path']) === $count &&
-                count($value['type']) === $count &&
-                count($value['tmp_name']) === $count &&
-                count($value['error']) === $count &&
-                count($value['size']) === $count;
+            return (is_countable($value['name']) ? count($value['name']) : 0) === $count &&
+                (is_countable($value['full_path']) ? count($value['full_path']) : 0) === $count &&
+                (is_countable($value['type']) ? count($value['type']) : 0) === $count &&
+                (is_countable($value['tmp_name']) ? count($value['tmp_name']) : 0) === $count &&
+                (is_countable($value['error']) ? count($value['error']) : 0) === $count &&
+                (is_countable($value['size']) ? count($value['size']) : 0) === $count;
         }, $errormessage);
 
         $this->addRule($middleware, $options);
@@ -51,12 +51,12 @@ final class TypeFiles extends TypeCompound
         $middleware = new Rule('minCount', function (Context $c) use ($minCount): bool {
             $value = $c->value;
 
-            return count($value['name']) >= $minCount &&
-                count($value['full_path']) >= $minCount &&
-                count($value['type']) >= $minCount &&
-                count($value['tmp_name']) >= $minCount &&
-                count($value['error']) >= $minCount &&
-                count($value['size']) >= $minCount;
+            return (is_countable($value['name']) ? count($value['name']) : 0) >= $minCount &&
+                (is_countable($value['full_path']) ? count($value['full_path']) : 0) >= $minCount &&
+                (is_countable($value['type']) ? count($value['type']) : 0) >= $minCount &&
+                (is_countable($value['tmp_name']) ? count($value['tmp_name']) : 0) >= $minCount &&
+                (is_countable($value['error']) ? count($value['error']) : 0) >= $minCount &&
+                (is_countable($value['size']) ? count($value['size']) : 0) >= $minCount;
         }, $errormessage);
 
         $this->addRule($middleware, $options);
@@ -73,12 +73,12 @@ final class TypeFiles extends TypeCompound
             $value = $c->value;
 
             return is_array($value) &&
-                array_key_exists('name', $value) && count($value['name']) <= $maxCount &&
-                array_key_exists('full_path', $value) && count($value['full_path']) <= $maxCount &&
-                array_key_exists('type', $value) && count($value['type']) <= $maxCount &&
-                array_key_exists('tmp_name', $value) && count($value['tmp_name']) <= $maxCount &&
-                array_key_exists('error', $value) && count($value['error']) <= $maxCount &&
-                array_key_exists('size', $value) && count($value['size']) <= $maxCount;
+                array_key_exists('name', $value) && (is_countable($value['name']) ? count($value['name']) : 0) <= $maxCount &&
+                array_key_exists('full_path', $value) && (is_countable($value['full_path']) ? count($value['full_path']) : 0) <= $maxCount &&
+                array_key_exists('type', $value) && (is_countable($value['type']) ? count($value['type']) : 0) <= $maxCount &&
+                array_key_exists('tmp_name', $value) && (is_countable($value['tmp_name']) ? count($value['tmp_name']) : 0) <= $maxCount &&
+                array_key_exists('error', $value) && (is_countable($value['error']) ? count($value['error']) : 0) <= $maxCount &&
+                array_key_exists('size', $value) && (is_countable($value['size']) ? count($value['size']) : 0) <= $maxCount;
         }, $errormessage);
 
         $this->addRule($middleware, $options);
@@ -87,10 +87,9 @@ final class TypeFiles extends TypeCompound
     }
 
     /**
-     * @param  mixed  $totalSize
-     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     * @param  string  $unit `B`|`KB`|`MB`|`GB`
      */
-    public function totalSize($totalSize, $unit = 'B', Options $options = null)
+    public function totalSize(mixed $totalSize, string $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensioni files non accettate';
@@ -113,10 +112,9 @@ final class TypeFiles extends TypeCompound
     }
 
     /**
-     * @param  mixed  $minTotalSize
-     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     * @param  string  $unit `B`|`KB`|`MB`|`GB`
      */
-    public function minTotalSize($minTotalSize, $unit = 'B', Options $options = null)
+    public function minTotalSize(mixed $minTotalSize, string $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo piccole';
@@ -139,10 +137,9 @@ final class TypeFiles extends TypeCompound
     }
 
     /**
-     * @param  mixed  $maxTotalSize
-     * @param  int|float  $unit `B`|`KB`|`MB`|`GB`
+     * @param  string  $unit `B`|`KB`|`MB`|`GB`
      */
-    public function maxTotalSize($maxTotalSize, $unit = 'B', Options $options = null)
+    public function maxTotalSize(mixed $maxTotalSize, string $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensioni files troppo grandi';
@@ -170,18 +167,13 @@ final class TypeFiles extends TypeCompound
     public function toJson(Options $options = null)
     {
         $errormessage = $options->getErrorMessage() ?: 'TRANSFORMER: toJson';
-        $transformer = new Transformer('toJson', function (Context $c) {
-            return json_encode($c->value);
-        }, $errormessage);
+        $transformer = new Transformer('toJson', fn (Context $c) => json_encode($c->value, JSON_THROW_ON_ERROR), $errormessage);
         $this->addTransformer($transformer, $options);
 
         return $this;
     }
 
-    /**
-     * @param  bool|callable  $stopOnItemFailure
-     */
-    public function each(TypeFile $fileField, $stopOnItemFailure = false, Options $options = null)
+    public function each(TypeFile $fileField, bool|callable $stopOnItemFailure = false, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
 
@@ -194,8 +186,8 @@ final class TypeFiles extends TypeCompound
     private function getEachRule(Type $type, $stopOnItemFailure, $errormessage): \Kedniko\Vivy\Core\Rule
     {
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
-            if (! is_array($c->value)) {
-                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
+            if (!is_array($c->value)) {
+                throw new \Exception('This is not an array. Got [' . gettype($c->value) . ']: ' . json_encode($c->value, JSON_THROW_ON_ERROR), 1);
             }
 
             $contextProxy = new ContextProxy($c);
@@ -245,22 +237,19 @@ final class TypeFiles extends TypeCompound
         };
 
         if ($errormessage === null) {
-            $errormessage = function (Context $c) {
-                return $c->errors;
-            };
+            $errormessage = fn (Context $c) => $c->errors;
         }
 
         return new Rule(self::RULE_ID, $ruleFn, $errormessage);
     }
 
     /**
-     * @param  mixed  $value
      * @param  mixed  $from `B`|`KB`|`MB`|`GB`
      * @param  mixed  $to `B`|`KB`|`MB`|`GB`
      */
-    private function convertUnit($value, $from, string $to)
+    private function convertUnit(mixed $value, mixed $from, string $to)
     {
-        $from = strtoupper($from);
+        $from = strtoupper((string) $from);
         $to = strtoupper($to);
         $value = floatval($value);
         $index = array_search($from, self::UNITS);
@@ -273,8 +262,7 @@ final class TypeFiles extends TypeCompound
             for ($i = 0; $i < $diff; $i++) {
                 $value /= 1024;
             }
-        }
-        else {
+        } else {
             for ($i = 0; $i < abs($diff); $i++) {
                 $value *= 1024;
             }
@@ -285,8 +273,9 @@ final class TypeFiles extends TypeCompound
 
     private function normalizeFileStructure(array $files)
     {
+        $newFiles = [];
         foreach ($files as $property => $value) {
-            for ($i = 0, $count = count($value); $i < $count; $i++) {
+            for ($i = 0, $count = is_countable($value) ? count($value) : 0; $i < $count; $i++) {
                 $newFiles[$i][$property] = $value[$i];
             }
         }

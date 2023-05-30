@@ -6,14 +6,13 @@ use Kedniko\Vivy\Context;
 
 final class ContextProxy extends Context
 {
-    /** @var Context */
-    private $context;
-
     public $field;
 
-    public function __construct($context)
+    /**
+     * @param Context $context
+     */
+    public function __construct(private $context)
     {
-        $this->context = $context;
     }
 
     // public function valueRef()

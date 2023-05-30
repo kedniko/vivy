@@ -10,9 +10,8 @@ final class Str
      * @param  string  $haystack
      * @param  string|string[]  $needles
      * @param  bool  $ignoreCase
-     * @return bool
      */
-    public static function contains($haystack, $needles, $ignoreCase = false): bool
+    public static function contains($haystack, string|array $needles, $ignoreCase = false): bool
     {
         if ($ignoreCase) {
             $haystack = mb_strtolower($haystack);
@@ -37,15 +36,14 @@ final class Str
      *
      * @param  string  $haystack
      * @param  string|string[]  $needles
-     * @return bool
      */
-    public static function startsWith($haystack, $needles, $ignoreCase = true): bool
+    public static function startsWith($haystack, string|array $needles, $ignoreCase = true): bool
     {
         foreach ((array) $needles as $needle) {
             if ($needle === '') {
                 continue;
             }
-            if (substr($haystack, 0, strlen($needle)) !== $needle) {
+            if (!str_starts_with($haystack, $needle)) {
                 continue;
             }
             return true;
@@ -59,9 +57,8 @@ final class Str
      *
      * @param  string  $haystack
      * @param  string|string[]  $needles
-     * @return bool
      */
-    public static function endsWith($haystack, $needles, $ignoreCase = true): bool
+    public static function endsWith($haystack, string|array $needles, $ignoreCase = true): bool
     {
         if ($ignoreCase) {
             $haystack = mb_strtolower($haystack);
@@ -73,7 +70,7 @@ final class Str
             if ((string) $needle === '') {
                 continue;
             }
-            if (substr($haystack, -strlen($needle)) !== $needle) {
+            if (!str_ends_with($haystack, $needle)) {
                 continue;
             }
             return true;

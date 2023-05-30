@@ -16,81 +16,81 @@ use Kedniko\Vivy\Support\Str;
 
 final class Rules
 {
-    const ID_REQUIRED = 'required';
+    public const ID_REQUIRED = 'required';
 
-    const ID_NOT_EMPTY_STRING = 'notEmptyString';
+    public const ID_NOT_EMPTY_STRING = 'notEmptyString';
 
-    const ID_NOT_NULL = 'notNull';
+    public const ID_NOT_NULL = 'notNull';
 
-    const ID_NULL = 'null';
+    public const ID_NULL = 'null';
 
-    const ID_GROUP = 'group';
+    public const ID_GROUP = 'group';
 
-    const ID_EACH = 'each';
+    public const ID_EACH = 'each';
 
-    const ID_OR = 'or';
+    public const ID_OR = 'or';
 
-    const ID_AND = 'and';
+    public const ID_AND = 'and';
 
-    const ID_NOT_FALSY = 'notFalsy';
+    public const ID_NOT_FALSY = 'notFalsy';
 
-    const ID_EMPTY_STRING = 'emptyString';
+    public const ID_EMPTY_STRING = 'emptyString';
 
-    const ID_MIN_DATE = 'minDate';
+    public const ID_MIN_DATE = 'minDate';
 
-    const ID_MAX_DATE = 'maxDate';
+    public const ID_MAX_DATE = 'maxDate';
 
-    const ID_DATE_BETWEEN = 'dateBetween';
+    public const ID_DATE_BETWEEN = 'dateBetween';
 
-    const ID_DATE_NOT_BETWEEN = 'dateNotBetween';
+    public const ID_DATE_NOT_BETWEEN = 'dateNotBetween';
 
-    const ID_STRING = 'string';
+    public const ID_STRING = 'string';
 
-    const ID_INTSTRING = 'intString';
+    public const ID_INTSTRING = 'intString';
 
-    const ID_DIGITS_STRING = 'digitsString';
+    public const ID_DIGITS_STRING = 'digitsString';
 
-    const ID_INTBOOL = 'intBool';
+    public const ID_INTBOOL = 'intBool';
 
-    const ID_FILE = 'file';
+    public const ID_FILE = 'file';
 
-    const ID_INT = 'int';
+    public const ID_INT = 'int';
 
-    const ID_FLOAT = 'float';
+    public const ID_FLOAT = 'float';
 
-    const ID_NUMBER = 'number';
+    public const ID_NUMBER = 'number';
 
-    const ID_FLOAT_OR_INT = 'floatOrInt';
+    public const ID_FLOAT_OR_INT = 'floatOrInt';
 
-    const ID_FLOAT_STRING = 'floatString';
+    public const ID_FLOAT_STRING = 'floatString';
 
-    const ID_BOOL = 'bool';
+    public const ID_BOOL = 'bool';
 
-    const ID_BOOL_STRING = 'boolString';
+    public const ID_BOOL_STRING = 'boolString';
 
-    const ID_EMAIL = 'email';
+    public const ID_EMAIL = 'email';
 
-    const ID_PHONE = 'phone';
+    public const ID_PHONE = 'phone';
 
-    const ID_DATE = 'date';
+    public const ID_DATE = 'date';
 
-    const ID_MIN = 'min';
+    public const ID_MIN = 'min';
 
-    const ID_MAX = 'max';
+    public const ID_MAX = 'max';
 
-    const ID_ARRAY = 'array';
+    public const ID_ARRAY = 'array';
 
-    const ID_SCALAR = 'scalar';
+    public const ID_SCALAR = 'scalar';
 
-    const ID_IN_ARRAY = 'inArray';
+    public const ID_IN_ARRAY = 'inArray';
 
-    const ID_NOT_IN_ARRAY = 'notInArray';
+    public const ID_NOT_IN_ARRAY = 'notInArray';
 
-    const ID_UNDEFINED = 'undefined';
+    public const ID_UNDEFINED = 'undefined';
 
-    const ID_SET_VALUE = 'setValue';
+    public const ID_SET_VALUE = 'setValue';
 
-    const ID_INT_STRING = 'intString';
+    public const ID_INT_STRING = 'intString';
 
     public static function getInvisibleKeys(): array
     {
@@ -144,9 +144,7 @@ final class Rules
     public static function notFalsy($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_FALSY;
-        $ruleFn = function (Context $c): bool {
-            return $c->value ? true : false;
-        };
+        $ruleFn = fn(Context $c): bool => $c->value ? true : false;
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
@@ -155,9 +153,7 @@ final class Rules
     public static function notNull($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_NULL;
-        $ruleFn = function (Context $c): bool {
-            return $c->value !== null;
-        };
+        $ruleFn = fn(Context $c): bool => $c->value !== null;
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
@@ -167,9 +163,7 @@ final class Rules
     public static function null($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NULL;
-        $ruleFn = function (Context $c): bool {
-            return $c->value === null;
-        };
+        $ruleFn = fn(Context $c): bool => $c->value === null;
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
@@ -239,7 +233,7 @@ final class Rules
             }
 
             if ($toTrim) {
-                $c->value = trim($c->value);
+                $c->value = trim((string) $c->value);
             }
 
             return true;
@@ -291,9 +285,7 @@ final class Rules
     public static function boolString($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_BOOL_STRING;
-        $ruleFn = function (Context $c): bool {
-            return in_array($c->value, ['true', 'false'], true);
-        };
+        $ruleFn = fn(Context $c): bool => in_array($c->value, ['true', 'false'], true);
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
@@ -343,9 +335,7 @@ final class Rules
     public static function int($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_INT;
-        $ruleFn = function (Context $c): bool {
-            return is_int($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => is_int($c->value);
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
@@ -368,9 +358,7 @@ final class Rules
     public static function floatOrInt($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FLOAT_OR_INT;
-        $ruleFn = function (Context $c): bool {
-            return is_float($c->value) || is_int($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => is_float($c->value) || is_int($c->value);
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
@@ -380,9 +368,7 @@ final class Rules
     public static function number($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_NUMBER;
-        $ruleFn = function (Context $c): bool {
-            return ! is_string($c->value) && is_numeric($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => ! is_string($c->value) && is_numeric($c->value);
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
@@ -492,18 +478,13 @@ final class Rules
     public static function bool($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_BOOL;
-        $ruleFn = function (Context $c): bool {
-            return is_bool($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => is_bool($c->value);
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    /**
-     * @return Rule
-     */
     public static function email($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_EMAIL;
@@ -572,9 +553,8 @@ final class Rules
 
     /**
      * @param  string  $format https://www.php.net/manual/en/datetime.format.php
-     * @param  string|callable|null  $errormessage
      */
-    public static function date($format = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
+    public static function date($format = 'Y-m-d', string|callable|null $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_DATE;
         $ruleFn = function (Context $c) use ($format): bool {
@@ -606,7 +586,7 @@ final class Rules
                 $min = Helpers::valueOrFunction($min, $c);
 
                 return BigDecimal::of($c->value)->isGreaterThanOrEqualTo(BigDecimal::of($min));
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         };
@@ -624,7 +604,7 @@ final class Rules
                 $max = Helpers::valueOrFunction($max, $c);
 
                 return BigDecimal::of($c->value)->isLessThanOrEqualTo(BigDecimal::of($max));
-            } catch (\Throwable $th) {
+            } catch (\Throwable) {
                 return false;
             }
         };
@@ -719,9 +699,7 @@ final class Rules
     public static function array($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_ARRAY;
-        $ruleFn = function (Context $c): bool {
-            return is_array($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => is_array($c->value);
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
@@ -731,9 +709,7 @@ final class Rules
     public static function scalar($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_SCALAR;
-        $ruleFn = function (Context $c): bool {
-            return is_scalar($c->value);
-        };
+        $ruleFn = fn(Context $c): bool => is_scalar($c->value);
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 

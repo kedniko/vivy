@@ -75,19 +75,13 @@ final class TypeArray extends TypeCompound
     public function toJson(Options $options = null)
     {
         $errormessage = $options->getErrorMessage() ?: 'TRANSFORMER: toJson';
-        $transformer = new Transformer('toJson', function (Context $c) {
-            return json_encode($c->value);
-        }, $errormessage);
+        $transformer = new Transformer('toJson', fn(Context $c) => json_encode($c->value, JSON_THROW_ON_ERROR), $errormessage);
         $this->addTransformer($transformer, $options);
 
         return $this;
     }
 
-    /**
-     * @param  Type|array  $type
-     * @param  bool|callable  $stopOnItemFailure
-     */
-    public function each($type, $stopOnItemFailure = false, Options $options = null)
+    public function each(\Kedniko\Vivy\Plugins\StandardLibrary\Type|array $type, bool|callable $stopOnItemFailure = false, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
 
@@ -106,7 +100,7 @@ final class TypeArray extends TypeCompound
         $ruleID = Rules::ID_EACH;
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
             if (! is_array($c->value)) {
-                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
+                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value, JSON_THROW_ON_ERROR), 1);
             }
 
             $contextProxy = new ContextProxy($c);
@@ -157,9 +151,7 @@ final class TypeArray extends TypeCompound
         };
 
         if ($errormessage === null) {
-            $errormessage = function (Context $c) {
-                return $c->errors;
-            };
+            $errormessage = fn(Context $c) => $c->errors;
         }
 
         return new Rule($ruleID, $ruleFn, $errormessage);
