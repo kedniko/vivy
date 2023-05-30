@@ -35,7 +35,7 @@ final class V
      */
     public static $registeredMiddlewares = [];
 
-    private static $registered = [];
+    private static array $registered = [];
 
     /** @var Type */
     private const CURRENT_TYPE = null;
@@ -52,7 +52,7 @@ final class V
      * @param  null  $exportFile The file will be overwritten if it exists
      * @param  bool  $auto
      */
-    public static function scan($registerFunction = null, $exportFile = null)
+    public static function scan($registerFunction = null, $exportFile = null): void
     {
         (new ScanCommand())->handle($exportFile);
     }
@@ -65,7 +65,7 @@ final class V
     // 	return self::$currentType;
     // }
 
-    public static function rule($ruleID, callable $ruleFn, $errormessage = null)
+    public static function rule($ruleID, callable $ruleFn, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -74,26 +74,26 @@ final class V
      * @param  mixed  $transformerID
      * @param  callable  $transformerFn `fn(Context){...}`
      */
-    public static function transformer($transformerID, callable $transformerFn, Options $options = null)
+    public static function transformer($transformerID, callable $transformerFn, Options $options = null): \Kedniko\Vivy\Transformer
     {
         $options = Options::build($options, func_get_args());
 
         return new Transformer($transformerID, $transformerFn, $options->getErrorMessage());
     }
 
-    public static function callback($id, callable $callbackFn, Options $options = null)
+    public static function callback($id, callable $callbackFn, Options $options = null): \Kedniko\Vivy\Callback
     {
         $options = Options::build($options, func_get_args());
 
         return new Callback($id, $callbackFn, $options->getErrorMessage());
     }
 
-    public static function args(array $args = [])
+    public static function args(array $args = []): \Kedniko\Vivy\Core\Args
     {
         return new Args($args);
     }
 
-    public static function registerPlugin(VivyPlugin $classname)
+    public static function registerPlugin(VivyPlugin $classname): void
     {
         $classname->register();
         // if (Util::classImplements($classname, VivyPlugin::class)) {
@@ -101,7 +101,7 @@ final class V
         // 	}
     }
 
-    public static function register($setups)
+    public static function register($setups): void
     {
         $args = func_get_args();
         if (!count($args)) {
@@ -144,16 +144,16 @@ final class V
     }
 
 
-    private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null)
+    private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null): void
     {
         if ($middleware instanceof Middleware) {
-            $function_or_class = function () use ($middleware) {
+            $function_or_class = function () use ($middleware): \Kedniko\Vivy\Core\Middleware {
                 return $middleware;
             };
         } elseif (is_bool($middleware)) {
             $bool = $middleware;
             $function_or_class = function () use ($bool) {
-                return self::rule('::', function () use ($bool) {
+                return self::rule('::', function () use ($bool): bool {
                     return $bool;
                 });
             };
@@ -188,7 +188,7 @@ final class V
         }
     }
 
-    private static function registerMany($setups)
+    private static function registerMany($setups): void
     {
         foreach ($setups as $key => $setup) {
             if (count($setup) === 3) {
@@ -207,7 +207,7 @@ final class V
         }
     }
 
-    private static function registerClass($class)
+    private static function registerClass($class): void
     {
         self::register($class);
         self::$registered = [
@@ -265,14 +265,14 @@ final class V
         return self::$failHandler[$id];
     }
 
-    public static function setFailHandler(string $id, callable $handler)
+    public static function setFailHandler(string $id, callable $handler): void
     {
         if (is_callable($handler)) {
             self::$failHandler[$id] = $handler;
         }
     }
 
-    public static function issetVar(&$variable, $varname, $errormessage = null)
+    public static function issetVar(&$variable, $varname, $errormessage = null): \Kedniko\Vivy\Core\Validated
     {
         if (!isset($variable)) {
             return new Validated(null, [
@@ -296,7 +296,7 @@ final class V
      * @param  null  $errormessage
      * @return Validated
      */
-    public static function issetVarPath($array, $path, $errormessage = null)
+    public static function issetVarPath($array, $path, $errormessage = null): \Kedniko\Vivy\Core\Validated
     {
         if (!Arr::get($array, $path)) {
             $chunks = explode('.', $path);
@@ -334,7 +334,7 @@ final class V
      * @param  null  $errormessage
      * @return Validated
      */
-    public static function assertTrue($bool, $name, $errormessage = null)
+    public static function assertTrue($bool, $name, $errormessage = null): \Kedniko\Vivy\Core\Validated
     {
         if (!$bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
@@ -364,7 +364,7 @@ final class V
     //     return self::handleUserDefinedCall($methodName, $args);
     // }
 
-    private static function addRule(Rule $rule, Options $options)
+    private static function addRule(Rule $rule, Options $options): \Kedniko\Vivy\Types\Type
     {
         if ($options->getStopOnFailure() !== null && !is_bool($options->getStopOnFailure())) {
             throw new \InvalidArgumentException('$stopOnFailure must be of type bool|null in rule "' . $rule->getID() . '"', 1);
@@ -389,7 +389,7 @@ final class V
     /**
      * Remove this rule after it has been used the first time
      */
-    public static function optional()
+    public static function optional(): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $type = new TypeAny();
         $type->state->requiredIf = false;
@@ -397,7 +397,7 @@ final class V
         return $type;
     }
 
-    public static function requiredIf($value)
+    public static function requiredIf($value): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $type = new TypeAny();
         $type->state->requiredIf = $value;
@@ -405,7 +405,7 @@ final class V
         return $type;
     }
 
-    public static function requiredIfField($fieldname, $value)
+    public static function requiredIfField(string $fieldname, $value): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $type = new TypeAny();
         $getContextFn = function (Context $c) use ($fieldname) {

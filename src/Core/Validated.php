@@ -76,12 +76,12 @@ final class Validated
         return $this;
     }
 
-    public function fails()
+    public function fails(): bool
     {
         return $this->errors && count($this->errors);
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         $errors = $this->errors;
 

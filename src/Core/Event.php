@@ -4,14 +4,14 @@ namespace Kedniko\Vivy\Core;
 
 final class Event
 {
-    private static $eventListeners = [];
+    private static array $eventListeners = [];
 
-    public static function listen($name, $callable)
+    public static function listen($name, $callable): void
     {
         static::$eventListeners[$name][] = $callable;
     }
 
-    public static function dispatch($name, $payload = [])
+    public static function dispatch($name, $payload = []): void
     {
         if (! isset(static::$eventListeners[$name])) {
             return;

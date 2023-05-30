@@ -6,7 +6,7 @@ final class State
 {
     private $data;
 
-    private $name;
+    private string|\Kedniko\Vivy\Core\Undefined $name;
 
     private $types;
 
@@ -50,7 +50,7 @@ final class State
     /** @var LinkedList */
     private $middlewares;
 
-    private $middlewaresid = [];
+    private array $middlewaresid = [];
 
     private $onValid = [];
 
@@ -58,7 +58,7 @@ final class State
 
     private $stopOnFailure = false;
 
-    private $once = false;
+    private false $once = false;
 
     public $setupFn;
 
@@ -122,7 +122,7 @@ final class State
         return $this;
     }
 
-    public function canBeEmptyString()
+    public function canBeEmptyString(): bool
     {
         return $this->hasNotEmptyString() && $this->notEmptyString === false;
     }
@@ -135,7 +135,7 @@ final class State
     /**
      * Get the value of notEmptyString
      */
-    public function getNotEmptyString()
+    public function getNotEmptyString(): bool|\Kedniko\Vivy\Core\Undefined
     {
         return $this->notEmptyString;
     }
@@ -145,7 +145,7 @@ final class State
      *
      * @return  self
      */
-    public function setNotEmptyString($notEmptyString, $rule = null)
+    public function setNotEmptyString(bool|\Kedniko\Vivy\Core\Undefined $notEmptyString, $rule = null)
     {
         $this->notEmptyString = $notEmptyString;
         if ($rule instanceof Rule) {
@@ -155,7 +155,7 @@ final class State
         return $this;
     }
 
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required === true;
     }
@@ -163,7 +163,7 @@ final class State
     /**
      * Get the value of required
      */
-    public function getRequired()
+    public function getRequired(): bool|\Kedniko\Vivy\Core\Undefined
     {
         return $this->required;
     }
@@ -179,7 +179,7 @@ final class State
      * @param  bool  $required
      * @param  Rule  $rule
      */
-    public function setRequired($required, $rule = null)
+    public function setRequired(bool|\Kedniko\Vivy\Core\Undefined $required, $rule = null)
     {
         $this->required = $required;
         if ($rule instanceof Rule) {
@@ -237,7 +237,7 @@ final class State
         return $this;
     }
 
-    public function canBeNull()
+    public function canBeNull(): bool
     {
         return $this->hasNotNull() && $this->notNull === false;
     }
@@ -250,7 +250,7 @@ final class State
     /**
      * Get the value of notNull
      */
-    public function getNotNull()
+    public function getNotNull(): bool|\Kedniko\Vivy\Core\Undefined
     {
         return $this->notNull;
     }
@@ -260,7 +260,7 @@ final class State
      *
      * @return  self
      */
-    public function setNotNull($notNull)
+    public function setNotNull(bool|\Kedniko\Vivy\Core\Undefined $notNull)
     {
         $this->notNull = $notNull;
 

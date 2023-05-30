@@ -51,10 +51,10 @@ final class TypeGroup extends TypeCompound
      * @param  LinkedList|callable  $types
      * @param  mixed  $errormessage
      */
-    public function getGroupRule(bool $stopOnFieldFailure, $errormessage)
+    public function getGroupRule(bool $stopOnFieldFailure, $errormessage): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_GROUP;
-        $ruleFn = function (Context $c) use ($stopOnFieldFailure) {
+        $ruleFn = function (Context $c) use ($stopOnFieldFailure): \Kedniko\Vivy\Core\Validated {
             $typeFields = $this->getFieldsFromState($c);
 
             $continueLoopFields = true;
@@ -168,7 +168,7 @@ final class TypeGroup extends TypeCompound
         return $types;
     }
 
-    private function buildFieldFromString($setup)
+    private function buildFieldFromString(string $setup)
     {
         $type = $this->getNewUnkownField();
         foreach (explode('|', $setup) as $rule) {
@@ -178,7 +178,7 @@ final class TypeGroup extends TypeCompound
         return $type;
     }
 
-    private function buildFieldFromCallable($setup)
+    private function buildFieldFromCallable(callable $setup)
     {
         $type = $this->getNewUnkownEmptyField();
         $type->state->setupFn = $setup;
@@ -186,14 +186,14 @@ final class TypeGroup extends TypeCompound
         return $type;
     }
 
-    private function buildFieldFromArray($setup)
+    private function buildFieldFromArray(array $setup)
     {
         $type = V::group($setup);
 
         return $type;
     }
 
-    private function getFieldsFromAssociativeArraySetup($setupArray)
+    private function getFieldsFromAssociativeArraySetup($setupArray): \Kedniko\Vivy\Core\LinkedList
     {
         $types = new LinkedList();
 
@@ -224,7 +224,7 @@ final class TypeGroup extends TypeCompound
     //  * @param mixed $rule
     //  * @param GroupCustom $g
     //  */
-    private function applyRuleOnField($rule, $type)
+    private function applyRuleOnField(string $rule, $type): void
     {
         if ($rule === 'optional') {
             $type->optional();
@@ -250,7 +250,7 @@ final class TypeGroup extends TypeCompound
      * @param  mixed  $name
      * @return TypeAny
      */
-    private function getNewUnkownField(Options $options = null)
+    private function getNewUnkownField(Options $options = null): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $options = Helpers::getOptions($options);
         $errormessage = $options->getErrorMessage();
@@ -263,7 +263,7 @@ final class TypeGroup extends TypeCompound
         return $type;
     }
 
-    private function getNewUnkownEmptyField()
+    private function getNewUnkownEmptyField(): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $type = new TypeAny();
 

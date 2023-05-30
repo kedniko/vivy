@@ -18,7 +18,7 @@ class TypeString extends TypeScalar
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: TransformerMessage::getErrorMessage('string.prefix');
-        $transformer = new Transformer('prefix', function (Context $c) {
+        $transformer = new Transformer('prefix', function (Context $c): string {
             $prefix = Helpers::issetOrDefault($c->args()[0], '');
 
             return $prefix.$c->value;
@@ -92,7 +92,7 @@ class TypeString extends TypeScalar
         return $this;
     }
 
-    public function startsWith($startsWith, $ignoreCase = true, Options $options = null)
+    public function startsWith(string $startsWith, $ignoreCase = true, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.startsWith');
@@ -101,7 +101,7 @@ class TypeString extends TypeScalar
         return $this;
     }
 
-    public function endsWith($endsWith, $ignoreCase = true, Options $options = null)
+    public function endsWith(string $endsWith, $ignoreCase = true, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.endsWith');
@@ -110,7 +110,7 @@ class TypeString extends TypeScalar
         return $this;
     }
 
-    public function contains($contains, $ignoreCase = true, Options $options = null)
+    public function contains(string $contains, $ignoreCase = true, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.contains');
@@ -119,7 +119,7 @@ class TypeString extends TypeScalar
         return $this;
     }
 
-    public function length($length, Options $options = null)
+    public function length(int $length, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('string.length');

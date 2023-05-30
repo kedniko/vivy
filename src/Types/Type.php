@@ -109,7 +109,7 @@ class Type
         return $this;
     }
 
-    public function once()
+    public function once(): void
     {
         $this->state->setOnce(true);
     }
@@ -122,36 +122,30 @@ class Type
     // 	];
     // 	return $this;
     // }
-
     // public function deny($value)
     // {
     // 	$this->state->deny[] = $value;
     // 	return $this;
     // }
-
     // public function allowEmptyString()
     // {
     // 	$_this = $this->get_this();
-
     // 	$this->removeRule(Rules::ID_NOT_EMPTY_STRING);
     // 	$_this->state->setNotEmptyString(false);
     // 	return $this;
     // }
-
     // public function allowNull()
     // {
     // 	$_this = $this->get_this();
-
     // 	$this->removeRule(Rules::ID_NOT_NULL);
     // 	$_this->state->setNotNull(false);
     // 	return $this;
     // }
-
     /**
      * @param  Rule|Transformer|callable  $middleware
-     * @param  Options  $options
+     * @param Options|null $options
      */
-    private function addMiddleware($middleware, $options = null)
+    private function addMiddleware($middleware, ?\Kedniko\Vivy\Core\Options $options = null): void
     {
         $_this = $this->get_this();
 
@@ -183,7 +177,7 @@ class Type
         $_this->state->addMiddlewareId($middleware->getID());
     }
 
-    private function removeMiddleware($middlewareid, $removeOnlyOne = false, $hardRemove = true)
+    private function removeMiddleware($middlewareid, $removeOnlyOne = false, $hardRemove = true): void
     {
         $type = $this;
 
@@ -194,7 +188,7 @@ class Type
         if ($hardRemove) {
             /** @var LinkedList $linkedlist */
             $linkedlist = $type->state->getMiddlewares();
-            $linkedlist->remove(function (Middleware $middleware) use ($middlewareid) {
+            $linkedlist->remove(function (Middleware $middleware) use ($middlewareid): bool {
                 return $middleware->getID() === $middlewareid;
             }, $removeOnlyOne);
         }
@@ -576,7 +570,7 @@ class Type
         return $this->state->hasStopOnFailure() && $this->state->getStopOnFailure() === true;
     }
 
-    private function setName($name)
+    private function setName($name): void
     {
         $this->state->setName($name);
     }
@@ -651,7 +645,7 @@ class Type
         return $validated;
     }
 
-    private function applyMiddlewares()
+    private function applyMiddlewares(): void
     {
         /** @var LinkedList $middlewares */
         $middlewares = $this->fieldProxy->getMiddlewares();
@@ -1000,7 +994,7 @@ class Type
         return $this->isValid();
     }
 
-    private function getValidatedOnEmpty()
+    private function getValidatedOnEmpty(): void
     {
         $errors = [];
 

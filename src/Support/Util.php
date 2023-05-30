@@ -52,7 +52,10 @@ final class Util
         }
     }
 
-    private static function getParentClasses($class)
+    /**
+     * @return class-string<object>[]
+     */
+    private static function getParentClasses($class): array
     {
         $classes = [];
         $reflection = new \ReflectionClass($class);
@@ -63,12 +66,12 @@ final class Util
         return $classes;
     }
 
-    public static function getMethodParameters($class, $method)
+    public static function getMethodParameters($class, $method): array
     {
         $method = new \ReflectionMethod($class, $method);
         $parameters = $method->getParameters();
 
-        return array_map(function ($parameter) {
+        return array_map(function ($parameter): array {
             $parameterType = $parameter->getType();
             $parameterTypeName = $parameterType->getName();
 
@@ -194,7 +197,7 @@ final class Util
         return is_array($var) ? array_map([self::class, 'clone'], $var) : (is_object($var) ? clone $var : $var);
     }
 
-    public static function classImplements(string $classname, string $interface)
+    public static function classImplements(string $classname, string $interface): bool
     {
         $interfaces = class_implements($classname);
 

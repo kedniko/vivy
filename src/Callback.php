@@ -21,12 +21,12 @@ final class Callback extends Middleware
         return $this->errormessage;
     }
 
-    public function setErrorMessage($errmessage)
+    public function setErrorMessage($errmessage): void
     {
         $this->errormessage = $errmessage;
     }
 
-    public function setStopOnFailure($stopOnFailure)
+    public function setStopOnFailure($stopOnFailure): void
     {
         $this->stopOnFailure = $stopOnFailure;
     }

@@ -15,7 +15,7 @@ final class TypeStringEmail extends TypeString
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Questo dominio non esiste';
 
-        $rule = V::rule('domain-exists', function (Context $c) use ($record) {
+        $rule = V::rule('domain-exists', function (Context $c) use ($record): bool {
             $email = $c->value ?: '';
             $domain = explode('@', $email)[1];
 
@@ -34,7 +34,7 @@ final class TypeStringEmail extends TypeString
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
 
-        $rule = V::rule('invalid-domain', function (Context $c) use ($domain) {
+        $rule = V::rule('invalid-domain', function (Context $c) use ($domain): bool {
             $email = $c->value ?: '';
             $valuedomain = explode('@', $email)[1];
 
@@ -51,7 +51,7 @@ final class TypeStringEmail extends TypeString
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Il dominio non corrisponde';
 
-        $rule = V::rule('invalid-domain', function (Context $c) use ($domainArray) {
+        $rule = V::rule('invalid-domain', function (Context $c) use ($domainArray): bool {
             $email = $c->value ?: '';
             $valuedomain = explode('@', $email)[1];
 
@@ -68,7 +68,7 @@ final class TypeStringEmail extends TypeString
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
 
-        $rule = V::rule('invalid-domain', function (Context $c) use ($tld) {
+        $rule = V::rule('invalid-domain', function (Context $c) use ($tld): bool {
             $email = $c->value ?: '';
             $tldvalue = explode('.', explode('@', $email)[1])[1];
 
@@ -85,7 +85,7 @@ final class TypeStringEmail extends TypeString
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Il Top-level-domain non valido';
 
-        $rule = V::rule('invalid-domain', function (Context $c) use ($tldArray) {
+        $rule = V::rule('invalid-domain', function (Context $c) use ($tldArray): bool {
             $email = $c->value ?: '';
             $tldvalue = explode('.', explode('@', $email)[1])[1];
 

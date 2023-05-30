@@ -23,10 +23,8 @@ final class LinkedList
 
     /**
      * Iteration started
-     *
-     * @var bool
      * */
-    private $advance = false;
+    private bool $advance = false;
 
     /**
      * @param  array  $items
@@ -38,19 +36,19 @@ final class LinkedList
         }
     }
 
-    private function incrementLength()
+    private function incrementLength(): void
     {
         $this->length++;
     }
 
-    private function decrementLength()
+    private function decrementLength(): void
     {
         if ($this->length > 0) {
             $this->length--;
         }
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->length === 0;
     }
@@ -60,10 +58,13 @@ final class LinkedList
         return $this->length;
     }
 
-    public function toArray()
+    /**
+     * @return mixed[]
+     */
+    public function toArray(): array
     {
         $items = [];
-        $this->each(function ($item) use (&$items) {
+        $this->each(function ($item) use (&$items): void {
             $items[] = $item;
         });
 
@@ -85,7 +86,7 @@ final class LinkedList
     /**
      * @param  Node|mixed  $node
      */
-    public function prepend($node)
+    public function prepend($node): void
     {
         if (! $node instanceof Node) {
             $node = new Node($node);
@@ -99,7 +100,7 @@ final class LinkedList
     /**
      * @param  Node|mixed  $node
      */
-    public function append($node)
+    public function append($node): void
     {
         $this->incrementLength();
 
@@ -128,7 +129,7 @@ final class LinkedList
     /**
      * @param  Node|mixed  $node
      */
-    public function appendAfterCurrent($node)
+    public function appendAfterCurrent($node): void
     {
         $this->decrementLength();
 
@@ -157,7 +158,7 @@ final class LinkedList
         }
     }
 
-    public function hasNext()
+    public function hasNext(): bool
     {
         if ($this->advance === false) {
             return $this->current !== null;
@@ -166,7 +167,7 @@ final class LinkedList
         return $this->current->next !== null;
     }
 
-    public function each(callable $callback)
+    public function each(callable $callback): void
     {
         $this->rewind();
         while ($this->hasNext()) {
@@ -188,7 +189,7 @@ final class LinkedList
     // 	});
     // }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->advance = false;
         $this->current = $this->head;
@@ -214,12 +215,12 @@ final class LinkedList
         return $data;
     }
 
-    private function advanceCurrent()
+    private function advanceCurrent(): void
     {
         $this->current = $this->current->next;
     }
 
-    public function removeCurrent()
+    public function removeCurrent(): void
     {
         $this->decrementLength();
 
@@ -242,7 +243,7 @@ final class LinkedList
         $this->advance = false;
     }
 
-    public function remove(callable $filterCallback, $removeOnlyOne = false)
+    public function remove(callable $filterCallback, $removeOnlyOne = false): void
     {
         $prev = null;
         $node = $this->head;

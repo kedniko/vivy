@@ -4,14 +4,14 @@ namespace Kedniko\Vivy\Support;
 
 final class Map
 {
-    private $items = [];
+    private array $items = [];
 
-    public function add($obj, $key)
+    public function add($obj, $key): void
     {
         $this->items[$key] = $obj;
     }
 
-    public function remove($key)
+    public function remove($key): void
     {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);

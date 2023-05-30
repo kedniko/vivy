@@ -21,7 +21,7 @@ final class TypeArray extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di elementi non ammesso';
 
-        $middleware = new Rule('count', function (Context $c) use ($count) {
+        $middleware = new Rule('count', function (Context $c) use ($count): bool {
             if (! is_array($c->value)) {
                 return false;
             }
@@ -39,7 +39,7 @@ final class TypeArray extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di elementi troppo piccolo';
 
-        $middleware = new Rule('minCount', function (Context $c) use ($minCount) {
+        $middleware = new Rule('minCount', function (Context $c) use ($minCount): bool {
             if (! is_array($c->value)) {
                 return false;
             }
@@ -56,7 +56,7 @@ final class TypeArray extends TypeCompound
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di elementi troppo grande';
-        $middleware = new Rule('maxCount', function (Context $c) use ($maxCount) {
+        $middleware = new Rule('maxCount', function (Context $c) use ($maxCount): bool {
             if (! is_array($c->value)) {
                 return false;
             }
@@ -101,10 +101,10 @@ final class TypeArray extends TypeCompound
         return $this;
     }
 
-    private function getEachRule(Type $type, $stopOnItemFailure, $errormessage)
+    private function getEachRule(Type $type, $stopOnItemFailure, $errormessage): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_EACH;
-        $ruleFn = function (Context $c) use ($type, $stopOnItemFailure) {
+        $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
             if (! is_array($c->value)) {
                 throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
             }

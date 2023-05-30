@@ -6,29 +6,26 @@ use Kedniko\Vivy\Types\Type;
 
 final class Options
 {
-    private $stopOnFailure = true;
+    private bool $stopOnFailure = true;
 
-    private $stopOnSuccess = false;
+    private bool $stopOnSuccess = false;
 
     private $errormessage = null;
 
-    private $errormessageDefault;
+    private ?string $errormessageDefault = null;
 
-    /**
-     * @var bool
-     */
-    private $once = false;
+    private bool $once = false;
 
     private $if;
 
-    private $appendAfterCurrent;
+    private ?bool $appendAfterCurrent = null;
 
     /**
      * @var bool Optimization
      */
-    private $withContext = true;
+    private bool $withContext = true;
 
-    private $args = [];
+    private array $args = [];
 
     /**
      * @var Type
@@ -130,7 +127,7 @@ final class Options
      */
     public function setArgs($args)
     {
-        $args = array_filter($args, function ($arg) {
+        $args = array_filter($args, function ($arg): bool {
             return ! ($arg instanceof Options);
         });
         $this->args = $args;

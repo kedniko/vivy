@@ -48,7 +48,7 @@ final class TypeProxy extends Type
         return null;
     }
 
-    public function hasDefaultValue($ruleID)
+    public function hasDefaultValue($ruleID): bool
     {
         $array = $this->type->state->getDefaultValues();
 
@@ -139,9 +139,9 @@ final class TypeProxy extends Type
     // 	return $linkedList;
     // }
 
-    public function getRules()
+    public function getRules(): ?array
     {
-        return array_filter($this->type->state->getMiddlewares()->toArray(), function ($e) {
+        return array_filter($this->type->state->getMiddlewares()->toArray(), function ($e): bool {
             return $e instanceof Rule;
         });
     }
@@ -276,13 +276,13 @@ final class TypeProxy extends Type
         return $rule($fieldname, $body);
     }
 
-    public function canBeNull()
+    public function canBeNull(): bool
     {
         return $this->type->state->canBeNull();
         // return !$this->hasRule(Rules::ID_NOT_NULL);
     }
 
-    public function canBeEmptyString()
+    public function canBeEmptyString(): bool
     {
         return $this->type->state->canBeEmptyString();
         // return !$this->hasRule(Rules::ID_NOT_EMPTY_STRING);
@@ -301,7 +301,7 @@ final class TypeProxy extends Type
      * @param  string  $propertyName
      * @param  mixed  $value
      */
-    public function setChildStateProperty($propertyName, $value)
+    public function setChildStateProperty($propertyName, $value): void
     {
         $parts = explode('.', $propertyName);
         $propertyName = array_shift($parts);
@@ -313,12 +313,12 @@ final class TypeProxy extends Type
         // Arr::set($this->field->state, $propertyName, $value);
     }
 
-    public function setData($value)
+    public function setData($value): void
     {
         $this->type->state->setData($value);
     }
 
-    public function setChildState($state)
+    public function setChildState($state): void
     {
         $this->type->state = $state;
     }

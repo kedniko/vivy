@@ -4,14 +4,14 @@ namespace Kedniko\Vivy\Support;
 
 final class ArrayList
 {
-    private $items = [];
+    private array $items = [];
 
-    public function add($obj, $key = null)
+    public function add($obj, $key = null): void
     {
         $this->items[] = $obj;
     }
 
-    public function remove($key)
+    public function remove($key): void
     {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);

@@ -51,13 +51,13 @@ class TypeNumber extends TypeScalar
         return $this;
     }
 
-    public function decimalPartIs($number, Options $options = null)
+    public function decimalPartIs(\Brick\Math\BigNumber|int|float|string $number, Options $options = null)
     {
         $ruleID = self::ID_NUMBER_DECIMAL_PART_IS;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-        $rule = V::rule($ruleID, function (Context $c) use ($number) {
+        $rule = V::rule($ruleID, function (Context $c) use ($number): bool {
             try {
                 $srcFractionalPart = BigDecimal::of('0.'.BigDecimal::of($c->value)->getFractionalPart());
                 $destfractionalPart = BigDecimal::of('0.'.BigDecimal::of($number)->getFractionalPart());
@@ -73,13 +73,13 @@ class TypeNumber extends TypeScalar
         return $this;
     }
 
-    public function multipleOf($number, Options $options = null)
+    public function multipleOf(\Brick\Math\BigNumber|int|float|string $number, Options $options = null)
     {
         $ruleID = self::ID_NUMBER_MULTIPLE_OF;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-        $rule = V::rule($ruleID, function (Context $c) use ($number) {
+        $rule = V::rule($ruleID, function (Context $c) use ($number): bool {
             try {
                 $result = BigDecimal::of($c->value)->remainder($number);
 
@@ -94,13 +94,13 @@ class TypeNumber extends TypeScalar
         return $this;
     }
 
-    public function decimalPartMin($min, Options $options = null)
+    public function decimalPartMin(\Brick\Math\BigNumber|int|float|string $min, Options $options = null)
     {
         $ruleID = self::ID_NUMBER_DECIMAL_PART_MIN;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-        $rule = V::rule($ruleID, function (Context $c) use ($min) {
+        $rule = V::rule($ruleID, function (Context $c) use ($min): bool {
             try {
                 $srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
                 $destfractionalPart = BigDecimal::of($min)->getFractionalPart();
@@ -118,13 +118,13 @@ class TypeNumber extends TypeScalar
         return $this;
     }
 
-    public function fractionalPartMax($max, Options $options = null)
+    public function fractionalPartMax(\Brick\Math\BigNumber|int|float|string $max, Options $options = null)
     {
         $ruleID = self::ID_NUMBER_DECIMAL_PART_MAX;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleID}");
 
-        $rule = V::rule($ruleID, function (Context $c) use ($max) {
+        $rule = V::rule($ruleID, function (Context $c) use ($max): bool {
             try {
                 $srcFractionalPart = BigDecimal::of($c->value)->getFractionalPart();
                 $destfractionalPart = BigDecimal::of($max)->getFractionalPart();
@@ -147,7 +147,7 @@ class TypeNumber extends TypeScalar
         $ruleid = self::ID_NUMBER_BETWEEN;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-        $rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
+        $rule = new Rule($ruleid, function (Context $c) use ($min, $max): bool {
             $value = $c->value;
 
             return $value >= $min && $value <= $max;
@@ -163,7 +163,7 @@ class TypeNumber extends TypeScalar
         $ruleid = self::ID_NUMBER_NOT_BETWEEN;
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage("number.{$ruleid}");
-        $rule = new Rule($ruleid, function (Context $c) use ($min, $max) {
+        $rule = new Rule($ruleid, function (Context $c) use ($min, $max): bool {
             $value = $c->value;
 
             return ! ($value >= $min && $value <= $max);

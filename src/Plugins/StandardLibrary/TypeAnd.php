@@ -14,7 +14,7 @@ final class TypeAnd extends Type
 {
     /**
      * @param  Type[]  $types
-     * @param  Options  $options
+     * @param Options|null $options
      */
     public function __construct(array $types, $isNot = false, Options $options = null)
     {
@@ -36,11 +36,11 @@ final class TypeAnd extends Type
      * @param  bool  $isNot - true = all rule false. false = any rule true
      * @param  string|null  $errormessage
      */
-    private function getAndRule($types, $isNot, $errormessage = null)
+    private function getAndRule(array $types, $isNot, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_AND;
         $types = new LinkedList($types);
-        $ruleFn = function (Context $c) use (&$types, $isNot) {
+        $ruleFn = function (Context $c) use (&$types, $isNot): bool|\Kedniko\Vivy\Core\Validated {
             $errors = [];
 
             $types->rewind();

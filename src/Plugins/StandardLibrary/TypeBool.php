@@ -26,7 +26,7 @@ final class TypeBool extends TypeScalar
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('bool.isTrue');
-        $rule = new Rule('bool-is-true', function (Context $c) {
+        $rule = new Rule('bool-is-true', function (Context $c): bool {
             return $c->value === true;
         }, $errormessage);
 
@@ -39,7 +39,7 @@ final class TypeBool extends TypeScalar
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('bool.isFalse');
-        $rule = new Rule('bool-is-false', function (Context $c) {
+        $rule = new Rule('bool-is-false', function (Context $c): bool {
             return $c->value === false;
         }, $errormessage);
 
@@ -50,10 +50,10 @@ final class TypeBool extends TypeScalar
 
     // Rules
 
-    private static function ruleBooeanIs($bool, $errormessage = null)
+    private static function ruleBooeanIs($bool, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'boolIs';
-        $ruleFn = function (Context $c) use ($bool) {
+        $ruleFn = function (Context $c) use ($bool): bool {
             return $c->value === $bool;
         };
 

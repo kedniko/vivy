@@ -40,7 +40,7 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('regex');
-        $rule = new Rule($ruleID, function (Context $c) use ($regex) {
+        $rule = new Rule($ruleID, function (Context $c) use ($regex): bool {
             if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
@@ -57,7 +57,7 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('regex');
-        $rule = new Rule($ruleID, function (Context $c) use ($regex) {
+        $rule = new Rule($ruleID, function (Context $c) use ($regex): bool {
             if (! $c->value || ! is_string($c->value)) {
                 return false;
             }

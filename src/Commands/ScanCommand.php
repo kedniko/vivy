@@ -8,10 +8,10 @@ use Kedniko\Vivy\V;
 
 final class ScanCommand
 {
-    public function handle($exportPath = null)
+    public function handle($exportPath = null): void
     {
         $exportPath = $exportPath ?? 'ide-helper.rules.php';
-        $registered = array_map(function ($item) {
+        $registered = array_map(function ($item): \Kedniko\PhpIdeHelper\Register {
             $r = new Register();
 
             $returnType = $item['returnType'];
@@ -36,7 +36,7 @@ final class ScanCommand
         $ih->generate($exportPath);
     }
 
-    private function getHeader()
+    private function getHeader(): string
     {
         return <<<'HEADER'
 

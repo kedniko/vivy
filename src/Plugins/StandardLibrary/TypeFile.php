@@ -19,7 +19,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Mime non corretto';
 
-        $middleware = new Rule('mime', function (Context $c) use ($mime) {
+        $middleware = new Rule('mime', function (Context $c) use ($mime): bool {
             $valueMime = $c->value['type'];
 
             return $valueMime === $mime;
@@ -35,7 +35,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Non è un pdf';
 
-        $middleware = new Rule('pdf', function (Context $c) {
+        $middleware = new Rule('pdf', function (Context $c): bool {
             $valueMime = $c->value['type'];
 
             return $valueMime === self::MIME_PDF;
@@ -54,7 +54,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Estensione non corretta';
 
-        $middleware = new Rule('extension', function (Context $c) use ($extensions) {
+        $middleware = new Rule('extension', function (Context $c) use ($extensions): bool {
             return in_array(pathinfo($c->value['tmp_name'], PATHINFO_EXTENSION), (array) $extensions);
         }, $errormessage);
 
@@ -68,7 +68,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Estensione non corretta';
 
-        $middleware = new Rule('extension', function (Context $c) use ($extension) {
+        $middleware = new Rule('extension', function (Context $c) use ($extension): bool {
             return $extension === pathinfo($c->value['tmp_name'], PATHINFO_EXTENSION);
         }, $errormessage);
 
@@ -82,7 +82,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Lunghezza basename non valida';
 
-        $middleware = new Rule('baseNameEquals', function (Context $c) use ($basename) {
+        $middleware = new Rule('baseNameEquals', function (Context $c) use ($basename): bool {
             return $basename === pathinfo($c->value['basename'], PATHINFO_BASENAME);
         }, $errormessage);
 
@@ -96,7 +96,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Lunghezza basename non valida';
 
-        $middleware = new Rule('baseNameLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('baseNameLength', function (Context $c) use ($maxLength): bool {
             return $maxLength === strlen(pathinfo($c->value['basename'], PATHINFO_BASENAME));
         }, $errormessage);
 
@@ -110,7 +110,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Basename troppo corto';
 
-        $middleware = new Rule('baseNameMinLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('baseNameMinLength', function (Context $c) use ($maxLength): bool {
             return $maxLength >= strlen(pathinfo($c->value['basename'], PATHINFO_BASENAME));
         }, $errormessage);
 
@@ -124,7 +124,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Basename troppo lungo';
 
-        $middleware = new Rule('baseNameMaxLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('baseNameMaxLength', function (Context $c) use ($maxLength): bool {
             return $maxLength <= strlen(pathinfo($c->value['basename'], PATHINFO_BASENAME));
         }, $errormessage);
 
@@ -138,7 +138,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Lunghezza filename non valida';
 
-        $middleware = new Rule('FileNameLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('FileNameLength', function (Context $c) use ($maxLength): bool {
             return $maxLength === strlen(pathinfo($c->value['FILENAME'], PATHINFO_FILENAME));
         }, $errormessage);
 
@@ -152,7 +152,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Filename troppo corto';
 
-        $middleware = new Rule('fileNameMinLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('fileNameMinLength', function (Context $c) use ($maxLength): bool {
             return $maxLength >= strlen(pathinfo($c->value['FILENAME'], PATHINFO_FILENAME));
         }, $errormessage);
 
@@ -166,7 +166,7 @@ final class TypeFile extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Filename troppo lungo';
 
-        $middleware = new Rule('fileNameMaxLength', function (Context $c) use ($maxLength) {
+        $middleware = new Rule('fileNameMaxLength', function (Context $c) use ($maxLength): bool {
             return $maxLength <= strlen(pathinfo($c->value['FILENAME'], PATHINFO_FILENAME));
         }, $errormessage);
 
@@ -182,7 +182,7 @@ final class TypeFile extends TypeCompound
 
         $size = $this->convertUnit($size, $unit, 'B');
 
-        $middleware = new Rule('size', function (Context $c) use ($size) {
+        $middleware = new Rule('size', function (Context $c) use ($size): bool {
             $valueSize = $c->value['size'];
 
             return floatval($valueSize) === floatval($size);
@@ -204,7 +204,7 @@ final class TypeFile extends TypeCompound
 
         $maxSize = $this->convertUnit($maxSize, $unit, 'B');
 
-        $middleware = new Rule('maxSize', function (Context $c) use ($maxSize) {
+        $middleware = new Rule('maxSize', function (Context $c) use ($maxSize): bool {
             $valueSize = $c->value['size'];
 
             return $valueSize <= $maxSize;
@@ -222,7 +222,7 @@ final class TypeFile extends TypeCompound
 
         $minSize = $this->convertUnit($minSize, $unit, 'B');
 
-        $middleware = new Rule('minSize', function (Context $c) use ($minSize) {
+        $middleware = new Rule('minSize', function (Context $c) use ($minSize): bool {
             $valueSize = $c->value['size'];
 
             return $valueSize >= $minSize;
@@ -239,7 +239,7 @@ final class TypeFile extends TypeCompound
      * @param  mixed  $to `B`|`KB`|`MB`|`GB`
      * @return int|float
      */
-    private function convertUnit($value, $from, $to)
+    private function convertUnit($value, $from, string $to)
     {
         $from = strtoupper($from);
         $to = strtoupper($to);

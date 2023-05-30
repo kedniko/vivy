@@ -18,7 +18,7 @@ final class TypeStringDate extends TypeString
         $sourceFormat = $this->state->_extra['format'];
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage();
 
-        $transformer = new Transformer('toFormat', function (Context $c) use ($format, $sourceFormat) {
+        $transformer = new Transformer('toFormat', function (Context $c) use ($format, $sourceFormat): string {
             if ($c->value instanceof DateTime) {
                 $given = $c->value;
             } else {
@@ -85,7 +85,7 @@ final class TypeStringDate extends TypeString
         return $this;
     }
 
-    public function notBetweenInclusive($minDate, $maxDate, Options $options = null)
+    public function notBetweenInclusive(\DateTime $minDate, \DateTime $maxDate, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('date.between');

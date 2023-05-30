@@ -27,7 +27,7 @@ final class TypeFiles extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di file errato';
 
-        $middleware = new Rule('count', function (Context $c) use ($count) {
+        $middleware = new Rule('count', function (Context $c) use ($count): bool {
             $value = $c->value;
 
             return count($value['name']) === $count &&
@@ -48,7 +48,7 @@ final class TypeFiles extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di file troppo piccolo';
 
-        $middleware = new Rule('minCount', function (Context $c) use ($minCount) {
+        $middleware = new Rule('minCount', function (Context $c) use ($minCount): bool {
             $value = $c->value;
 
             return count($value['name']) >= $minCount &&
@@ -69,7 +69,7 @@ final class TypeFiles extends TypeCompound
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Numero di file troppo grande';
 
-        $middleware = new Rule('maxCount', function (Context $c) use ($maxCount) {
+        $middleware = new Rule('maxCount', function (Context $c) use ($maxCount): bool {
             $value = $c->value;
 
             return is_array($value) &&
@@ -97,7 +97,7 @@ final class TypeFiles extends TypeCompound
 
         $totalSize = $this->convertUnit($totalSize, $unit, 'B');
 
-        $middleware = new Rule('totalSize', function (Context $c) use ($totalSize) {
+        $middleware = new Rule('totalSize', function (Context $c) use ($totalSize): bool {
             $value = $c->value;
             $totalSize = 0;
             foreach ($value['size'] as $size) {
@@ -123,7 +123,7 @@ final class TypeFiles extends TypeCompound
 
         $minTotalSize = $this->convertUnit($minTotalSize, $unit, 'B');
 
-        $middleware = new Rule('minTotalSize', function (Context $c) use ($minTotalSize) {
+        $middleware = new Rule('minTotalSize', function (Context $c) use ($minTotalSize): bool {
             $value = $c->value;
             $totalSize = 0;
             foreach ($value['size'] as $size) {
@@ -149,7 +149,7 @@ final class TypeFiles extends TypeCompound
 
         $maxTotalSize = $this->convertUnit($maxTotalSize, $unit, 'B');
 
-        $middleware = new Rule('maxTotalSize', function (Context $c) use ($maxTotalSize) {
+        $middleware = new Rule('maxTotalSize', function (Context $c) use ($maxTotalSize): bool {
             $value = $c->value;
             $totalSize = 0;
             foreach ($value['size'] as $size) {
@@ -191,9 +191,9 @@ final class TypeFiles extends TypeCompound
         return $this;
     }
 
-    private function getEachRule(Type $type, $stopOnItemFailure, $errormessage)
+    private function getEachRule(Type $type, $stopOnItemFailure, $errormessage): \Kedniko\Vivy\Core\Rule
     {
-        $ruleFn = function (Context $c) use ($type, $stopOnItemFailure) {
+        $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
             if (! is_array($c->value)) {
                 throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
             }
@@ -258,7 +258,7 @@ final class TypeFiles extends TypeCompound
      * @param  mixed  $from `B`|`KB`|`MB`|`GB`
      * @param  mixed  $to `B`|`KB`|`MB`|`GB`
      */
-    private function convertUnit($value, $from, $to)
+    private function convertUnit($value, $from, string $to)
     {
         $from = strtoupper($from);
         $to = strtoupper($to);
@@ -281,7 +281,7 @@ final class TypeFiles extends TypeCompound
         return $value;
     }
 
-    private function normalizeFileStructure($files)
+    private function normalizeFileStructure(array $files)
     {
         foreach ($files as $property => $value) {
             for ($i = 0, $count = count($value); $i < $count; $i++) {

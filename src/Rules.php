@@ -92,7 +92,7 @@ final class Rules
 
     const ID_INT_STRING = 'intString';
 
-    public static function getInvisibleKeys()
+    public static function getInvisibleKeys(): array
     {
         return [
             self::ID_GROUP,
@@ -132,7 +132,7 @@ final class Rules
         return $rule;
     }
 
-    public static function required($errormessage = null)
+    public static function required($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_REQUIRED;
         $ruleFn = null;
@@ -141,10 +141,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notFalsy($errormessage = null)
+    public static function notFalsy($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_FALSY;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return $c->value ? true : false;
         };
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -152,10 +152,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notNull($errormessage = null)
+    public static function notNull($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_NULL;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return $c->value !== null;
         };
 
@@ -164,10 +164,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function null($errormessage = null)
+    public static function null($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NULL;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return $c->value === null;
         };
 
@@ -176,10 +176,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notEmptyString($trim = false, $errormessage = null)
+    public static function notEmptyString($trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_EMPTY_STRING;
-        $ruleFn = function (Context $c) use ($trim) {
+        $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
             if (is_string($value) && $trim) {
@@ -193,10 +193,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function emptyString($trim = false, $errormessage = null)
+    public static function emptyString($trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_EMPTY_STRING;
-        $ruleFn = function (Context $c) use ($trim) {
+        $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
             if (is_string($value) && $trim) {
@@ -210,10 +210,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function string($allowEmpty = true, $trimBeforeCheckEmpty = false, $toTrim = false, $errormessage = null)
+    public static function string($allowEmpty = true, $trimBeforeCheckEmpty = false, $toTrim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_STRING;
-        $ruleFn = function (Context $c) use ($allowEmpty, $toTrim, $trimBeforeCheckEmpty) {
+        $ruleFn = function (Context $c) use ($allowEmpty, $toTrim, $trimBeforeCheckEmpty): bool {
             $value = $c->value;
 
             $allowEmpty = Helpers::valueOrFunction($allowEmpty, $c);
@@ -244,10 +244,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function digitsString($trim = false, $errormessage = null)
+    public static function digitsString($trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_DIGITS_STRING;
-        $ruleFn = function (Context $c) use ($trim) {
+        $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             $value = $c->value;
             if (! is_string($value)) {
@@ -266,7 +266,7 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function intString($trim = false, $errormessage = null)
+    public static function intString($trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_INTSTRING;
         $ruleFn = function (Context $c) use ($trim) {
@@ -282,10 +282,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function boolString($errormessage = null)
+    public static function boolString($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_BOOL_STRING;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return in_array($c->value, ['true', 'false'], true);
         };
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -293,7 +293,7 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function intBool($strict = false, $errormessage = null)
+    public static function intBool($strict = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_INTBOOL;
         $ruleFn = function (Context $c) use ($strict) {
@@ -310,10 +310,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function file($errormessage = null)
+    public static function file($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FILE;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             $value = $c->value;
 
             $isOfTypeFile = isset($value['name']) &&
@@ -335,10 +335,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function int($errormessage = null)
+    public static function int($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_INT;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return is_int($c->value);
         };
 
@@ -360,10 +360,10 @@ final class Rules
     // 	return new Rule($ruleID, $ruleFn, $errormessage);
     // }
 
-    public static function floatOrInt($errormessage = null)
+    public static function floatOrInt($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FLOAT_OR_INT;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return is_float($c->value) || is_int($c->value);
         };
 
@@ -372,10 +372,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function number($errormessage = null)
+    public static function number($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_NUMBER;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return ! is_string($c->value) && is_numeric($c->value);
         };
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -383,10 +383,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function float($strictFloat = true, $errormessage = null)
+    public static function float($strictFloat = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FLOAT;
-        $ruleFn = function (Context $c) use ($strictFloat) {
+        $ruleFn = function (Context $c) use ($strictFloat): bool {
             $strictFloat = Helpers::valueOrFunction($strictFloat, $c);
             if ($strictFloat) {
                 return is_float($c->value);
@@ -400,7 +400,7 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function floatString($strictFloat = true, $trim = false, $errormessage = null)
+    public static function floatString($strictFloat = true, $trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FLOAT_STRING;
         $ruleFn = function (Context $c) use ($strictFloat, $trim) {
@@ -454,10 +454,10 @@ final class Rules
         return $isTypeFloatString || $isTypeIntString;
     }
 
-    public static function numberString($trim = false, $errormessage = null)
+    public static function numberString($trim = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_FLOAT_STRING;
-        $ruleFn = function (Context $c) use ($trim) {
+        $ruleFn = function (Context $c) use ($trim): bool {
             $trim = Helpers::valueOrFunction($trim, $c);
             if (! is_string($c->value)) {
                 return false;
@@ -474,7 +474,7 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function undefined($errormessage = null)
+    public static function undefined($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_UNDEFINED;
         $ruleFn = fn () => Undefined::instance();
@@ -484,10 +484,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function bool($errormessage = null)
+    public static function bool($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_BOOL;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return is_bool($c->value);
         };
 
@@ -499,10 +499,10 @@ final class Rules
     /**
      * @return Rule
      */
-    public static function email($errormessage = null)
+    public static function email($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_EMAIL;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
@@ -515,10 +515,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function equals($value, $strict = true, $errormessage = null)
+    public static function equals($value, $strict = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'equals';
-        $ruleFn = function (Context $c) use ($value, $strict) {
+        $ruleFn = function (Context $c) use ($value, $strict): bool {
             $value = Helpers::valueOrFunction($value, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
 
@@ -530,10 +530,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notEquals($value, $strict, $errormessage = null)
+    public static function notEquals($value, $strict, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'notEquals';
-        $ruleFn = function (Context $c) use ($value, $strict) {
+        $ruleFn = function (Context $c) use ($value, $strict): bool {
             $value = Helpers::valueOrFunction($value, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
 
@@ -545,10 +545,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function phone($errormessage = null)
+    public static function phone($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_PHONE;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             if (! $c->value || ! is_string($c->value)) {
                 return false;
             }
@@ -565,10 +565,10 @@ final class Rules
      * @param  string  $format https://www.php.net/manual/en/datetime.format.php
      * @param  string|callable|null  $errormessage
      */
-    public static function date($format = 'Y-m-d', $errormessage = null)
+    public static function date($format = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_DATE;
-        $ruleFn = function (Context $c) use ($format) {
+        $ruleFn = function (Context $c) use ($format): bool {
             $format = Helpers::valueOrFunction($format, $c);
             if (! $c->value || ! is_string($c->value)) {
                 return false;
@@ -586,10 +586,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function min($min, $errormessage = null)
+    public static function min(\Brick\Math\BigNumber|int|float|string $min, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_MIN;
-        $ruleFn = function (Context $c) use ($min) {
+        $ruleFn = function (Context $c) use ($min): bool {
             try {
                 $min = Helpers::valueOrFunction($min, $c);
 
@@ -604,10 +604,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function max($max, $errormessage = null)
+    public static function max(\Brick\Math\BigNumber|int|float|string $max, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_MAX;
-        $ruleFn = function (Context $c) use ($max) {
+        $ruleFn = function (Context $c) use ($max): bool {
             try {
                 $max = Helpers::valueOrFunction($max, $c);
 
@@ -622,10 +622,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function minDate(Datetime $date, $sourceFormat = 'Y-m-d', $errormessage = null)
+    public static function minDate(Datetime $date, $sourceFormat = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_MIN_DATE;
-        $ruleFn = function (Context $c) use ($date, $sourceFormat) {
+        $ruleFn = function (Context $c) use ($date, $sourceFormat): bool {
             $date = Helpers::valueOrFunction($date, $c);
             $sourceFormat = Helpers::valueOrFunction($sourceFormat, $c);
             if ($c->value instanceof DateTime) {
@@ -642,10 +642,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function maxDate(Datetime $date, $sourceFormat = 'Y-m-d', $errormessage = null)
+    public static function maxDate(Datetime $date, $sourceFormat = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_MAX_DATE;
-        $ruleFn = function (Context $c) use ($date, $sourceFormat) {
+        $ruleFn = function (Context $c) use ($date, $sourceFormat): bool {
             $date = Helpers::valueOrFunction($date, $c);
             $sourceFormat = Helpers::valueOrFunction($sourceFormat, $c);
             if ($c->value instanceof DateTime) {
@@ -662,10 +662,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function between(Datetime $minDate, Datetime $maxDate, $sourceFormat = 'Y-m-d', $errormessage = null)
+    public static function between(Datetime $minDate, Datetime $maxDate, $sourceFormat = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_DATE_BETWEEN;
-        $ruleFn = function (Context $c) use ($minDate, $maxDate, $sourceFormat) {
+        $ruleFn = function (Context $c) use ($minDate, $maxDate, $sourceFormat): bool {
             $minDate = Helpers::valueOrFunction($minDate, $c);
             $maxDate = Helpers::valueOrFunction($maxDate, $c);
             $sourceFormat = Helpers::valueOrFunction($sourceFormat, $c);
@@ -683,10 +683,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notBetween(Datetime $minDate, Datetime $maxDate, $sourceFormat = 'Y-m-d', $errormessage = null)
+    public static function notBetween(Datetime $minDate, Datetime $maxDate, $sourceFormat = 'Y-m-d', $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_DATE_BETWEEN;
-        $ruleFn = function (Context $c) use ($minDate, $maxDate, $sourceFormat) {
+        $ruleFn = function (Context $c) use ($minDate, $maxDate, $sourceFormat): bool {
             $minDate = Helpers::valueOrFunction($minDate, $c);
             $maxDate = Helpers::valueOrFunction($maxDate, $c);
             $sourceFormat = Helpers::valueOrFunction($sourceFormat, $c);
@@ -704,10 +704,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function array($errormessage = null)
+    public static function array($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_ARRAY;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return is_array($c->value);
         };
 
@@ -716,10 +716,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function scalar($errormessage = null)
+    public static function scalar($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_SCALAR;
-        $ruleFn = function (Context $c) {
+        $ruleFn = function (Context $c): bool {
             return is_scalar($c->value);
         };
 
@@ -728,10 +728,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function in($array, $strict = true, $errormessage = null)
+    public static function in($array, $strict = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_IN_ARRAY;
-        $ruleFn = function (Context $c) use ($array, $strict) {
+        $ruleFn = function (Context $c) use ($array, $strict): bool {
             $array = Helpers::valueOrFunction($array, $c);
             $strict = Helpers::valueOrFunction($strict, $c);
 
@@ -743,10 +743,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function notInArray($array, $errormessage = null)
+    public static function notInArray($array, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_NOT_IN_ARRAY;
-        $ruleFn = function (Context $c) use ($array) {
+        $ruleFn = function (Context $c) use ($array): bool {
             $array = Helpers::valueOrFunction($array, $c);
 
             return ! in_array($c->value, $array, true);
@@ -757,10 +757,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleEndsWith(string $endsWith, $ignoreCase = true, $errormessage = null)
+    public static function ruleEndsWith(string $endsWith, $ignoreCase = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'endsWith';
-        $ruleFn = function (Context $c) use ($endsWith, $ignoreCase) {
+        $ruleFn = function (Context $c) use ($endsWith, $ignoreCase): bool {
             $endsWith = Helpers::valueOrFunction($endsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
             if (! $c->value || ! is_string($c->value)) {
@@ -775,10 +775,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleStartsWith(string $startsWith, $ignoreCase = true, $errormessage = null)
+    public static function ruleStartsWith(string $startsWith, $ignoreCase = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'startsWith';
-        $ruleFn = function (Context $c) use ($startsWith, $ignoreCase) {
+        $ruleFn = function (Context $c) use ($startsWith, $ignoreCase): bool {
             $startsWith = Helpers::valueOrFunction($startsWith, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
             if (! $c->value || ! is_string($c->value)) {
@@ -793,10 +793,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleContains(string $contains, $ignoreCase = true, $errormessage = null)
+    public static function ruleContains(string $contains, $ignoreCase = true, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'contains';
-        $ruleFn = function (Context $c) use ($contains, $ignoreCase) {
+        $ruleFn = function (Context $c) use ($contains, $ignoreCase): bool {
             $contains = Helpers::valueOrFunction($contains, $c);
             $ignoreCase = Helpers::valueOrFunction($ignoreCase, $c);
             if (! $c->value || ! is_string($c->value)) {
@@ -811,10 +811,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleMinLength($length, $errormessage = null)
+    public static function ruleMinLength($length, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'minLength';
-        $ruleFn = function (Context $c) use ($length) {
+        $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
             if (! $c->value || ! is_string($c->value)) {
                 return false;
@@ -828,10 +828,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleMaxLength($length, $errormessage = null)
+    public static function ruleMaxLength($length, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'maxLength';
-        $ruleFn = function (Context $c) use ($length) {
+        $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
             if (! $c->value || ! is_string($c->value)) {
                 return false;
@@ -845,10 +845,10 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    public static function ruleLength(int $length, $errormessage = null)
+    public static function ruleLength(int $length, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = 'length';
-        $ruleFn = function (Context $c) use ($length) {
+        $ruleFn = function (Context $c) use ($length): bool {
             $length = Helpers::valueOrFunction($length, $c);
             if (! $c->value || ! is_string($c->value)) {
                 return false;

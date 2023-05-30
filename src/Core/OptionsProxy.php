@@ -9,7 +9,7 @@ final class OptionsProxy extends Options
         $this->builder = $builder;
     }
 
-    public function setBuilder($builder)
+    public function setBuilder($builder): void
     {
         $this->builder = $builder;
     }

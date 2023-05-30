@@ -37,12 +37,12 @@ final class Transformers
 
     const ID_NUMBER_TO_STRING = 'numberToString';
 
-    public static function trim($characters = " \t\n\r\0\x0B", $errormessage = null)
+    public static function trim($characters = " \t\n\r\0\x0B", $errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_TRIM;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) use ($characters) {
+        return new Transformer($transformerID, function (Context $c) use ($characters): ?string {
             $value = $c->value;
             if ($value === null) {
                 return $value;
@@ -55,12 +55,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function ltrim($characters = " \t\n\r\0\x0B", $errormessage = null)
+    public static function ltrim($characters = " \t\n\r\0\x0B", $errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_LTRIM;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) use ($characters) {
+        return new Transformer($transformerID, function (Context $c) use ($characters): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -70,12 +70,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function rtrim($characters = " \t\n\r\0\x0B", $errormessage = null)
+    public static function rtrim($characters = " \t\n\r\0\x0B", $errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_RTRIM;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) use ($characters) {
+        return new Transformer($transformerID, function (Context $c) use ($characters): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -85,12 +85,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function toUpperCase($errormessage = null)
+    public static function toUpperCase($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_TO_UPPER_CASE;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -100,12 +100,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function toLowerCase($errormessage = null)
+    public static function toLowerCase($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_TO_LOWER_CASE;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -115,12 +115,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function firstLetterUpperCase($errormessage = null)
+    public static function firstLetterUpperCase($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_FIRST_LETTER_UPPER_CASE;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -130,12 +130,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function firstLetterLowerCase($errormessage = null)
+    public static function firstLetterLowerCase($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_FIRST_LETTER_LOWER_CASE;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): string {
             $value = $c->value;
             if (! is_string($value)) {
                 throw new VivyTransformerException();
@@ -153,12 +153,12 @@ final class Transformers
      *
      * @throws VivyTransformerException
      */
-    public static function stringToInt($errormessage = null)
+    public static function stringToInt($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_STRING_TO_INT;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): int {
             $value = $c->value;
 
             if (! is_string($value)) {
@@ -174,12 +174,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function stringBoolToBool($errormessage = null)
+    public static function stringBoolToBool($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_STRING_TO_BOOL;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): bool {
             $value = $c->value;
 
             if (! is_string($value)) {
@@ -194,7 +194,7 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function intToString($errormessage = null)
+    public static function intToString($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_INT_TO_STRING;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
@@ -214,7 +214,7 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function numberToString($errormessage = null)
+    public static function numberToString($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_NUMBER_TO_STRING;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
@@ -234,12 +234,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function boolToInt($errormessage = null)
+    public static function boolToInt($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_BOOL_TO_INT;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): int {
             $value = $c->value;
 
             if (! is_bool($value)) {
@@ -250,12 +250,12 @@ final class Transformers
         }, $errormessage);
     }
 
-    public static function boolToString($errormessage = null)
+    public static function boolToString($errormessage = null): \Kedniko\Vivy\Transformer
     {
         $transformerID = self::ID_BOOL_TO_STRING;
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
 
-        return new Transformer($transformerID, function (Context $c) {
+        return new Transformer($transformerID, function (Context $c): string {
             $value = $c->value;
 
             if (! is_bool($value)) {

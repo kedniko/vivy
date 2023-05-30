@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Core;
 
 final class Undefined
 {
-    private static $instance = null;
+    private static ?\Kedniko\Vivy\Core\Undefined $instance = null;
 
     private function __construct()
     {

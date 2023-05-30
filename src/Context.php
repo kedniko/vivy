@@ -25,7 +25,7 @@ class Context
 
     public array $childrenErrors;
 
-    /** @var Context */
+    /** @var \Kedniko\Vivy\Context|null */
     public $rootContext;
 
     /** @var Context */

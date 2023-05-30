@@ -12,7 +12,7 @@ use Kedniko\Vivy\V;
 
 final class StandardLibrary implements VivyPlugin
 {
-    public function register()
+    public function register(): void
     {
         // V::register([
         // 	// [availableFor, name, callback, return],
@@ -198,7 +198,7 @@ final class StandardLibrary implements VivyPlugin
 
     public static function float($strictFloat = false, Options $options = null)
     {
-        return function (Type|null $obj) use ($strictFloat, $options) {
+        return function (Type|null $obj) use ($strictFloat, $options): \Kedniko\Vivy\Plugins\StandardLibrary\TypeFloat {
             $options = Options::build($options, func_get_args());
             $type = new TypeFloat();
             $type->addRule(Rules::float($strictFloat, $options->getErrorMessage()), $options);
@@ -429,7 +429,7 @@ final class StandardLibrary implements VivyPlugin
         };
     }
 
-    public static function make($data, $setup = null, $stopOnFieldFailure = false, Options $options = null)
+    public static function make($data, $setup = null, bool $stopOnFieldFailure = false, Options $options = null)
     {
         $type = self::group($setup, $stopOnFieldFailure, $options);
         (new TypeProxy($type))->setData($data);
