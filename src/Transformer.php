@@ -4,7 +4,7 @@ namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Middleware;
 
-class Transformer extends Middleware
+final class Transformer extends Middleware
 {
     public function getID()
     {

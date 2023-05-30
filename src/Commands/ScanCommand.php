@@ -6,7 +6,7 @@ use Kedniko\PhpIdeHelper\IdeHelper;
 use Kedniko\PhpIdeHelper\Register;
 use Kedniko\Vivy\V;
 
-class ScanCommand
+final class ScanCommand
 {
     public function handle($exportPath = null)
     {

@@ -7,9 +7,9 @@ use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
-class GroupContext extends Context
+final class GroupContext extends Context
 {
-    protected $fieldname;
+    private $fieldname;
 
     public function __construct($fieldname, Context $cloneFrom = null)
     {

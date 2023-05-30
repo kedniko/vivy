@@ -13,7 +13,7 @@ use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\V;
 
-class Util
+final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {

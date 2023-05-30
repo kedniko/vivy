@@ -14,7 +14,7 @@ use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\V;
 
-class TypeArray extends TypeCompound
+final class TypeArray extends TypeCompound
 {
     public function count($count, Options $options = null)
     {

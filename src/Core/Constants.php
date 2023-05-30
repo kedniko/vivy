@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Constants
+final class Constants
 {
     const REGEX_MAIL = '/^[A-Za-z0-9_]+([\-\+\.\'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([\-\.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([\-\.][A-Za-z0-9_]+)*$/i';
 

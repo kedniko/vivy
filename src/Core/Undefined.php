@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Undefined
+final class Undefined
 {
     private static $instance = null;
 

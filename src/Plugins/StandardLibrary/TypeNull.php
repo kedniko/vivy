@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-class TypeNull extends Type
+final class TypeNull extends Type
 {
 }

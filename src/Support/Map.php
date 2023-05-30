@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Support;
 
-class Map
+final class Map
 {
     private $items = [];
 

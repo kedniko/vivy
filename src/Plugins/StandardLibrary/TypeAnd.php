@@ -10,7 +10,7 @@ use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Support\Util;
 
-class TypeAnd extends Type
+final class TypeAnd extends Type
 {
     /**
      * @param  Type[]  $types

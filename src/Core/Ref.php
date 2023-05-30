@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Support\Arr;
 
-class Ref
+final class Ref
 {
     // /** @var mixed $value */
     // protected $value;

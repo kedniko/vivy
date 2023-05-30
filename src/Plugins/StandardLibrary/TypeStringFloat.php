@@ -9,7 +9,7 @@ use Kedniko\Vivy\Messages\TransformerMessage;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
-class TypeStringFloat extends TypeStringNumber
+final class TypeStringFloat extends TypeStringNumber
 {
     public function toInteger(Options $options = null)
     {

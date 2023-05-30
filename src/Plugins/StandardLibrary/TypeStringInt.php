@@ -12,7 +12,7 @@ use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 use Kedniko\Vivy\V;
 
-class TypeStringInt extends TypeStringNumber
+final class TypeStringInt extends TypeStringNumber
 {
     public function min($min, Options $options = null)
     {

@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-class TypeFloat extends TypeNumber
+final class TypeFloat extends TypeNumber
 {
 }

@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Exceptions;
 
-class VivyValidationFailedException extends VivyException
+final class VivyValidationFailedException extends VivyException
 {
     private $payload;
 

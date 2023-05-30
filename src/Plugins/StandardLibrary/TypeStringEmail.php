@@ -7,7 +7,7 @@ use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\V;
 
-class TypeStringEmail extends TypeString
+final class TypeStringEmail extends TypeString
 {
     public function checkValidDomain($record = 'MX', Options $options = null)
     {

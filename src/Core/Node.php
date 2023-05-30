@@ -2,20 +2,18 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Node
+final class Node
 {
     public $data;
 
     /** @var Node|null */
-    public $next;
+    public $next = null;
 
     /** @var Node|null */
-    public $prev;
+    public $prev = null;
 
     public function __construct($data)
     {
         $this->data = $data;
-        $this->next = null;
-        $this->prev = null;
     }
 }

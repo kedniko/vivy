@@ -2,9 +2,9 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Event
+final class Event
 {
-    protected static $eventListeners = [];
+    private static $eventListeners = [];
 
     public static function listen($name, $callable)
     {

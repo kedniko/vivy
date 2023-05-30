@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Messages;
 
-class TransformerMessage extends Messages
+final class TransformerMessage extends Messages
 {
     protected static $defaultMessage = 'Trasformazione fallita';
 

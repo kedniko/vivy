@@ -10,7 +10,7 @@ use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 use Kedniko\Vivy\V;
 
-class StandardLibrary implements VivyPlugin
+final class StandardLibrary implements VivyPlugin
 {
     public function register()
     {

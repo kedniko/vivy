@@ -8,8 +8,12 @@ use Kedniko\Vivy\Messages\TransformerMessage;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Transformer;
 
-class TypeInt extends TypeNumber
+final class TypeInt extends TypeNumber
 {
+    /**
+     * @var string
+     */
+    private const TRANSFORMER_ID = 'intToBool';
     public function toBool($strict = true, $errormessage = null)
     {
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage('intToBool');
@@ -17,10 +21,8 @@ class TypeInt extends TypeNumber
         $this->addRule(Rules::intBool($strict));
 
         $type = (new TypeBool())->from($this);
-
-        $transformerID = 'intToBool';
-        $errormessage = $errormessage ?: TransformerMessage::getErrorMessage($transformerID);
-        $transformer = new Transformer($transformerID, function (Context $c) use ($strict) {
+        $errormessage = $errormessage ?: TransformerMessage::getErrorMessage(self::TRANSFORMER_ID);
+        $transformer = new Transformer(self::TRANSFORMER_ID, function (Context $c) use ($strict) {
             $value = $c->value;
 
             if (! is_int($value)) {

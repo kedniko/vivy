@@ -13,7 +13,7 @@ use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Support\Util;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
-class TypeOr extends Type
+final class TypeOr extends Type
 {
     /**
      * @param  Type[]  $types

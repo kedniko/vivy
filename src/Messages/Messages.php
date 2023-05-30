@@ -13,7 +13,7 @@ class Messages
     // private static $enableLangFallback = true;
     protected static $langFallback = self::LANG_IT;
 
-    private static $enableDefaultErrorFallback = true;
+    private const ENABLE_DEFAULT_ERROR_FALLBACK = true;
 
     protected static $messages;
 
@@ -50,9 +50,9 @@ class Messages
         // error
         $message = self::getMessage($errorID, $lang) ?:
             // default error by type
-            (self::$enableDefaultErrorFallback ? self::getMessage("default.{$errorID}", $lang) : null) ?:
+            (self::ENABLE_DEFAULT_ERROR_FALLBACK ? self::getMessage("default.{$errorID}", $lang) : null) ?:
             // default error
-            (self::$enableDefaultErrorFallback ? self::getMessage('default.generic', $lang) : null) ?:
+            (self::ENABLE_DEFAULT_ERROR_FALLBACK ? self::getMessage('default.generic', $lang) : null) ?:
             // fallback language
             // (self::$enableLangFallback ?  self::getMessage($errorID, self::$langFallback) : null) ?:
             // default error

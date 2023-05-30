@@ -2,20 +2,17 @@
 
 namespace Kedniko\Vivy;
 
-class ArrayContext extends Context
+final class ArrayContext extends Context
 {
-    public $index;
+    public $index = null;
 
-    public $failsCount;
+    public $failsCount = null;
 
-    public $successCount;
+    public $successCount = null;
 
     public function __construct(Context $c = null)
     {
         parent::__construct($c);
-        $this->index = null;
-        $this->failsCount = null;
-        $this->successCount = null;
     }
 
     public function getIndex()

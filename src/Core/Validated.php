@@ -5,7 +5,7 @@ namespace Kedniko\Vivy\Core;
 use Kedniko\Vivy\Exceptions\VivyValidationFailedException;
 use Kedniko\Vivy\V;
 
-class Validated
+final class Validated
 {
     /**
      * @var mixed|Ref
@@ -19,7 +19,7 @@ class Validated
 
     public $chain;
 
-    protected $orFail;
+    private const OR_FAIL = false;
 
     /**
      * @param  mixed  $value
@@ -29,7 +29,6 @@ class Validated
     {
         $this->value = $value;
         $this->errors = $errors;
-        $this->orFail = false;
     }
 
     /**
@@ -79,12 +78,12 @@ class Validated
 
     public function fails()
     {
-        return $this->errors() && count($this->errors());
+        return $this->errors && count($this->errors);
     }
 
     public function isValid()
     {
-        $errors = $this->errors();
+        $errors = $this->errors;
 
         return count($errors) === 0;
     }

@@ -12,8 +12,16 @@ use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Types\Type;
 
-class TypeFiles extends TypeCompound
+final class TypeFiles extends TypeCompound
 {
+    /**
+     * @var string
+     */
+    private const RULE_ID = 'each';
+    /**
+     * @var string[]
+     */
+    private const UNITS = ['B', 'KB', 'MB', 'GB'];
     public function count($count, Options $options = null)
     {
         $options = Options::build($options, func_get_args());
@@ -185,7 +193,6 @@ class TypeFiles extends TypeCompound
 
     private function getEachRule(Type $type, $stopOnItemFailure, $errormessage)
     {
-        $ruleID = 'each';
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure) {
             if (! is_array($c->value)) {
                 throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value), 1);
@@ -243,7 +250,7 @@ class TypeFiles extends TypeCompound
             };
         }
 
-        return new Rule($ruleID, $ruleFn, $errormessage);
+        return new Rule(self::RULE_ID, $ruleFn, $errormessage);
     }
 
     /**
@@ -256,9 +263,8 @@ class TypeFiles extends TypeCompound
         $from = strtoupper($from);
         $to = strtoupper($to);
         $value = floatval($value);
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $index = array_search($from, $units);
-        $toIndex = array_search($to, $units);
+        $index = array_search($from, self::UNITS);
+        $toIndex = array_search($to, self::UNITS);
         $diff = $toIndex - $index;
         if ($diff === 0) {
             return $value;

@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Messages;
 
-class RuleMessage extends Messages
+final class RuleMessage extends Messages
 {
     protected static $defaultMessage = 'Validazione fallita';
 

@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Support;
 
 use ArrayAccess;
 
-class Arr
+final class Arr
 {
     /**
      * Determine whether the given value is array accessible.

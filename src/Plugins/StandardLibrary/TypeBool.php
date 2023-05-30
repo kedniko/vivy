@@ -11,7 +11,7 @@ use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Messages\TransformerMessage;
 use Kedniko\Vivy\Rules;
 
-class TypeBool extends TypeScalar
+final class TypeBool extends TypeScalar
 {
     public function equals($bool, $strict = true, Options $options = null)
     {
@@ -50,7 +50,7 @@ class TypeBool extends TypeScalar
 
     // Rules
 
-    protected static function ruleBooeanIs($bool, $errormessage = null)
+    private static function ruleBooeanIs($bool, $errormessage = null)
     {
         $ruleID = 'boolIs';
         $ruleFn = function (Context $c) use ($bool) {

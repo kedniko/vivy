@@ -14,7 +14,7 @@ use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Rules\RuleFunctions;
 use Kedniko\Vivy\Support\Str;
 
-class Rules
+final class Rules
 {
     const ID_REQUIRED = 'required';
 

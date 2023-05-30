@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Core;
 
-class OptionsProxy extends Options
+final class OptionsProxy extends Options
 {
     public function __construct($builder)
     {

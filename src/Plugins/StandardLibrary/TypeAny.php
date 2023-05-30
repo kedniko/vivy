@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-class TypeAny extends Type
+final class TypeAny extends Type
 {
 }

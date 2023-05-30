@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Core;
 
-class FieldMiddleware extends Middleware
+final class FieldMiddleware extends Middleware
 {
     private $type;
 

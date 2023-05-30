@@ -7,7 +7,7 @@ use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Transformers;
 use Kedniko\Vivy\Messages\TransformerMessage;
 
-class TypeStringBool extends TypeString
+final class TypeStringBool extends TypeString
 {
     public function toBool(Options $options = null)
     {

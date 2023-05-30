@@ -17,7 +17,7 @@ use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
 use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Types\Type;
 
-class V
+final class V
 {
     use TraitUserDefinedCallStatic;
 
@@ -28,7 +28,7 @@ class V
      */
     public static $failHandler = null;
 
-    private static $bootstrapped = false;
+    private const BOOTSTRAPPED = false;
 
     /**
      * @var array
@@ -38,7 +38,7 @@ class V
     private static $registered = [];
 
     /** @var Type */
-    private static $currentType = null;
+    private const CURRENT_TYPE = null;
 
     /**
      * Private constructor
@@ -144,7 +144,7 @@ class V
     }
 
 
-    protected static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null)
+    private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null)
     {
         if ($middleware instanceof Middleware) {
             $function_or_class = function () use ($middleware) {
@@ -207,7 +207,7 @@ class V
         }
     }
 
-    protected static function registerClass($class)
+    private static function registerClass($class)
     {
         self::register($class);
         self::$registered = [

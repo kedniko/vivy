@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Support;
 
-class Str
+final class Str
 {
     /**
      * Determine if a given string contains a given substring.

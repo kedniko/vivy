@@ -2,63 +2,63 @@
 
 namespace Kedniko\Vivy\Core;
 
-class State
+final class State
 {
-    protected $data;
+    private $data;
 
-    protected $name;
+    private $name;
 
-    protected $types;
-
-
-    protected bool|Undefined $required;
+    private $types;
 
 
-    protected bool|Undefined $notEmptyString;
+    private bool|Undefined $required;
 
 
-    protected bool|Undefined $notNull;
+    private bool|Undefined $notEmptyString;
 
-    /** @var Rule */
-    protected $requiredRule;
+
+    private bool|Undefined $notNull;
 
     /** @var Rule */
-    protected $emptyStringRule;
+    private $requiredRule = null;
 
     /** @var Rule */
-    protected $notEmptyStringRule;
+    private $emptyStringRule;
 
     /** @var Rule */
-    protected $notNullRule;
+    private $notEmptyStringRule;
 
-    protected $defaultValues;
+    /** @var Rule */
+    private $notNullRule;
 
-    protected $defaultValuesAny;
+    private $defaultValues = [];
 
-    protected $enableDefaultValueIfOptional;
+    private $defaultValuesAny;
 
-    protected $defaultValueIfOptional;
+    private $enableDefaultValueIfOptional = false;
 
-    protected $customErrMessages;
+    private $defaultValueIfOptional;
 
-    protected $errorMessageAny;
+    private $customErrMessages = [];
 
-    protected $errorMessageEmpty;
+    private $errorMessageAny;
 
-    protected $valueIfOptionalNotExists;
+    private $errorMessageEmpty;
+
+    private $valueIfOptionalNotExists;
 
     /** @var LinkedList */
-    protected $middlewares;
+    private $middlewares;
 
-    protected $middlewaresid;
+    private $middlewaresid = [];
 
-    protected $onValid;
+    private $onValid = [];
 
-    protected $onError;
+    private $onError = [];
 
-    protected $stopOnFailure;
+    private $stopOnFailure = false;
 
-    protected $once;
+    private $once = false;
 
     public $setupFn;
 
@@ -80,29 +80,18 @@ class State
         $this->data = Undefined::instance();
         $this->name = Undefined::instance();
         $this->fields = new LinkedList();
-
-        $this->customErrMessages = [];
-        $this->defaultValues = [];
         $this->defaultValuesAny = Undefined::instance();
         $this->errorMessageAny = Undefined::instance();
         $this->errorMessageEmpty = Undefined::instance();
         $this->valueIfOptionalNotExists = Undefined::instance();
         $this->middlewares = new LinkedList();
-        $this->middlewaresid = [];
-        $this->onValid = [];
-        $this->onError = [];
 
         $this->required = Undefined::instance();
         $this->requiredIf = Undefined::instance();
         $this->requiredIfField = Undefined::instance();
-        $this->requiredRule = null;
         $this->notEmptyString = Undefined::instance();
         $this->notNull = Undefined::instance();
-
-        $this->enableDefaultValueIfOptional = false;
         $this->defaultValueIfOptional = Undefined::instance();
-        $this->stopOnFailure = false;
-        $this->once = false;
 
         // $this->allow = [];
         // $this->deny = [];
@@ -135,7 +124,7 @@ class State
 
     public function canBeEmptyString()
     {
-        return $this->hasNotEmptyString() && $this->getNotEmptyString() === false;
+        return $this->hasNotEmptyString() && $this->notEmptyString === false;
     }
 
     public function hasNotEmptyString()
@@ -168,7 +157,7 @@ class State
 
     public function isRequired()
     {
-        return $this->getRequired() === true;
+        return $this->required === true;
     }
 
     /**
@@ -250,7 +239,7 @@ class State
 
     public function canBeNull()
     {
-        return $this->hasNotNull() && $this->getNotNull() === false;
+        return $this->hasNotNull() && $this->notNull === false;
     }
 
     public function hasNotNull()

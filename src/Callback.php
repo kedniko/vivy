@@ -4,7 +4,7 @@ namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Middleware;
 
-class Callback extends Middleware
+final class Callback extends Middleware
 {
     public function getID()
     {

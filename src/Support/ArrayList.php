@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Support;
 
-class ArrayList
+final class ArrayList
 {
     private $items = [];
 

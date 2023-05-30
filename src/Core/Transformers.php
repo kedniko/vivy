@@ -7,7 +7,7 @@ use Kedniko\Vivy\Exceptions\VivyTransformerException;
 use Kedniko\Vivy\Messages\TransformerMessage;
 use Kedniko\Vivy\Transformer;
 
-class Transformers
+final class Transformers
 {
     const ID_STRING_TO_BOOL = 'stringToBool';
 

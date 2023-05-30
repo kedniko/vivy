@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Args
+final class Args
 {
     /**
      * @var array

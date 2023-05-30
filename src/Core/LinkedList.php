@@ -2,45 +2,37 @@
 
 namespace Kedniko\Vivy\Core;
 
-class LinkedList
+final class LinkedList
 {
     /** @var Node|null */
-    public $head;
+    public $head = null;
 
     /** @var Node|null */
-    public $tail;
+    public $tail = null;
 
     /** @var Node|null */
-    public $current;
+    public $current = null;
 
     /** @var Node|null */
-    public $prev;
+    public $prev = null;
 
     /**
      * @var int
      */
-    public $length;
+    public $length = 0;
 
     /**
      * Iteration started
      *
      * @var bool
      * */
-    private $advance;
+    private $advance = false;
 
     /**
      * @param  array  $items
      */
     public function __construct($items = [])
     {
-        $this->advance = false;
-
-        $this->head = null;
-        $this->tail = null;
-        $this->current = null;
-        $this->prev = null;
-        $this->length = 0;
-
         if ($items) {
             $this->fromArray($items);
         }

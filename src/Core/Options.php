@@ -4,36 +4,36 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Types\Type;
 
-class Options
+final class Options
 {
-    protected $stopOnFailure;
+    private $stopOnFailure = true;
 
-    protected $stopOnSuccess;
+    private $stopOnSuccess = false;
 
-    protected $errormessage;
+    private $errormessage = null;
 
-    protected $errormessageDefault;
+    private $errormessageDefault;
 
     /**
      * @var bool
      */
-    protected $once;
+    private $once = false;
 
-    protected $if;
+    private $if;
 
-    protected $appendAfterCurrent;
+    private $appendAfterCurrent;
 
     /**
      * @var bool Optimization
      */
-    protected $withContext;
+    private $withContext = true;
 
-    protected $args;
+    private $args = [];
 
     /**
      * @var Type
      */
-    protected $builder;
+    private $builder;
 
     /**
      * @param  null|string  $errormessage
@@ -41,13 +41,7 @@ class Options
      */
     public function __construct()
     {
-        $this->errormessage = null;
-        $this->stopOnFailure = true;
-        $this->stopOnSuccess = false;
-        $this->once = false;
-        $this->args = [];
         $this->if = Undefined::instance();
-        $this->withContext = true;
     }
 
     public static function build(Options $options = null, array $args = [], string $errormessage = null)

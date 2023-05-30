@@ -4,9 +4,9 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Context;
 
-class OrContext extends Context
+final class OrContext extends Context
 {
-    protected $childErrors;
+    private $childErrors;
 
     public function __construct($childErrors, Context $c = null)
     {

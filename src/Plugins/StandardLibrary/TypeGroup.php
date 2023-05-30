@@ -17,7 +17,7 @@ use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 use Kedniko\Vivy\V;
 
-class TypeGroup extends TypeCompound
+final class TypeGroup extends TypeCompound
 {
     /**
      * @param  array|callable  $setup function(GroupBuilder $type)

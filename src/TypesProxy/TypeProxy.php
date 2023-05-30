@@ -12,7 +12,7 @@ use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Types\Type;
 
-class TypeProxy extends Type
+final class TypeProxy extends Type
 {
     /**
      * @var Type

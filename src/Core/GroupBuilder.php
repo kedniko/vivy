@@ -8,7 +8,7 @@ namespace Kedniko\Vivy\Core;
  * Alcuni field potrebbero avere delle rule applicate\
  * di default come `required`/`notNull`/etc..
  */
-class GroupBuilder
+final class GroupBuilder
 {
     // use TraitUserDefinedCallGroup;
 

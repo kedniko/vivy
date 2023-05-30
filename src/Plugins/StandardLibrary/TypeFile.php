@@ -6,9 +6,13 @@ use Kedniko\Vivy\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 
-class TypeFile extends TypeCompound
+final class TypeFile extends TypeCompound
 {
     const MIME_PDF = 'application/pdf';
+    /**
+     * @var string[]
+     */
+    private const UNITS = ['B', 'KB', 'MB', 'GB'];
 
     public function mime($mime, Options $options = null)
     {
@@ -240,9 +244,8 @@ class TypeFile extends TypeCompound
         $from = strtoupper($from);
         $to = strtoupper($to);
         $value = floatval($value);
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $index = array_search($from, $units);
-        $toIndex = array_search($to, $units);
+        $index = array_search($from, self::UNITS);
+        $toIndex = array_search($to, self::UNITS);
         $diff = $toIndex - $index;
         if ($diff === 0) {
             return $value;

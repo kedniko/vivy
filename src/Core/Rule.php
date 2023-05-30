@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Core;
 
-class Rule extends Middleware
+final class Rule extends Middleware
 {
 }

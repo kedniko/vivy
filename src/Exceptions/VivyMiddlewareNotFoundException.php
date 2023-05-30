@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Exceptions;
 
-class VivyMiddlewareNotFoundException extends VivyException
+final class VivyMiddlewareNotFoundException extends VivyException
 {
 }

@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Support;
 
-class ColorCli
+final class ColorCli
 {
     const C_DEFAULT = 'default';
 

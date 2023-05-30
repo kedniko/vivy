@@ -2,6 +2,6 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-class TypeStringEmpty extends TypeScalar
+final class TypeStringEmpty extends TypeScalar
 {
 }

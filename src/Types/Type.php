@@ -62,20 +62,13 @@ class Type
     /**
      * @var TypeProxy
      */
-    protected $fieldProxy;
+    protected $fieldProxy = null;
 
     public $_extra;
 
     public function __construct()
     {
         $this->state = new State();
-        $this->context = null;
-        $this->validated = null;
-        $this->fieldProxy = null;
-        $this->skipOtherMiddlewares = false;
-        $this->skipOtherRules = false;
-        $this->value = null;
-        $this->errors = [];
     }
 
     public function required(Options $options = null)

@@ -7,7 +7,7 @@ use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
-class Helpers
+final class Helpers
 {
     public static function isNotUndefined($value)
     {

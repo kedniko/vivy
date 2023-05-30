@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Context;
 
-class ContextProxy extends Context
+final class ContextProxy extends Context
 {
     /** @var Context */
     private $context;

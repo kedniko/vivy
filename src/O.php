@@ -4,7 +4,7 @@ namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Options;
 
-class O
+final class O
 {
     public static function options($options = [])
     {

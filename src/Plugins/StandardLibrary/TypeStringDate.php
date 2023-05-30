@@ -10,7 +10,7 @@ use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Transformer;
 
-class TypeStringDate extends TypeString
+final class TypeStringDate extends TypeString
 {
     public function toFormat($format, Options $options = null)
     {
