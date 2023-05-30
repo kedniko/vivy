@@ -58,7 +58,7 @@ final class State
 
     private $stopOnFailure = false;
 
-    private false $once = false;
+    private bool $once = false;
 
     public $setupFn;
 
