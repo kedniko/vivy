@@ -295,7 +295,7 @@ final class State
     /**
      * Get the value of middlewaresid
      */
-    public function getMiddlewaresIds()
+    public function getMiddlewaresIds(): array
     {
         return $this->middlewaresid;
     }
@@ -371,7 +371,7 @@ final class State
      *
      * @return  self
      */
-    public function setName($name)
+    public function setName(string|\Kedniko\Vivy\Core\Undefined $name)
     {
         $this->name = $name;
 
@@ -644,7 +644,7 @@ final class State
     /**
      * Get the value of once
      */
-    public function getOnce()
+    public function getOnce(): bool
     {
         return $this->once;
     }
@@ -652,10 +652,9 @@ final class State
     /**
      * Set the value of once
      *
-     * @param  bool  $once
      * @return  self
      */
-    public function setOnce($once)
+    public function setOnce(bool $once)
     {
         $this->once = $once;
 

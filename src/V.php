@@ -137,7 +137,7 @@ final class V
             $function_or_class = fn(): \Kedniko\Vivy\Core\Middleware => $middleware;
         } elseif (is_bool($middleware)) {
             $bool = $middleware;
-            $function_or_class = fn() => self::rule('::', fn(): bool => $bool);
+            $function_or_class = fn(): \Kedniko\Vivy\Core\Rule => self::rule('::', fn(): bool => $bool);
         } else {
             $function_or_class = $middleware;
         }
@@ -340,9 +340,7 @@ final class V
     public static function requiredIfField(string $fieldname, $value): \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny
     {
         $type = new TypeAny();
-        $getContextFn = function (Context $c) use ($fieldname) {
-            return $c->fatherContext->getFieldContext($fieldname);
-        };
+        $getContextFn = fn(Context $c) => $c->fatherContext->getFieldContext($fieldname);
         $type->state->requiredIfField = [
             'fieldname' => $fieldname,
             'value' => $value,

@@ -258,7 +258,7 @@ final class Rules
                 $value = trim($value);
             }
 
-            return preg_match(Constants::REGEX_DIGITS, (string) $value, $matches) === 1;
+            return preg_match(Constants::REGEX_DIGITS, $value, $matches) === 1;
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -398,7 +398,7 @@ final class Rules
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
 
-    private static function isTypeIntString($trim, $value)
+    private static function isTypeIntString($trim, $value): bool
     {
         if (! is_string($value)) {
             return false;
@@ -408,7 +408,7 @@ final class Rules
             $value = trim($value);
         }
 
-        return preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, (string) $value, $matches) === 1;
+        return preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, $value, $matches) === 1;
     }
 
     private static function isTypeFloatString($trim, $strictFloat, $value)
@@ -420,8 +420,6 @@ final class Rules
         if ($trim) {
             $value = trim($value);
         }
-
-        $value = (string) $value;
 
         $isTypeFloatString = preg_match(Constants::REGEX_FLOAT_POSITIVE_OR_NEGATIVE, $value, $matches) === 1;
 

@@ -22,7 +22,7 @@ final class TypeInt extends TypeNumber
 
         $type = (new TypeBool())->from($this);
         $errormessage = $errormessage ?: TransformerMessage::getErrorMessage(self::TRANSFORMER_ID);
-        $transformer = new Transformer(self::TRANSFORMER_ID, function (Context $c) use ($strict) {
+        $transformer = new Transformer(self::TRANSFORMER_ID, function (Context $c) use ($strict): bool {
             $value = $c->value;
 
             if (! is_int($value)) {

@@ -212,7 +212,7 @@ final class TypeGroup extends TypeCompound
     //  * @param mixed $rule
     //  * @param GroupCustom $g
     //  */
-    private function applyRuleOnField(string $rule, $type): void
+    private function applyRuleOnField(string $rule, \Kedniko\Vivy\Plugins\StandardLibrary\TypeAny $type): void
     {
         if ($rule === 'optional') {
             $type->optional();

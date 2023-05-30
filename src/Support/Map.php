@@ -25,7 +25,7 @@ final class Map
         }
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items;
     }

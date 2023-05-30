@@ -28,9 +28,7 @@ final class Validated
             $handler = V::getFailHandler();
             return $handler($this);
         }
-        else {
-            throw new VivyValidationFailedException();
-        }
+        throw new VivyValidationFailedException();
     }
 
     public function forceFailWith(string|callable $handler)

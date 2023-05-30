@@ -112,7 +112,7 @@ final class TypeProxy extends Type
         return $linkedList;
     }
 
-    public function getMiddlewaresIds()
+    public function getMiddlewaresIds(): array
     {
         return $this->type->state->getMiddlewaresIds();
     }

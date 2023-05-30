@@ -31,7 +31,7 @@ class TypeNumber extends TypeScalar
 
     public const ID_NUMBER_TO_STRING = 'numberToString';
 
-    public function min($min, Options $options = null)
+    public function min(\Brick\Math\BigNumber|int|float|string $min, Options $options = null)
     {
         $ruleid = self::ID_MIN;
         $options = Options::build($options, func_get_args());
@@ -41,7 +41,7 @@ class TypeNumber extends TypeScalar
         return $this;
     }
 
-    public function max($max, Options $options = null)
+    public function max(\Brick\Math\BigNumber|int|float|string $max, Options $options = null)
     {
         $ruleid = self::ID_MAX;
         $options = Options::build($options, func_get_args());

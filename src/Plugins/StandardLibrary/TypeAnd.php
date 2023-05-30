@@ -56,16 +56,12 @@ final class TypeAnd extends Type
                 $clonedValue = Util::clone($c->value);
                 $validated = $type->validate($c->value, $c);
                 $errors = $type->_extra['or_errors'] ?? [];
-
-                if ($errors === []) {
-                    if ($isNot) {
-                        return false;
-                    }
-                    $c->value = $validated->value();
-                    $c->errors = [];
-                    break;
+                if ($isNot) {
+                    return false;
                 }
-                $c->value = $clonedValue;
+                $c->value = $validated->value();
+                $c->errors = [];
+                break;
             }
             $types->rewind();
 

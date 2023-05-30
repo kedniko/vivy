@@ -100,7 +100,7 @@ final class Options
     // 	return $this;
     // }
 
-    public function getArgs()
+    public function getArgs(): array
     {
         return $this->args;
     }
@@ -130,7 +130,7 @@ final class Options
     /**
      * Get the value of stopOnFailure
      */
-    public function getStopOnFailure()
+    public function getStopOnFailure(): bool
     {
         return $this->stopOnFailure;
     }
@@ -147,10 +147,8 @@ final class Options
 
     /**
      * Get the value of consume
-     *
-     * @return  bool
      */
-    public function getOnce()
+    public function getOnce(): bool
     {
         return $this->once;
     }
@@ -158,7 +156,7 @@ final class Options
     /**
      * Get the value of appendAfterCurrent
      */
-    public function getAppendAfterCurrent()
+    public function getAppendAfterCurrent(): ?bool
     {
         return $this->appendAfterCurrent;
     }

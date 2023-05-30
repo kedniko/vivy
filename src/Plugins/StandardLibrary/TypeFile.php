@@ -157,7 +157,7 @@ final class TypeFile extends TypeCompound
         return $this;
     }
 
-    public function size($size, $unit = 'B', Options $options = null)
+    public function size(mixed $size, mixed $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensione file non accettata';
@@ -178,7 +178,7 @@ final class TypeFile extends TypeCompound
     /**
      * @param  string  $unit `B` | `KB` | `MB` | `GB`,
      */
-    public function maxSize(mixed $maxSize, $unit = 'B', Options $options = null)
+    public function maxSize(mixed $maxSize, mixed $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensione file troppo grande';
@@ -196,7 +196,7 @@ final class TypeFile extends TypeCompound
         return $this;
     }
 
-    public function minSize($minSize, $unit = 'B', Options $options = null)
+    public function minSize(mixed $minSize, mixed $unit = 'B', Options $options = null)
     {
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: 'Dimensione file troppo piccola';

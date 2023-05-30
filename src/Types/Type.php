@@ -561,7 +561,7 @@ class Type
         return $this->state->getStopOnFailure() === true;
     }
 
-    private function setName($name): void
+    private function setName(string|\Kedniko\Vivy\Core\Undefined $name): void
     {
         $this->state->setName($name);
     }
@@ -922,13 +922,13 @@ class Type
     /**
      * @param  bool  $value Overrides the old one if exists
      */
-    public function failsWith($value)
+    public function failsWith(mixed $value)
     {
         return ! $this->isValidWith($value);
     }
 
     /**
-     * @param  mixed  $value Overrides the old one if exists
+     * @param mixed $value Overrides the old one if exists
      * @return array
      */
     public function errors(mixed $value = null)
