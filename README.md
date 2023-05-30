@@ -1,4 +1,5 @@
 # Vivy (work in progress)
+
 PHP validation engine
 
 🚀 Blazingly fast  
@@ -6,7 +7,16 @@ PHP validation engine
 🎨 Custom validators  
 🧩 Plugin first approach  
 
+## Installation
+
+Require this package with composer.
+
+```shell
+composer require kedniko/vivy
+```
+
 # StandardLibrary Plugin
+
 ```mermaid
 graph TD
     A[RootType] -->T(Type)
