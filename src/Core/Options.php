@@ -50,7 +50,7 @@ class Options
         $this->withContext = true;
     }
 
-    public static function build(Options $options = null, array $args, string $errormessage = null)
+    public static function build(Options $options = null, array $args = [], string $errormessage = null)
     {
         if (! ($options instanceof Options)) {
             $options = new Options();
