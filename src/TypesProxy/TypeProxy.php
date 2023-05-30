@@ -155,12 +155,9 @@ final class TypeProxy extends Type
         $middlewares->rewind();
         while ($middlewares->hasNext()) {
             $middleware = $middlewares->getNext();
-            if ($middleware instanceof Rule) {
-                if ($middleware->getID() === $ruleID) {
-                    $middlewares->rewind();
-
-                    return $middleware;
-                }
+            if ($middleware instanceof Rule && $middleware->getID() === $ruleID) {
+                $middlewares->rewind();
+                return $middleware;
             }
         }
         $middlewares->rewind();
@@ -189,11 +186,7 @@ final class TypeProxy extends Type
             $requiredIfField = $state->requiredIfField;
             $c = $requiredIfField['getContextFn']($gc);
             $value = $requiredIfField['value'];
-            if (is_callable($value)) {
-                $value = $value($c);
-            } else {
-                $value = $c->value === $value;
-            }
+            $value = is_callable($value) ? $value($c) : $c->value === $value;
 
             return (bool) $value;
         }
@@ -236,7 +229,7 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_NULL);
 
-        if (! $rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
@@ -255,7 +248,7 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
 
-        if (! $rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 

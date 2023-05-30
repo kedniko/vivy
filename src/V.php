@@ -96,7 +96,7 @@ final class V
     public static function register($setups): void
     {
         $args = func_get_args();
-        if (!count($args)) {
+        if ($args === []) {
             return;
         }
 

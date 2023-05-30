@@ -144,7 +144,7 @@ final class Rules
     public static function notFalsy($errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = Rules::ID_NOT_FALSY;
-        $ruleFn = fn(Context $c): bool => $c->value ? true : false;
+        $ruleFn = fn(Context $c): bool => (bool) $c->value;
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
 
         return new Rule($ruleID, $ruleFn, $errormessage);
@@ -258,7 +258,7 @@ final class Rules
                 $value = trim($value);
             }
 
-            return preg_match(Constants::REGEX_DIGITS, strval($value), $matches) === 1;
+            return preg_match(Constants::REGEX_DIGITS, (string) $value, $matches) === 1;
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -293,7 +293,7 @@ final class Rules
     public static function intBool($strict = false, $errormessage = null): \Kedniko\Vivy\Core\Rule
     {
         $ruleID = self::ID_INTBOOL;
-        $ruleFn = function (Context $c) use ($strict) {
+        $ruleFn = function (Context $c) use ($strict): bool|int {
             $strict = Helpers::valueOrFunction($strict, $c);
             if ($strict) {
                 return in_array($c->value, [0, 1], true);
@@ -311,19 +311,12 @@ final class Rules
         $ruleID = self::ID_FILE;
         $ruleFn = function (Context $c): bool {
             $value = $c->value;
-
-            $isOfTypeFile = isset($value['name']) &&
+            return isset($value['name']) &&
                 isset($value['full_path']) &&
                 isset($value['type']) &&
                 isset($value['tmp_name']) &&
                 isset($value['error']) &&
                 isset($value['size']);
-
-            if (! $isOfTypeFile) {
-                return false;
-            }
-
-            return true;
         };
 
         $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.'.$ruleID);
@@ -415,7 +408,7 @@ final class Rules
             $value = trim($value);
         }
 
-        return preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, strval($value), $matches) === 1;
+        return preg_match(Constants::REGEX_INTEGER_POSITIVE_OR_NEGATIVE, (string) $value, $matches) === 1;
     }
 
     private static function isTypeFloatString($trim, $strictFloat, $value)
@@ -428,7 +421,7 @@ final class Rules
             $value = trim($value);
         }
 
-        $value = strval($value);
+        $value = (string) $value;
 
         $isTypeFloatString = preg_match(Constants::REGEX_FLOAT_POSITIVE_OR_NEGATIVE, $value, $matches) === 1;
 

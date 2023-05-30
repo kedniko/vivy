@@ -189,7 +189,9 @@ final class Util
 
     public static function clone($var)
     {
-        return is_array($var) ? array_map([self::class, 'clone'], $var) : (is_object($var) ? clone $var : $var);
+        return is_array($var) ? array_map(function ($var) {
+            return self::clone($var);
+        }, $var) : (is_object($var) ? clone $var : $var);
     }
 
     public static function classImplements(string $classname, string $interface): bool

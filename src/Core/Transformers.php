@@ -169,7 +169,7 @@ final class Transformers
                 throw new VivyTransformerException('String does not contain an integer');
             }
 
-            return intval($value);
+            return (int) $value;
         }, $errormessage);
     }
 
@@ -206,7 +206,7 @@ final class Transformers
             }
 
             try {
-                return strval($value);
+                return (string) $value;
             } catch (\Exception) {
                 throw new VivyTransformerException();
             }
@@ -226,7 +226,7 @@ final class Transformers
             }
 
             try {
-                return strval($value);
+                return (string) $value;
             } catch (\Exception) {
                 throw new VivyTransformerException();
             }
@@ -245,7 +245,7 @@ final class Transformers
                 throw new VivyTransformerException('This is not a bool');
             }
 
-            return $value === true ? 1 : 0;
+            return $value ? 1 : 0;
         }, $errormessage);
     }
 
@@ -261,7 +261,7 @@ final class Transformers
                 throw new VivyTransformerException('This is not a bool');
             }
 
-            return $value === true ? 'true' : 'false';
+            return $value ? 'true' : 'false';
         }, $errormessage);
     }
 }

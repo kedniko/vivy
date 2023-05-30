@@ -66,7 +66,7 @@ final class TypeOr extends Type
                 $validated = $type->validate($c->value, $c);
                 $errors = $type->_extra['or_errors'] ?? [];
 
-                if ($errors) {
+                if ($errors !== []) {
                     $c->value = $clonedValue;
                     $all_errors[$index] = $errors;
                 } else {

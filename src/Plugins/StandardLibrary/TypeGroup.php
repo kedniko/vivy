@@ -149,7 +149,7 @@ final class TypeGroup extends TypeCompound
      */
     private function getFieldsFromState(Context $c)
     {
-        if (isset($this->state->setupFn) && is_callable($this->state->setupFn)) {
+        if ($this->state->setupFn !== null && is_callable($this->state->setupFn)) {
             $fn = $this->state->setupFn;
             $arraySetup = $fn($c);
             return $this->getFieldsFromAssociativeArraySetup($arraySetup);

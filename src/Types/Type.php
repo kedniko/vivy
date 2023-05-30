@@ -589,11 +589,11 @@ class Type
         $this->skipOtherMiddlewares = false;
         $this->skipOtherRules = false;
         $this->fieldProxy = new TypeProxy($this);
-        $issetvalue = count(func_get_args());
+        $issetvalue = func_num_args();
 
         $this->context = $this->getContext($fatherContext);
 
-        if ($issetvalue) {
+        if ($issetvalue !== 0) {
             $this->context->value = $value;
         } elseif ($this->state->hasData()) {
             $this->context->value = $this->state->getData();
@@ -847,7 +847,7 @@ class Type
         $c->setFatherContext($fatherContext);
 
         if ($c->rootContext() === null) {
-            if ($fatherContext !== null) {
+            if ($fatherContext instanceof \Kedniko\Vivy\Context) {
                 $c->setRootContext($fatherContext->rootContext());
             } else {
                 $c->setRootContext($c);
@@ -933,7 +933,7 @@ class Type
      */
     public function errors(mixed $value = null)
     {
-        if (count(func_get_args())) {
+        if (func_num_args() !== 0) {
             $dataToValidate = $value;
         } elseif ($this->state->hasData()) {
             $dataToValidate = $this->state->getData();
@@ -1027,11 +1027,7 @@ class Type
      */
     public function setValue($callback_or_value)
     {
-        if (is_callable($callback_or_value)) {
-            $callback = $callback_or_value;
-        } else {
-            $callback = fn() => $callback_or_value;
-        }
+        $callback = is_callable($callback_or_value) ? $callback_or_value : fn() => $callback_or_value;
         $transformer = new Transformer(Rules::ID_SET_VALUE, $callback);
         $type = (new \Kedniko\Vivy\Types\Type())->from($this);
         $type->addTransformer($transformer);

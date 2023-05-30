@@ -4,6 +4,7 @@ namespace Kedniko\Vivy\Core;
 
 final class OptionsProxy extends Options
 {
+    public $builder;
     public function __construct($builder)
     {
         $this->builder = $builder;

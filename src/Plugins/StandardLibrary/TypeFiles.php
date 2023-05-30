@@ -249,7 +249,7 @@ final class TypeFiles extends TypeCompound
     {
         $from = strtoupper((string) $from);
         $to = strtoupper($to);
-        $value = floatval($value);
+        $value = (float) $value;
         $index = array_search($from, self::UNITS);
         $toIndex = array_search($to, self::UNITS);
         $diff = $toIndex - $index;

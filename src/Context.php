@@ -49,7 +49,7 @@ class Context
 
     public function __construct(Context $cloneFrom = null, Context $fatherContext = null)
     {
-        if ($cloneFrom) {
+        if ($cloneFrom instanceof \Kedniko\Vivy\Context) {
             $this->value = $cloneFrom->value;
             $this->errors = $cloneFrom->errors;
             $this->args = $cloneFrom->args();
@@ -65,7 +65,7 @@ class Context
             $this->isRootContext = false;
         }
 
-        if ($fatherContext) {
+        if ($fatherContext instanceof \Kedniko\Vivy\Context) {
             $this->fatherContext = $fatherContext;
         }
 

@@ -31,7 +31,7 @@ final class LinkedList
      */
     public function __construct($items = [])
     {
-        if ($items) {
+        if ($items !== []) {
             $this->fromArray($items);
         }
     }
@@ -108,7 +108,7 @@ final class LinkedList
             $node = new Node($node);
         }
 
-        if ($this->tail === null) {
+        if (!$this->tail instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -121,7 +121,7 @@ final class LinkedList
 
         $this->tail = $node;
 
-        if ($this->current === null) {
+        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->current = $node;
         }
     }
@@ -136,7 +136,7 @@ final class LinkedList
         if (! $node instanceof Node) {
             $node = new Node($node);
         }
-        if ($this->current === null) {
+        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -145,7 +145,7 @@ final class LinkedList
 
         $node->next = $this->current->next;
 
-        if ($this->current->next) {
+        if ($this->current->next instanceof \Kedniko\Vivy\Core\Node) {
             $this->current->next->prev = $node;
         }
 
@@ -160,11 +160,11 @@ final class LinkedList
 
     public function hasNext(): bool
     {
-        if ($this->advance === false) {
-            return $this->current !== null;
+        if (!$this->advance) {
+            return $this->current instanceof \Kedniko\Vivy\Core\Node;
         }
 
-        return $this->current->next !== null;
+        return $this->current->next instanceof \Kedniko\Vivy\Core\Node;
     }
 
     public function each(callable $callback): void
@@ -227,11 +227,11 @@ final class LinkedList
             $this->tail = $this->current->prev;
         }
 
-        if ($this->current->prev) {
+        if ($this->current->prev instanceof \Kedniko\Vivy\Core\Node) {
             $this->current->prev->next = $this->current->next;
         }
 
-        if ($this->current->next) {
+        if ($this->current->next instanceof \Kedniko\Vivy\Core\Node) {
             $this->current->next->prev = $this->current->prev;
         }
 
@@ -243,7 +243,7 @@ final class LinkedList
     {
         $prev = null;
         $node = $this->head;
-        while ($node !== null) {
+        while ($node instanceof \Kedniko\Vivy\Core\Node) {
             $mustRemove = $filterCallback($node->data);
             if ($mustRemove) {
                 if ($node === $this->head) {
@@ -253,10 +253,8 @@ final class LinkedList
                     if ($prev instanceof Node) {
                         $prev->next = $node->next;
                     }
-                } else {
-                    if ($prev instanceof Node) {
-                        $prev->next = $node->next;
-                    }
+                } elseif ($prev instanceof Node) {
+                    $prev->next = $node->next;
                 }
                 if ($removeOnlyOne) {
                     return;

@@ -167,7 +167,7 @@ final class TypeFile extends TypeCompound
         $middleware = new Rule('size', function (Context $c) use ($size): bool {
             $valueSize = $c->value['size'];
 
-            return floatval($valueSize) === floatval($size);
+            return (float) $valueSize === (float) $size;
         }, $errormessage);
 
         $this->addRule($middleware, $options);
@@ -222,7 +222,7 @@ final class TypeFile extends TypeCompound
     {
         $from = strtoupper((string) $from);
         $to = strtoupper($to);
-        $value = floatval($value);
+        $value = (float) $value;
         $index = array_search($from, self::UNITS);
         $toIndex = array_search($to, self::UNITS);
         $diff = $toIndex - $index;

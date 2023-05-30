@@ -172,15 +172,13 @@ final class Helpers
         $class = null;
         $method = null;
 
-        if (is_array($value)) {
-            if (count($value) === 2 && (is_string($value[0]) || is_object($value[0]))) {
-                if (is_string($value[1]) && ! empty($value[1])) {
-                    $class = $value[0];
-                    $method = $value[1];
-                } elseif (is_string($value[0])) {
-                    $value = $value[0];
-                } else {
-                }
+        if (is_array($value) && (count($value) === 2 && (is_string($value[0]) || is_object($value[0])))) {
+            if (is_string($value[1]) && ! empty($value[1])) {
+                $class = $value[0];
+                $method = $value[1];
+            } elseif (is_string($value[0])) {
+                $value = $value[0];
+            } else {
             }
         }
 
