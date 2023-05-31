@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is inside .git folder so it is ignored by php intellisense
+ * This file is inside .svn folder so it is ignored by php intellisense
  * include
  */
 
