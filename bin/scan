@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Support\Util;
+
+require_once __DIR__ . '/vendor/autoload.php';
+$registerFunction = $argv[1] ?? 'App\App::boot';
+// $result = \Kedniko\Vivy\Core\Helpers::getClassAndMethod($registerFunction);
+Util::runFunction($registerFunction);
+(new ScanCommand())->handle();
