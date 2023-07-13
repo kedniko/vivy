@@ -37,10 +37,10 @@ final class StandardLibrary implements VivyPlugin
             [[V::class, TypeAny::class], 'bool', [self::class, 'bool'], TypeBool::class],
             [[V::class, TypeAny::class], 'float', [self::class, 'float'], TypeFloat::class],
             [[V::class, TypeAny::class], 'number', [self::class, 'number'], TypeNumber::class],
-            [[V::class, TypeAny::class], 'make', [self::class, 'make'], TypeMake::class], //
-            [[V::class, TypeAny::class], 'everything', [self::class, 'everything'], TypeEverything::class], //
-            [[V::class, TypeAny::class], 'notFalsy', [self::class, 'notFalsy'], TypeNotFalsy::class], //
-            [[V::class, TypeAny::class], 'notNull', [self::class, 'notNull'], TypeNotNull::class], //
+            // [[V::class, TypeAny::class], 'make', [self::class, 'make'], TypeMake::class], //
+            // [[V::class, TypeAny::class], 'everything', [self::class, 'everything'], TypeEverything::class], //
+            // [[V::class, TypeAny::class], 'notFalsy', [self::class, 'notFalsy'], TypeNotFalsy::class], //
+            // [[V::class, TypeAny::class], 'notNull', [self::class, 'notNull'], TypeNotNull::class], //
             [[V::class, TypeAny::class], 'null', [self::class, 'null'], TypeNull::class],
             [[V::class, TypeAny::class], 'files', [self::class, 'files'], TypeFiles::class],
             [[V::class, TypeAny::class], 'array', [self::class, 'array'], TypeArray::class], //
@@ -342,7 +342,7 @@ final class StandardLibrary implements VivyPlugin
             $options = Options::build($options, func_get_args());
             $type = (new TypeNull())->from($obj);
             $type->allowNull();
-            $type->addRule(Rules::null($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.'.Rules::ID_NULL)), $options);
+            $type->addRule(Rules::null($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.' . Rules::ID_NULL)), $options);
 
             return $type;
         };
@@ -353,7 +353,7 @@ final class StandardLibrary implements VivyPlugin
         return function (Type|null $obj) use ($options) {
             $options = Options::build($options, func_get_args());
             $type = (new TypeString())->from($obj);
-            $type->addRule(Rules::notEmptyString($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.'.Rules::ID_NOT_EMPTY_STRING)), $options);
+            $type->addRule(Rules::notEmptyString($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.' . Rules::ID_NOT_EMPTY_STRING)), $options);
 
             return $type;
         };
@@ -364,7 +364,7 @@ final class StandardLibrary implements VivyPlugin
         return function (Type|null $obj) use ($options) {
             $options = Options::build($options, func_get_args());
             $type = (new TypeStringEmpty())->from($obj);
-            $type->addRule(Rules::emptyString($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.'.Rules::ID_EMPTY_STRING)), $options);
+            $type->addRule(Rules::emptyString($options->getErrorMessage() ?: RuleMessage::getErrorMessage('default.' . Rules::ID_EMPTY_STRING)), $options);
             $type->allowEmptyString();
 
             return $type;
