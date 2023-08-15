@@ -70,19 +70,11 @@ final class Validated
 
     public function errors()
     {
-        // if ($this->errors instanceof Ref) {
-        //     return $this->errors->value();
-        // }
-
         return $this->errors;
     }
 
     public function value()
     {
-        // if ($this->value instanceof Ref) {
-        //     return $this->value->value();
-        // }
-
         return $this->value;
     }
 }

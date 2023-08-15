@@ -3,18 +3,12 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\GroupContext;
-use Kedniko\Vivy\Core\Ref;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
 class Context
 {
-    // /** @var Ref $valueRef */
-    // protected $valueRef;
-
-    // /** @var Ref $errorsRef */
-    // protected $errorsRef;
 
     /**
      * @var mixed|array<mixed>
@@ -46,6 +40,9 @@ class Context
     public $fields;
 
     public $extra;
+    public $index;
+    public $failCount;
+    public $successCount;
 
     public function __construct(Context $cloneFrom = null, Context $fatherContext = null)
     {
@@ -53,14 +50,12 @@ class Context
             $this->value = $cloneFrom->value;
             $this->errors = $cloneFrom->errors;
             $this->args = $cloneFrom->args();
-            // $this->errorsRef = $cloneFrom->errors; // TODO delete
             $this->rootContext = $cloneFrom->rootContext;
             $this->isRootContext = $cloneFrom->isRootContext();
         } else {
             $this->value = Undefined::instance();
             $this->errors = [];
             $this->args = [];
-            // $this->errorsRef = [];
             $this->rootContext = null;
             $this->isRootContext = false;
         }
@@ -120,14 +115,6 @@ class Context
     }
 
     /**
-     * Get the value of errors
-     */
-    // public function errors()
-    // {
-    // 	return $this->errorsRef->value();
-    // }
-
-    /**
      * Set the value of errors
      *
      * @return self
@@ -138,18 +125,6 @@ class Context
 
         return $this;
     }
-
-    /**
-     * Push error to errors array
-     *
-     * @return self
-     */
-    // public function pushToErrors($error)
-    // {
-    // 	$this->errorsRef[] = $error;
-
-    // 	return $this;
-    // }
 
     /**
      * Get the value of args
@@ -204,7 +179,7 @@ class Context
 
     public function issetValue()
     {
-        return ! ($this->value instanceof Undefined);
+        return !($this->value instanceof Undefined);
     }
 
     /**
@@ -219,22 +194,13 @@ class Context
 
     public function isValid()
     {
-        return ! $this->errors;
+        return !$this->errors;
     }
 
     public function getFieldContext(string $fieldname)
     {
         return $this->fields[$fieldname] ?? null;
     }
-
-    /**
-     * Get the value of value
-     */
-    // public function value()
-    // {
-    // 	// return $this->value instanceof Undefined ? null : $this->value;
-    // 	return $this->valueRef->value();
-    // }
 
     // /**
     //  * @param mixed $value

@@ -15,24 +15,6 @@ final class ContextProxy extends Context
     {
     }
 
-    // public function valueRef()
-    // {
-    // 	$this->context->valueRef;
-    // }
-    // public function errorRef()
-    // {
-    // 	$this->context->errorsRef;
-    // }
-    // public function setValueProxy($index, $value)
-    // {
-    // 	$this->context->valueRef->setPath($index, $value);
-    // }
-    // public function setErrorProxy($index, $error)
-    // {
-    // 	$this->context->errorsRef->setPath($index, $error);
-    // }
-
-    /** @suppress(PHP0416) */
     public function setField($type)
     {
         $this->context->type = $type;
@@ -40,7 +22,6 @@ final class ContextProxy extends Context
         return $this;
     }
 
-    /** @suppress(PHP0416) */
     public function setIndex($value)
     {
         $this->context->index = $value;
@@ -48,23 +29,20 @@ final class ContextProxy extends Context
         return $this;
     }
 
-    /** @suppress(PHP0416) */
     public function setFailsCount($value)
     {
-        $this->context->index = $value;
+        $this->context->failCount = $value;
 
         return $this;
     }
 
-    /** @suppress(PHP0416) */
     public function setSuccessCount($value)
     {
-        $this->context->index = $value;
+        $this->context->successCount = $value;
 
         return $this;
     }
 
-    /** @suppress(PHP0416) */
     public function setExtra($index, $value)
     {
         $this->context->extra[$index] = $value;
@@ -72,7 +50,6 @@ final class ContextProxy extends Context
         return $this;
     }
 
-    /** @suppress(PHP0416) */
     public function getRawField()
     {
         return $this->context->type;
