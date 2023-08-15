@@ -2,8 +2,13 @@
 
 namespace Kedniko\Vivy\Core;
 
-final class FieldMiddleware extends Middleware
+use Kedniko\Vivy\Concerns\MiddlewareTrait;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
+
+final class FieldMiddleware implements MiddlewareInterface
 {
+    use MiddlewareTrait;
+
     public function __construct(private $type)
     {
     }

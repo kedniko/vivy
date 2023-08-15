@@ -2,30 +2,31 @@
 
 namespace Kedniko\Vivy\Types;
 
-use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Call\TraitUserDefinedCallBasic;
-use Kedniko\Vivy\Callback;
+use Kedniko\Vivy\V;
+use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Callback;
 use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\ContextProxy;
-use Kedniko\Vivy\Core\GroupContext;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\LinkedList;
-use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Core\Node;
-use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\State;
+use Kedniko\Vivy\Transformer;
+use Kedniko\Vivy\ArrayContext;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Exceptions\VivyException;
+use Kedniko\Vivy\Core\LinkedList;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Core\ContextProxy;
+use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Messages\TransformerMessage;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
-use Kedniko\Vivy\Rules;
-use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
-use Kedniko\Vivy\V;
+use Kedniko\Vivy\Exceptions\VivyException;
+use Kedniko\Vivy\Messages\TransformerMessage;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Call\TraitUserDefinedCallBasic;
+use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
 
 class Type
 {
@@ -184,7 +185,7 @@ class Type
         if ($hardRemove) {
             /** @var LinkedList $linkedlist */
             $linkedlist = $type->state->getMiddlewares();
-            $linkedlist->remove(fn (Middleware $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
+            $linkedlist->remove(fn (MiddlewareInterface $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
         }
 
         /** @var Type $type */
@@ -296,7 +297,7 @@ class Type
         $options = Helpers::getOptions($options);
 
         if (
-            ! $transformer instanceof Transformer && ! is_string($transformer) && ! is_callable($transformer)
+            !$transformer instanceof Transformer && !is_string($transformer) && !is_callable($transformer)
         ) {
             throw new VivyException('Expected type Transformer or function name', 1);
         }
@@ -406,7 +407,7 @@ class Type
     {
         $_this = $this->get_this();
 
-        if (! is_array($rulesID)) {
+        if (!is_array($rulesID)) {
             $rulesID = [$rulesID];
         }
         foreach ($rulesID as $ruleID) {
@@ -493,7 +494,7 @@ class Type
         $_this = $this->get_this();
 
         if ($rulesID) {
-            if (! is_array($rulesID)) {
+            if (!is_array($rulesID)) {
                 $rulesID = [$rulesID];
             }
             foreach ($rulesID as $ruleID) {
@@ -520,7 +521,7 @@ class Type
     {
         $_this = $this->get_this();
 
-        if (! is_array($rulesID)) {
+        if (!is_array($rulesID)) {
             $rulesID = [$rulesID];
         }
         foreach ($rulesID as $ruleID) {
@@ -554,7 +555,7 @@ class Type
 
     public function getStopOnFailure()
     {
-        if (! $this->state->hasStopOnFailure()) {
+        if (!$this->state->hasStopOnFailure()) {
             return false;
         }
 
@@ -614,9 +615,9 @@ class Type
         if ($this instanceof TypeOr) {
             $orChildCanBeNull = $this->state->_extra['childCanBeNull'] ?? false;
             $orChildCanBeEmptyString = $this->state->_extra['childCanBeEmptyString'] ?? false;
-            $emptyIsInvalid = (! $orChildCanBeEmptyString && $this->context->value === '') || (! $orChildCanBeNull && $this->context->value === null);
+            $emptyIsInvalid = (!$orChildCanBeEmptyString && $this->context->value === '') || (!$orChildCanBeNull && $this->context->value === null);
         } else {
-            $emptyIsInvalid = (! $this->canBeEmptyString && $this->context->value === '') || (! $this->canBeNull && $this->context->value === null);
+            $emptyIsInvalid = (!$this->canBeEmptyString && $this->context->value === '') || (!$this->canBeNull && $this->context->value === null);
         }
 
         if ($emptyIsInvalid) {
@@ -645,19 +646,19 @@ class Type
         while ($middlewares->hasNext()) {
             $middleware = $middlewares->getNext();
 
-            if (! $middleware instanceof Middleware) {
+            if (!$middleware instanceof MiddlewareInterface) {
                 $middleware = Rules::equals($middleware, true);
             }
 
             /** @var Middleware $middleware */
             $skipThisMiddleware = $this->skipOtherMiddlewares || ($this->skipOtherRules && $middleware->isRule());
 
-            if (! $skipThisMiddleware) {
+            if (!$skipThisMiddleware) {
                 $idmiddleware = $middleware->getID();
                 $middlewaresIds = $this->fieldProxy->getState()->getMiddlewaresIds();
 
                 // OPTIMIZATION: if not bigger than 0 then it means that the middleware is not active
-                if (! (isset($middlewaresIds[$idmiddleware]) && $middlewaresIds[$idmiddleware] > 0)) {
+                if (!(isset($middlewaresIds[$idmiddleware]) && $middlewaresIds[$idmiddleware] > 0)) {
                     continue;
                 }
 
@@ -669,17 +670,17 @@ class Type
                 if ($options->hasIf()) {
                     $ifCallback = $options->getIf();
                     if (is_callable($ifCallback)) {
-                        if (! $ifCallback($context)) {
+                        if (!$ifCallback($context)) {
                             continue;
                         }
-                    } elseif (! $ifCallback) {
+                    } elseif (!$ifCallback) {
                         continue;
                     }
                 }
 
                 $isValid = $this->applyMiddleware($middleware);
 
-                if (! $isValid) {
+                if (!$isValid) {
                     $areAllValid = false;
                 }
 
@@ -692,11 +693,11 @@ class Type
             // if this is the last middleware
             // these callbacks could add more middlewares at runtime!
             // this is why we need to check this inside this while loop
-            if (! $middlewares->hasNext() || $this->skipOtherMiddlewares) {
+            if (!$middlewares->hasNext() || $this->skipOtherMiddlewares) {
                 if ($areAllValid) {
                     $this->applyOnValidFunctions();
                 }
-                if (! $areAllValid) {
+                if (!$areAllValid) {
                     $this->applyOnErrorFunctions();
                 }
             }
@@ -705,7 +706,7 @@ class Type
         $middlewares->rewind();
     }
 
-    private function applyMiddleware(Middleware $middleware)
+    private function applyMiddleware(MiddlewareInterface $middleware)
     {
         $errors = [];
 
@@ -722,7 +723,7 @@ class Type
 
             if ($emptyIsValid) {
                 // if current middleware check force empty value, don't skip other rules but continue to validate...
-                if (! in_array($middlewareId, [Rules::ID_NULL, Rules::ID_EMPTY_STRING])) {
+                if (!in_array($middlewareId, [Rules::ID_NULL, Rules::ID_EMPTY_STRING])) {
                     $this->skipOtherRules = true;
                 }
             } else {
@@ -734,7 +735,7 @@ class Type
 
                 if ($validated_or_bool instanceof Validated) {
                     if ($this instanceof TypeOr) {
-                        $isvalid = ! ($this->state->_extra['or_errors'] ?? []);
+                        $isvalid = !($this->state->_extra['or_errors'] ?? []);
                     } else {
                         $isvalid = $validated_or_bool->isValid();
                     }
@@ -743,7 +744,7 @@ class Type
                     $isvalid = $validated_or_bool;
                 }
 
-                if (! $isvalid) {
+                if (!$isvalid) {
                     $newDefault = Helpers::tryToGetDefault($middleware->getID(), $this->fieldProxy, $this->context);
                     if (Helpers::isNotUndefined($newDefault)) {
                         $this->context->value = $newDefault;
@@ -794,13 +795,13 @@ class Type
             $this->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
             // errors for types inside orRule are ignored. The main orRule will handle them
-            $canEditContextErrors = ! (isset($this->_extra['isInsideOr']) && $this->_extra['isInsideOr'] === true);
+            $canEditContextErrors = !(isset($this->_extra['isInsideOr']) && $this->_extra['isInsideOr'] === true);
             if ($canEditContextErrors) {
                 $this->context->errors = $errors;
             }
         }
 
-        return ! $errors;
+        return !$errors;
     }
 
     private function getArrayContext($index, $failsCount)
@@ -887,10 +888,10 @@ class Type
                 $fnAll($this->context);
             }
         }
-        if (! isset($fns['rules'])) {
+        if (!isset($fns['rules'])) {
             return;
         }
-        if (! ($fnsRules = $fns['rules'])) {
+        if (!($fnsRules = $fns['rules'])) {
             return;
         }
         foreach ($fnsRules as $ruleKey => $fnRuleArray) {
@@ -907,7 +908,7 @@ class Type
      */
     public function fails()
     {
-        return ! $this->isValid();
+        return !$this->isValid();
     }
 
     public function from($obj)
@@ -924,7 +925,7 @@ class Type
      */
     public function failsWith(mixed $value)
     {
-        return ! $this->isValidWith($value);
+        return !$this->isValidWith($value);
     }
 
     /**
@@ -941,7 +942,7 @@ class Type
             throw new \Exception('No data to validate');
         }
 
-        if (! $this->validated) {
+        if (!$this->validated) {
             $this->validated = $this->validate($dataToValidate);
         }
 
@@ -964,7 +965,7 @@ class Type
         }
 
         // validate if has not already been validated
-        if (! $this->validated) {
+        if (!$this->validated) {
             $this->validated = $this->validate($dataToValidate);
         }
 
@@ -986,7 +987,7 @@ class Type
     {
         $errors = [];
 
-        if (! $this->canBeEmptyString && $this->context->value === '') {
+        if (!$this->canBeEmptyString && $this->context->value === '') {
             $ruleID = Rules::ID_NOT_EMPTY_STRING;
             $rule = $this->fieldProxy->hasRule($ruleID) ? $this->fieldProxy->getRule($ruleID) : Rules::notEmptyString();
 
@@ -996,7 +997,7 @@ class Type
             } else {
                 $errors = Helpers::getErrors($rule, $this->fieldProxy, $this->context);
             }
-        } elseif (! $this->canBeNull && $this->context->value === null) {
+        } elseif (!$this->canBeNull && $this->context->value === null) {
             $ruleID = Rules::ID_NOT_NULL;
             $rule = $this->fieldProxy->hasRule($ruleID) ? $this->fieldProxy->getRule($ruleID) : Rules::notNull();
 
@@ -1016,7 +1017,7 @@ class Type
         $this->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
         // errors for types inside orRule are ignored. The main orRule will handle them
-        $canEditContextErrors = ! (isset($this->_extra['isInsideOr']) && $this->_extra['isInsideOr'] === true);
+        $canEditContextErrors = !(isset($this->_extra['isInsideOr']) && $this->_extra['isInsideOr'] === true);
         if ($canEditContextErrors) {
             $this->context->errors = $errors;
         }

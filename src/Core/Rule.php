@@ -2,6 +2,10 @@
 
 namespace Kedniko\Vivy\Core;
 
-final class Rule extends Middleware
+use Kedniko\Vivy\Concerns\MiddlewareTrait;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
+
+final class Rule implements MiddlewareInterface
 {
+  use MiddlewareTrait;
 }

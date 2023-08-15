@@ -64,8 +64,8 @@ final class StandardLibrary implements VivyPlugin
 
             // casts
             [[V::class, TypeAny::class, Type::class], 'asAny', [self::class, 'asAny'], TypeAny::class],
-            [[V::class, TypeAny::class, Type::class], 'asFile', [self::class, 'asFile'], TypeFile::class],
             [[V::class, TypeAny::class, Type::class], 'asArray', [self::class, 'asArray'], TypeArray::class],
+            [[V::class, TypeAny::class, Type::class], 'asFile', [self::class, 'asFile'], TypeFile::class],
             [[V::class, TypeAny::class, Type::class], 'asBool', [self::class, 'asBool'], TypeBool::class],
             [[V::class, TypeAny::class, Type::class], 'asDate', [self::class, 'asDate'], TypeStringDate::class],
             [[V::class, TypeAny::class, Type::class], 'asEmail', [self::class, 'asEmail'], TypeStringEmail::class],

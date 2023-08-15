@@ -3,9 +3,13 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Concerns\MiddlewareTrait;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
-final class Callback extends Middleware
+final class Callback implements MiddlewareInterface
 {
+    use MiddlewareTrait;
+
     public function getID()
     {
         return $this->id;

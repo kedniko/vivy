@@ -2,29 +2,28 @@
 
 namespace Kedniko\Vivy\Support;
 
-use Kedniko\Vivy\Callback;
-use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Core\ContextProxy;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Transformer;
-use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\V;
+use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Callback;
+use Kedniko\Vivy\Core\Rule;
+use Kedniko\Vivy\Types\Type;
+use Kedniko\Vivy\Transformer;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {
-        if (! $fn) {
+        if (!$fn) {
             throw new \Exception('Invalid register function', 1);
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
         }
         $result = Helpers::getClassAndMethod($fn);
-        if (! $result) {
+        if (!$result) {
             throw new \Exception('Invalid register function', 1);
         }
         $class = $result[0];
@@ -83,22 +82,22 @@ final class Util
     public static function handleUserDefinedCall($className, $methodName, $callerObj, $parameters)
     {
         $newField = null;
-        $classMethod = $className.'::'.$methodName;
+        $classMethod = $className . '::' . $methodName;
         $registered = V::$registeredMiddlewares;
 
-        if (! array_key_exists($classMethod, $registered)) {
+        if (!array_key_exists($classMethod, $registered)) {
             $classes = self::getParentClasses($className);
             $found = false;
             foreach ($classes as $classnameparent) {
-                $tryClassMethod = $classnameparent.'::'.$methodName;
+                $tryClassMethod = $classnameparent . '::' . $methodName;
                 if (array_key_exists($tryClassMethod, $registered)) {
                     $found = true;
                     $classMethod = $tryClassMethod;
                     break;
                 }
             }
-            if (! $found) {
-                throw new \Exception('Method "'.$classMethod.'" does not exists in '.self::class, 1);
+            if (!$found) {
+                throw new \Exception('Method "' . $classMethod . '" does not exists in ' . self::class, 1);
             }
         }
 
@@ -119,7 +118,7 @@ final class Util
         // $result = call_user_func_array($setup['function'], $parameters);
         $isCallable = is_callable($result);
 
-        if (! $callerObj && ! ($result instanceof Type)) {
+        if (!$callerObj && !($result instanceof Type)) {
             if ($availableForType === V::class) {
                 //
             } else {
@@ -133,7 +132,7 @@ final class Util
             $result = $result($callerObj);
         }
 
-        if ($result instanceof Middleware) {
+        if ($result instanceof MiddlewareInterface) {
             $middleware = $result;
             $options = $middleware->getOptions();
 

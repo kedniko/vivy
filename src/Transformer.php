@@ -2,10 +2,13 @@
 
 namespace Kedniko\Vivy;
 
-use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Concerns\MiddlewareTrait;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
-final class Transformer extends Middleware
+final class Transformer implements MiddlewareInterface
 {
+    use MiddlewareTrait;
+
     public function getID()
     {
         return $this->id;

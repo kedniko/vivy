@@ -4,6 +4,7 @@ namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Call\TraitUserDefinedCallStatic;
 use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 use Kedniko\Vivy\Core\Args;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Middleware;
@@ -131,8 +132,8 @@ final class V
 
     private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null): void
     {
-        if ($middleware instanceof Middleware) {
-            $function_or_class = fn (): \Kedniko\Vivy\Core\Middleware => $middleware;
+        if ($middleware instanceof MiddlewareInterface) {
+            $function_or_class = fn () => $middleware;
         } elseif (is_bool($middleware)) {
             $bool = $middleware;
             $function_or_class = fn (): \Kedniko\Vivy\Core\Rule => self::rule('::', fn (): bool => $bool);
@@ -152,12 +153,12 @@ final class V
         //     throw new \Exception('This is not a midleware', 1);
         // }
 
-        if (! $returnType) {
+        if (!$returnType) {
             $returnType ??= Type::class;
         }
 
         foreach ($availableForTypes as $avForType) {
-            $classMethod = $avForType.'::'.$methodName;
+            $classMethod = $avForType . '::' . $methodName;
             self::$registeredMiddlewares[$classMethod] = [
                 'methodName' => $methodName,
                 'function' => $function_or_class,
@@ -189,20 +190,20 @@ final class V
     /**
      * @param  Middleware|Middleware[]  $middlewares
      */
-    public static function registerMiddleware(Middleware|array $middlewares, $overwriteExisting = false)
+    public static function registerMiddleware(MiddlewareInterface|array $middlewares, $overwriteExisting = false)
     {
-        if (! is_array($middlewares)) {
+        if (!is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (! $middleware instanceof Middleware) {
+            if (!$middleware instanceof MiddlewareInterface) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (! $overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
+            if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
             self::$registeredMiddlewares[$id] = $middleware;
@@ -243,7 +244,7 @@ final class V
 
     public static function issetVar(&$variable, $varname, $errormessage = null): Validated
     {
-        if (! isset($variable)) {
+        if (!isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
@@ -266,14 +267,14 @@ final class V
      */
     public static function issetVarPath($array, mixed $path, $errormessage = null): Validated
     {
-        if (! Arr::get($array, $path)) {
+        if (!Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -302,7 +303,7 @@ final class V
      */
     public static function assertTrue($bool, $name, $errormessage = null): Validated
     {
-        if (! $bool) {
+        if (!$bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);
