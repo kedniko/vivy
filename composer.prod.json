@@ -14,7 +14,7 @@
 	"require": {
 		"php": "^8.2.0",
 		"brick/math": "^0.11.0",
-		"kedniko/php-ide-helper": "dev-main",
+		"kedniko/php-ide-helper": "v0.0.4",
 		"nikic/php-parser": "^4.15.5"
 	},
 	"require-dev": {
@@ -46,11 +46,5 @@
 			"@test:types",
 			"@test:unit"
 		]
-	},
-	"repositories": [
-		{
-			"type": "path",
-			"url": "~/code/.kedniko/php-ide-helper"
-		}
-	]
+	}
 }
