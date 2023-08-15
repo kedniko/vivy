@@ -362,52 +362,52 @@ test('group', function () {
 /**
  * @noinspection
  */
-test('performance-native', function () {
-    if (function_exists('xdebug_is_debugger_active')) {
-        $isDebugging = call_user_func('xdebug_is_debugger_active');
-        if ($isDebugging) {
-            expect(true)->toBe(false, 'Xdebug is active, please disable it for performance tests');
+// test('performance-native', function () {
+//     if (function_exists('xdebug_is_debugger_active')) {
+//         $isDebugging = call_user_func('xdebug_is_debugger_active');
+//         if ($isDebugging) {
+//             expect(true)->toBe(false, 'Xdebug is active, please disable it for performance tests');
 
-            return;
-        }
-    }
+//             return;
+//         }
+//     }
 
-    $hrtime_start = hrtime(true);
-    $r = range(1, 50000);
-    $post = [
-        'num' => $r,
-    ];
-    $l = count($r);
-    for ($i = 1; $i < $l; $i++) {
-        is_int($post['num'][$i]);
-    }
-    $ms = (hrtime(true) - $hrtime_start) / 1e+6;
-    // echo('performance-native: ' . $ms) . ' ms' . PHP_EOL;
-    expect($ms)->toBeLessThan(20);
-})->skip();
+//     $hrtime_start = hrtime(true);
+//     $r = range(1, 50000);
+//     $post = [
+//         'num' => $r,
+//     ];
+//     $l = count($r);
+//     for ($i = 1; $i < $l; $i++) {
+//         is_int($post['num'][$i]);
+//     }
+//     $ms = (hrtime(true) - $hrtime_start) / 1e+6;
+//     // echo('performance-native: ' . $ms) . ' ms' . PHP_EOL;
+//     expect($ms)->toBeLessThan(20);
+// })->skip();
 
-test('performance-vivy', function () {
-    if (function_exists('xdebug_is_debugger_active')) {
-        $isDebugging = call_user_func('xdebug_is_debugger_active');
-        if ($isDebugging) {
-            expect(true)->toBe(false, 'Xdebug is active, please disable it for performance tests');
+// test('performance-vivy', function () {
+//     if (function_exists('xdebug_is_debugger_active')) {
+//         $isDebugging = call_user_func('xdebug_is_debugger_active');
+//         if ($isDebugging) {
+//             expect(true)->toBe(false, 'Xdebug is active, please disable it for performance tests');
 
-            return;
-        }
-    }
+//             return;
+//         }
+//     }
 
-    $hrtime_start = hrtime(true);
-    $r = range(1, 50000);
-    $post = [
-        'num' => $r,
-    ];
-    $v = V::group(['num' => V::array()->each(V::int())]);
-    $validated = $v->validate($post);
-    expect($validated->isValid())->toBeTrue();
-    $ms = (hrtime(true) - $hrtime_start) / 1e+6;
-    // echo('performance-vivy: ' . $ms . ' ms') . PHP_EOL;
-    expect($ms)->toBeLessThan(2000);
-})->skip();
+//     $hrtime_start = hrtime(true);
+//     $r = range(1, 50000);
+//     $post = [
+//         'num' => $r,
+//     ];
+//     $v = V::group(['num' => V::array()->each(V::int())]);
+//     $validated = $v->validate($post);
+//     expect($validated->isValid())->toBeTrue();
+//     $ms = (hrtime(true) - $hrtime_start) / 1e+6;
+//     // echo('performance-vivy: ' . $ms . ' ms') . PHP_EOL;
+//     expect($ms)->toBeLessThan(2000);
+// })->skip();
 
 // test('performance-with-functions', function () {
 // 		// $isInt = function ($value) {
