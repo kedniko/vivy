@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Messages\RuleMessage;
@@ -41,10 +41,10 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('regex');
         $rule = new Rule($ruleID, function (Context $c) use ($regex): bool {
-            if (! $c->value) {
+            if (!$c->value) {
                 return false;
             }
-            if (! is_string($c->value)) {
+            if (!is_string($c->value)) {
                 return false;
             }
 
@@ -61,10 +61,10 @@ class TypeScalar extends \Kedniko\Vivy\Plugins\StandardLibrary\Type
         $options = Options::build($options, func_get_args());
         $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage('regex');
         $rule = new Rule($ruleID, function (Context $c) use ($regex): bool {
-            if (! $c->value) {
+            if (!$c->value) {
                 return false;
             }
-            if (! is_string($c->value)) {
+            if (!is_string($c->value)) {
                 return false;
             }
 

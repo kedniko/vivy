@@ -4,7 +4,7 @@ namespace App;
 
 use App\Types\TypePhone;
 use App\Types\TypeToken;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\V;
@@ -39,14 +39,14 @@ class Regole implements VivyPlugin
         return V::rule('pratica', function (Context $c) {
             return $c->value instanceof TypeToken;
         }, function (Context $c) {
-            return 'Non è una pratica ma '.gettype($c->value);
+            return 'Non è una pratica ma ' . gettype($c->value);
         });
     }
 
     public static function toIT(Options $options)
     {
         return V::transformer('toIT', function (Context $c) {
-            return '+39 '.$c->value;
+            return '+39 ' . $c->value;
         });
     }
 }

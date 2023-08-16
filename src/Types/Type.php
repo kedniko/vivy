@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Types;
 
 use Kedniko\Vivy\V;
 use Kedniko\Vivy\Rules;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Callback;
 use Kedniko\Vivy\Core\Args;
 use Kedniko\Vivy\Core\Node;
@@ -18,7 +18,6 @@ use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\ContextProxy;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
@@ -807,9 +806,8 @@ class Type
     private function getArrayContext($index, $failsCount)
     {
         $c = new ArrayContext();
-        $arrayContextProxy = new ContextProxy($c);
-        $arrayContextProxy->setIndex($index);
-        $arrayContextProxy->setExtra('failsCount', $failsCount);
+        $c->setIndex($index);
+        $c->setExtra('failsCount', $failsCount);
 
         return $c;
     }
@@ -839,11 +837,11 @@ class Type
                 $fieldname = $this->getName();
                 $c = new GroupContext($fieldname);
             } else {
-                $c = new Context();
+                $c = new \Kedniko\Vivy\Context();
             }
         }
 
-        (new ContextProxy($c))->setField($this);
+        $c->setField($this);
 
         $c->setFatherContext($fatherContext);
 

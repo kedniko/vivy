@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Types\TypeToken;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Plugins\StandardLibrary\StandardLibrary;
 use Kedniko\Vivy\Plugins\StandardLibrary\TypeString;

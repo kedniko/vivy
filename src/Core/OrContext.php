@@ -2,13 +2,23 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Concerns\ContextTrait;
+use Kedniko\Vivy\Contracts\Context;
 
-final class OrContext extends Context
+final class OrContext implements Context
 {
-    public function __construct(private $childErrors, Context $c = null)
+
+    use ContextTrait;
+
+    /**
+     * TODO: childErrors is not used
+     * 
+     * @param private $childErrors
+     * @param Context|null $c
+     */
+    public function __construct(private $childErrors, Context $cloneFrom = null, Context $fatherContext = null)
     {
-        parent::__construct($c);
+        $this->init($cloneFrom, $fatherContext);
     }
 
     public function childErrors()

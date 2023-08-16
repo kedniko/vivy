@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\TypesProxy;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Core\Options;
@@ -174,7 +174,7 @@ final class TypeProxy extends Type
     public function isRequired(Context $gc)
     {
         $state = $this->type->state;
-        if (! ($state->requiredIf instanceof Undefined)) {
+        if (!($state->requiredIf instanceof Undefined)) {
             $value = $state->requiredIf;
             if (is_callable($value)) {
                 $value = $value($gc);
@@ -183,7 +183,7 @@ final class TypeProxy extends Type
             return (bool) $value;
         }
 
-        if (! ($state->requiredIfField instanceof Undefined)) {
+        if (!($state->requiredIfField instanceof Undefined)) {
             $requiredIfField = $state->requiredIfField;
             $c = $requiredIfField['getContextFn']($gc);
             $value = $requiredIfField['value'];
@@ -230,15 +230,15 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_NULL);
 
-        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
         $rule = $rule->getCallback();
-        if (! $rule) {
+        if (!$rule) {
             return;
         }
-        if (! is_callable($rule)) {
+        if (!is_callable($rule)) {
             return;
         }
 
@@ -249,15 +249,15 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
 
-        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
         $rule = $rule->getCallback();
-        if (! $rule) {
+        if (!$rule) {
             return;
         }
-        if (! is_callable($rule)) {
+        if (!is_callable($rule)) {
             return;
         }
 

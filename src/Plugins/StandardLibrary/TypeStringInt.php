@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Transformers;
@@ -38,7 +38,7 @@ final class TypeStringInt extends TypeStringNumber
         $options->setArgs(func_get_args());
         $errormessage = $options->getErrorMessage() ?: TransformerMessage::getErrorMessage('stringToInt');
 
-        if (! (new TypeProxy($this))->hasRule('intString')) {
+        if (!(new TypeProxy($this))->hasRule('intString')) {
             $this->addRule(Rules::intString($options->getErrorMessage()), $options);
         }
 

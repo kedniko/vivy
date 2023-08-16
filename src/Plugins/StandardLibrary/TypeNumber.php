@@ -3,7 +3,7 @@
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
 use Brick\Math\BigDecimal;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Transformers;
@@ -59,8 +59,8 @@ class TypeNumber extends TypeScalar
 
         $rule = V::rule($ruleID, function (Context $c) use ($number): bool {
             try {
-                $srcFractionalPart = BigDecimal::of('0.'.BigDecimal::of($c->value)->getFractionalPart());
-                $destfractionalPart = BigDecimal::of('0.'.BigDecimal::of($number)->getFractionalPart());
+                $srcFractionalPart = BigDecimal::of('0.' . BigDecimal::of($c->value)->getFractionalPart());
+                $destfractionalPart = BigDecimal::of('0.' . BigDecimal::of($number)->getFractionalPart());
 
                 return $srcFractionalPart->isEqualTo($destfractionalPart);
             } catch (\Throwable) {
@@ -166,7 +166,7 @@ class TypeNumber extends TypeScalar
         $rule = new Rule($ruleid, function (Context $c) use ($min, $max): bool {
             $value = $c->value;
 
-            return ! ($value >= $min && $value <= $max);
+            return !($value >= $min && $value <= $max);
         }, $errormessage);
 
         $this->addRule($rule, $options);

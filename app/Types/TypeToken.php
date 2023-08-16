@@ -2,7 +2,7 @@
 
 namespace App\Types;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\Types\Type;
@@ -33,7 +33,7 @@ class TypeToken extends Type implements VivyPlugin
 
             return $value->expired === false;
         }, function (Context $c) use ($options) {
-            return 'Il token è scaduto'.$options->getErrorMessage();
+            return 'Il token è scaduto' . $options->getErrorMessage();
         }), $options);
 
         return $this;

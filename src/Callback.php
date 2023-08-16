@@ -2,7 +2,6 @@
 
 namespace Kedniko\Vivy;
 
-use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Concerns\MiddlewareTrait;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
 

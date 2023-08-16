@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Exceptions\VivyTransformerException;
 use Kedniko\Vivy\Messages\TransformerMessage;
 use Kedniko\Vivy\Rules;
@@ -26,11 +26,11 @@ final class TypeInt extends TypeNumber
         $transformer = new Transformer(self::TRANSFORMER_ID, function (Context $c) use ($strict): bool {
             $value = $c->value;
 
-            if (! is_int($value)) {
+            if (!is_int($value)) {
                 throw new VivyTransformerException();
             }
 
-            if ($strict && ! in_array($value, [0, 1], true)) {
+            if ($strict && !in_array($value, [0, 1], true)) {
                 throw new VivyTransformerException();
             }
 

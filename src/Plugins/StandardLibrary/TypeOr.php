@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Options;
@@ -80,7 +80,7 @@ final class TypeOr extends Type
             }
             $types->rewind();
 
-            if (! $isValid) {
+            if (!$isValid) {
                 $this->state->_extra['or_errors'] = $all_errors;
                 // $c->errors = [1];
                 // $middleware = $this->state->getMiddlewares()->getCurrent();

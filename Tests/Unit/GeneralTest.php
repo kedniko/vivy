@@ -4,7 +4,7 @@ namespace Tests;
 
 use App\App;
 use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;

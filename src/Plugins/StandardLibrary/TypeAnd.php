@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
@@ -45,7 +45,7 @@ final class TypeAnd extends Type
             while ($types->hasNext()) {
                 $type = $types->getNext();
 
-                if (! $type instanceof Type) {
+                if (!$type instanceof Type) {
                     $type = new TypeAny();
                     $type->addRule(Rules::email());
                 }

@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\LinkedList;
@@ -24,7 +24,7 @@ final class TypeGroup extends TypeCompound
      */
     public function init(array|callable $setup = null)
     {
-        if (! $setup) {
+        if (!$setup) {
             return;
         }
 
@@ -74,15 +74,15 @@ final class TypeGroup extends TypeCompound
 
                 $gc = GroupContext::build($fieldname, $c, $c->value[$fieldname] ?? Undefined::instance(), $c);
 
-                $isRequired = $typeProxy->isRequired($gc) && ! $nextIsUndefined;
+                $isRequired = $typeProxy->isRequired($gc) && !$nextIsUndefined;
 
                 $isInOr = $type instanceof TypeOr;
 
-                if (! is_array($c->value)) {
+                if (!is_array($c->value)) {
                     throw new \Exception('$c->value in not an array', 1);
                 }
 
-                if (! array_key_exists($fieldname, $c->value) && ! $isInOr && $isRequired) {
+                if (!array_key_exists($fieldname, $c->value) && !$isInOr && $isRequired) {
                     $rule = $type->state->getRequiredRule() ?: Rules::required();
 
                     $newDefault = Helpers::tryToGetDefault($rule->getID(), $typeProxy, $gc);
@@ -196,10 +196,10 @@ final class TypeGroup extends TypeCompound
             } elseif ($type instanceof Type) {
                 // do nothing
             } else {
-                throw new VivyException('Unknown setup type: '.gettype($type));
+                throw new VivyException('Unknown setup type: ' . gettype($type));
             }
 
-            if (! $type->state->issetRequired()) {
+            if (!$type->state->issetRequired()) {
                 $type->state->setRequired(true, Rules::required());
             }
             (new TypeProxy($type))->setName($fieldname);

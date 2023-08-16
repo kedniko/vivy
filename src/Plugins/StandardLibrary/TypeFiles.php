@@ -3,9 +3,7 @@
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
 use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Core\ContextProxy;
-use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Validated;
@@ -188,14 +186,11 @@ final class TypeFiles extends TypeCompound
     private function getEachRule(Type $type, bool|callable $stopOnItemFailure, $errormessage): Rule
     {
         $ruleFn = function (Context $c) use ($type, $stopOnItemFailure): \Kedniko\Vivy\Core\Validated {
-            if (! is_array($c->value)) {
-                throw new \Exception('This is not an array. Got ['.gettype($c->value).']: '.json_encode($c->value, JSON_THROW_ON_ERROR), 1);
+            if (!is_array($c->value)) {
+                throw new \Exception('This is not an array. Got [' . gettype($c->value) . ']: ' . json_encode($c->value, JSON_THROW_ON_ERROR), 1);
             }
 
-            new ContextProxy($c);
-
             $arrayContext = new ArrayContext();
-            $arrayContextProxy = new ContextProxy($arrayContext);
 
             $failsCount = 0;
             $successCount = 0;
@@ -219,9 +214,9 @@ final class TypeFiles extends TypeCompound
                     $failsCount++;
                     $c->errors[$index] = $validated->errors();
                     if (is_callable($stopOnItemFailure)) {
-                        $arrayContextProxy->setIndex($index);
-                        $arrayContextProxy->setFailsCount($failsCount);
-                        $arrayContextProxy->setSuccessCount($successCount);
+                        $arrayContext->setIndex($index);
+                        $arrayContext->setFailsCount($failsCount);
+                        $arrayContext->setSuccessCount($successCount);
                         if ($stopOnItemFailure($arrayContext)) {
                             break;
                         }

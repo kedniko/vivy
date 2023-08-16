@@ -2,20 +2,21 @@
 
 namespace Kedniko\Vivy;
 
-use Kedniko\Vivy\Call\TraitUserDefinedCallStatic;
-use Kedniko\Vivy\Commands\ScanCommand;
-use Kedniko\Vivy\Contracts\MiddlewareInterface;
 use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
-use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
-use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Types\Type;
+use Kedniko\Vivy\Support\Arr;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Messages\RuleMessage;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Call\TraitUserDefinedCallStatic;
+use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
 
 final class V
 {
@@ -271,7 +272,7 @@ final class V
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
-                $c = (new Context())->setArgs(func_get_args());
+                $c = (new \Kedniko\Vivy\Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
             $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");

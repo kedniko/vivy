@@ -3,7 +3,7 @@
 namespace Kedniko\Vivy\Support;
 
 use Kedniko\Vivy\V;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Callback;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Types\Type;

@@ -2,18 +2,22 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Concerns\ContextTrait;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Types\Type;
 use Kedniko\Vivy\TypesProxy\TypeProxy;
 
-final class GroupContext extends Context
+final class GroupContext implements Context
 {
+    use ContextTrait;
+
     private $fieldname;
 
-    public function __construct($fieldname, Context $cloneFrom = null)
+
+    public function __construct($fieldname, Context $cloneFrom = null, Context $fatherContext = null)
     {
-        parent::__construct($cloneFrom);
+        $this->init($cloneFrom, $fatherContext);
         $this->fieldname = $fieldname ?? Undefined::instance();
     }
 
@@ -46,10 +50,10 @@ final class GroupContext extends Context
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (! $permanent) {
+        if (!$permanent) {
             $type->once();
         }
-        if (! $typeProxy->getState()->issetRequired()) {
+        if (!$typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 
@@ -68,10 +72,10 @@ final class GroupContext extends Context
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (! $permanent) {
+        if (!$permanent) {
             $type->once();
         }
-        if (! $typeProxy->getState()->issetRequired()) {
+        if (!$typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 

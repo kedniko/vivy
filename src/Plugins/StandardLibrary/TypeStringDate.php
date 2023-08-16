@@ -3,7 +3,7 @@
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
 use DateTime;
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Messages\RuleMessage;

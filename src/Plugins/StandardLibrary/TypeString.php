@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Plugins\StandardLibrary;
 
-use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
@@ -21,7 +21,7 @@ class TypeString extends TypeScalar
         $transformer = new Transformer('prefix', function (Context $c): string {
             $prefix = Helpers::issetOrDefault($c->args()[0], '');
 
-            return $prefix.$c->value;
+            return $prefix . $c->value;
         }, $errormessage);
 
         $this->addTransformer($transformer, $options);
