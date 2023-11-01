@@ -10,7 +10,7 @@ final class Undefined
     {
     }
 
-    public static function instance()
+    public static function instance(): Undefined
     {
         if (! isset(self::$instance)) {
             self::$instance = new self();

@@ -44,7 +44,7 @@ final class Validated
     /**
      * Handler can be set with `V::setFailHandler()`
      */
-    public function orFailWith(string|callable $handler)
+    public function orFailWith(string|callable $handler): Validated
     {
         if ($this->fails()) {
             if (is_string($handler)) {
@@ -68,12 +68,12 @@ final class Validated
         return (is_countable($errors) ? count($errors) : 0) === 0;
     }
 
-    public function errors()
+    public function errors(): array
     {
         return $this->errors;
     }
 
-    public function value()
+    public function value(): mixed
     {
         return $this->value;
     }

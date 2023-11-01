@@ -4,7 +4,7 @@ namespace Tests;
 
 use App\App;
 use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
@@ -39,7 +39,7 @@ test('required-if-simple-2', function () {
 test('required-if-2', function () {
     $v = V::group([
         'allow_sms' => V::bool()->required(),
-        'phone' => V::requiredIf(function (Context $c) {
+        'phone' => V::requiredIf(function (ContextInterface $c) {
             $allowSmsContext = $c->fatherContext->getFieldContext('allow_sms');
             $res = $allowSmsContext->value === true;
 
@@ -56,7 +56,7 @@ test('required-if-2', function () {
 test('required-if-3', function () {
     $v = V::group([
         'allow_sms' => V::bool()->required(),
-        'phone' => V::requiredIfField('allow_sms', function (Context $c) {
+        'phone' => V::requiredIfField('allow_sms', function (ContextInterface $c) {
             $res = $c->value === true;
 
             return $res;
@@ -88,7 +88,7 @@ test('simple-setvalue-2', function () {
 
 test('real-input', function () {
     $validated = V::group([
-        'sale_group' => V::string(true, true, true, O::continueOnFailure())->asAny()->int(),
+        'sale_group' => V::string(O::continueOnFailure())->asAny()->int(),
         'sale_id' => V::string(),
         'exclude_taxes' => V::bool(),
         'dates' => V::array()->maxCount(5)->each(V::date('Y-m-d')),

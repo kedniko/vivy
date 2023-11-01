@@ -6,7 +6,7 @@ final class State
 {
     private $data;
 
-    private string|\Kedniko\Vivy\Core\Undefined $name;
+    private string|Undefined $name;
 
     private bool|Undefined $required;
 
@@ -14,53 +14,49 @@ final class State
 
     private bool|Undefined $notNull;
 
-    /** @var Rule */
-    private $requiredRule;
+    private Rule $requiredRule;
 
-    /** @var Rule */
-    private $emptyStringRule;
+    private readonly Rule $emptyStringRule;
 
-    /** @var Rule */
-    private $notNullRule;
+    private Rule $notNullRule;
 
-    private $defaultValues = [];
+    private array $defaultValues = [];
 
     private $defaultValuesAny;
 
-    private $enableDefaultValueIfOptional = false;
+    private bool $enableDefaultValueIfOptional = false;
 
     private $defaultValueIfOptional;
 
-    private $customErrMessages = [];
+    private array $customErrMessages = [];
 
-    private $errorMessageAny;
+    private \Closure|string|Undefined $errorMessageAny;
 
-    private $errorMessageEmpty;
+    private \Closure|string|Undefined $errorMessageEmpty;
 
-    private $valueIfOptionalNotExists;
+    private \Kedniko\Vivy\Core\Undefined $valueIfOptionalNotExists;
 
-    /** @var LinkedList */
-    private $middlewares;
+    private LinkedList $middlewares;
 
     private array $middlewaresid = [];
 
-    private $onValid = [];
+    private array $onValid = [];
 
-    private $onError = [];
+    private array $onError = [];
 
-    private $stopOnFailure = false;
+    private bool $stopOnFailure = false;
 
     private bool $once = false;
 
-    public $setupFn;
+    public \Closure|Undefined $setupFn;
 
-    public $_extra;
+    public array $_extra = [];
 
-    public $fields;
+    public LinkedList $fields;
 
-    public $requiredIf;
+    public \Closure|Undefined|bool $requiredIf;
 
-    public $requiredIfField;
+    public array|Undefined $requiredIfField;
 
     // /** @var array */
     // public $allow;
@@ -82,6 +78,7 @@ final class State
         $this->requiredIf = Undefined::instance();
         $this->requiredIfField = Undefined::instance();
         $this->notEmptyString = Undefined::instance();
+        $this->setupFn = Undefined::instance();
         $this->notNull = Undefined::instance();
         $this->defaultValueIfOptional = Undefined::instance();
 
@@ -188,22 +185,22 @@ final class State
     // 	return !$this->isUndefined($this->requiredRule) && !is_null($this->requiredRule);
     // }
 
-    public function getRequiredRule()
+    public function getRequiredRule(): Rule
     {
         return $this->requiredRule;
     }
 
-    public function getEmptyStringRule()
+    public function getEmptyStringRule(): Rule
     {
         return $this->emptyStringRule;
     }
 
-    public function getNotNullRule()
+    public function getNotNullRule(): Rule
     {
         return $this->notNullRule;
     }
 
-    public function setRequiredRule($rule)
+    public function setRequiredRule(Rule $rule)
     {
         $this->requiredRule = $rule;
 
@@ -215,7 +212,7 @@ final class State
         return $this;
     }
 
-    public function setNotNullRule($rule)
+    public function setNotNullRule(Rule $rule)
     {
         $this->notNullRule = $rule;
 
@@ -263,13 +260,7 @@ final class State
         return $this;
     }
 
-    /**
-     * Get the value of middlewares
-     */
-    /**
-     * @return [type]
-     */
-    public function getMiddlewares()
+    public function getMiddlewares(): LinkedList
     {
         return $this->middlewares;
     }
@@ -284,7 +275,7 @@ final class State
      *
      * @return  self
      */
-    public function setMiddlewares($middlewares)
+    public function setMiddlewares(LinkedList $middlewares)
     {
         $this->middlewares = $middlewares;
 
@@ -385,7 +376,7 @@ final class State
     /**
      * Get the value of stopOnFailure
      */
-    public function getStopOnFailure()
+    public function getStopOnFailure(): bool
     {
         return $this->stopOnFailure;
     }
@@ -395,7 +386,7 @@ final class State
      *
      * @return  self
      */
-    public function setStopOnFailure($stopOnFailure)
+    public function setStopOnFailure(bool $stopOnFailure)
     {
         $this->stopOnFailure = $stopOnFailure;
 
@@ -405,7 +396,7 @@ final class State
     /**
      * Get the value of customErrMessages
      */
-    public function getCustomErrMessages()
+    public function getCustomErrMessages(): array
     {
         return $this->customErrMessages;
     }
@@ -415,7 +406,7 @@ final class State
      *
      * @return  self
      */
-    public function setCustomErrMessages($customErrMessages)
+    public function setCustomErrMessages(array $customErrMessages)
     {
         $this->customErrMessages = $customErrMessages;
 
@@ -423,9 +414,9 @@ final class State
     }
 
     /**
-     * Get the value of fields
+     * @return LinkedList[Type]
      */
-    public function getFields()
+    public function getFields(): LinkedList
     {
         return $this->fields;
     }
@@ -433,9 +424,10 @@ final class State
     /**
      * Set the value of fields
      *
+     * @param LinkedList[Type] $types
      * @return  self
      */
-    public function setFields($types)
+    public function setFields(LinkedList $types)
     {
         $this->fields = $types;
 
@@ -450,7 +442,7 @@ final class State
     /**
      * Get the value of errorMessageAny
      */
-    public function getErrorMessageAny()
+    public function getErrorMessageAny(): \Closure|string|\Kedniko\Vivy\Core\Undefined
     {
         return $this->errorMessageAny;
     }
@@ -460,7 +452,7 @@ final class State
      *
      * @return  self
      */
-    public function setErrorMessageAny($errorMessageAny)
+    public function setErrorMessageAny(\Closure|string|\Kedniko\Vivy\Core\Undefined $errorMessageAny)
     {
         $this->errorMessageAny = $errorMessageAny;
 
@@ -470,7 +462,7 @@ final class State
     /**
      * Get the value of onValid
      */
-    public function getOnValid()
+    public function getOnValid(): array
     {
         return $this->onValid;
     }
@@ -480,7 +472,7 @@ final class State
      *
      * @return  self
      */
-    public function setOnValid($onValid)
+    public function setOnValid(array $onValid)
     {
         $this->onValid = $onValid;
 
@@ -497,7 +489,7 @@ final class State
     /**
      * Get the value of onError
      */
-    public function getOnError()
+    public function getOnError(): array
     {
         return $this->onError;
     }
@@ -507,7 +499,7 @@ final class State
      *
      * @return  self
      */
-    public function setOnError($onError)
+    public function setOnError(array $onError)
     {
         $this->onError = $onError;
 
@@ -533,7 +525,7 @@ final class State
     /**
      * Get the value of errorMessageEmpty
      */
-    public function getErrorMessageEmpty()
+    public function getErrorMessageEmpty(): \Closure|string|\Kedniko\Vivy\Core\Undefined
     {
         return $this->errorMessageEmpty;
     }
@@ -543,7 +535,7 @@ final class State
      *
      * @return  self
      */
-    public function setErrorMessageEmpty($errorMessageEmpty)
+    public function setErrorMessageEmpty(\Closure|string|\Kedniko\Vivy\Core\Undefined $errorMessageEmpty)
     {
         $this->errorMessageEmpty = $errorMessageEmpty;
 
@@ -553,7 +545,7 @@ final class State
     /**
      * Get the value of defaultValues
      */
-    public function getDefaultValues()
+    public function getDefaultValues(): array
     {
         return $this->defaultValues;
     }
@@ -563,7 +555,7 @@ final class State
      *
      * @return  self
      */
-    public function setDefaultValues($defaultValues)
+    public function setDefaultValues(array $defaultValues)
     {
         $this->defaultValues = $defaultValues;
 
@@ -598,7 +590,7 @@ final class State
     /**
      * Get the value of enableDefaultValueIfOptional
      */
-    public function getEnableDefaultValueIfOptional()
+    public function getEnableDefaultValueIfOptional(): bool
     {
         return $this->enableDefaultValueIfOptional;
     }
@@ -608,7 +600,7 @@ final class State
      *
      * @return  self
      */
-    public function setEnableDefaultValueIfOptional($enableDefaultValueIfOptional)
+    public function setEnableDefaultValueIfOptional(bool $enableDefaultValueIfOptional)
     {
         $this->enableDefaultValueIfOptional = $enableDefaultValueIfOptional;
 

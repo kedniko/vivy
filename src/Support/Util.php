@@ -2,28 +2,28 @@
 
 namespace Kedniko\Vivy\Support;
 
-use Kedniko\Vivy\V;
-use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Callback;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Types\Type;
-use Kedniko\Vivy\Transformer;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Core\Rule;
+use Kedniko\Vivy\Core\State;
+use Kedniko\Vivy\Transformer;
+use Kedniko\Vivy\Type;
+use Kedniko\Vivy\V;
 
 final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {
-        if (!$fn) {
+        if (! $fn) {
             throw new \Exception('Invalid register function', 1);
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
         }
         $result = Helpers::getClassAndMethod($fn);
-        if (!$result) {
+        if (! $result) {
             throw new \Exception('Invalid register function', 1);
         }
         $class = $result[0];
@@ -82,26 +82,25 @@ final class Util
     public static function handleUserDefinedCall($className, $methodName, $callerObj, $parameters)
     {
         $newField = null;
-        $classMethod = $className . '::' . $methodName;
-        $registered = V::$registeredMiddlewares;
+        $registered = V::$magicCaller->toArray();
 
-        if (!array_key_exists($classMethod, $registered)) {
+        if (! isset($registered[$className][$methodName])) {
             $classes = self::getParentClasses($className);
             $found = false;
             foreach ($classes as $classnameparent) {
-                $tryClassMethod = $classnameparent . '::' . $methodName;
-                if (array_key_exists($tryClassMethod, $registered)) {
+                if (isset($registered[$classnameparent][$methodName])) {
                     $found = true;
-                    $classMethod = $tryClassMethod;
+                    $className = $classnameparent;
                     break;
                 }
             }
-            if (!$found) {
-                throw new \Exception('Method "' . $classMethod . '" does not exists in ' . self::class, 1);
+            if (! $found) {
+                $id = $className.'::'.$methodName;
+                throw new \Exception('Method "'.$id.'" does not exists in '.self::class, 1);
             }
         }
 
-        $setup = $registered[$classMethod];
+        $setup = $registered[$className][$methodName];
         $returntype = $setup['returnType'];
         $availableForType = $setup['availableForType'];
 
@@ -118,7 +117,7 @@ final class Util
         // $result = call_user_func_array($setup['function'], $parameters);
         $isCallable = is_callable($result);
 
-        if (!$callerObj && !($result instanceof Type)) {
+        if (! $callerObj && ! ($result instanceof Type)) {
             if ($availableForType === V::class) {
                 //
             } else {
@@ -178,6 +177,7 @@ final class Util
         // 	$newField->state = $type->state;
         // }
 
+        $newField->state ??= new State();
         $newField->state->_extra ??= [];
         $newField->state->_extra['caller'] = $className;
 

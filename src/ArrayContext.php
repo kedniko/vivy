@@ -3,19 +3,19 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
-final class ArrayContext implements Context
+final class ArrayContext implements ContextInterface
 {
     use ContextTrait;
 
     public $index;
 
-    public $failsCount;
+    public ?int $failsCount = null;
 
     public $successCount;
 
-    public function __construct(Context $cloneFrom = null, Context $fatherContext = null)
+    public function __construct(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
     }
@@ -25,16 +25,15 @@ final class ArrayContext implements Context
         return $this->index;
     }
 
-    public function getFailsCount()
+    public function getFailsCount(): int
     {
         return $this->failsCount;
     }
 
-    public function getSuccessCount()
+    public function getSuccessCount(): int
     {
         return $this->successCount;
     }
-
 
     public function setIndex($value)
     {
@@ -43,14 +42,14 @@ final class ArrayContext implements Context
         return $this;
     }
 
-    public function setFailsCount($value)
+    public function setFailsCount(int $value): ArrayContext
     {
         $this->failCount = $value;
 
         return $this;
     }
 
-    public function setSuccessCount($value)
+    public function setSuccessCount(int $value): ArrayContext
     {
         $this->successCount = $value;
 

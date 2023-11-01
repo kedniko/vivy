@@ -2,25 +2,27 @@
 
 namespace Kedniko\Vivy;
 
-use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Types\Type;
-use Kedniko\Vivy\Support\Arr;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Contracts\Context;
 use Kedniko\Vivy\Commands\ScanCommand;
-use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
-use Kedniko\Vivy\Call\TraitUserDefinedCallStatic;
+use Kedniko\Vivy\Core\Args;
+use Kedniko\Vivy\Core\hasMagicCallStatic;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Core\Rule;
+use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\Vivy\Messages\RuleMessage;
+use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
 use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
+use Kedniko\Vivy\Support\Arr;
+use Kedniko\Vivy\Support\MagicCaller;
+use Kedniko\Vivy\Support\Registrar;
 
 final class V
 {
-    use TraitUserDefinedCallStatic;
+    use hasMagicCallStatic;
 
     // const BASE = 'VIVY_BASE';
 
@@ -29,10 +31,7 @@ final class V
      */
     public static $failHandler;
 
-    /**
-     * @var array
-     */
-    public static $registeredMiddlewares = [];
+    public static ?MagicCaller $magicCaller = null;
 
     /**
      * Private constructor
@@ -48,18 +47,10 @@ final class V
      */
     public static function scan($registerFunction = null, $exportFile = null): void
     {
-        (new ScanCommand())->handle($exportFile);
+        (new ScanCommand())->handle();
     }
 
-    // /**
-    //  * @return Type
-    //  */
-    // public static function useBuilder()
-    // {
-    // 	return self::$currentType;
-    // }
-
-    public static function rule($ruleID, callable $ruleFn, $errormessage = null): Rule
+    public static function rule(string $ruleID, callable $ruleFn, $errormessage = null): Rule
     {
         return new Rule($ruleID, $ruleFn, $errormessage);
     }
@@ -67,14 +58,14 @@ final class V
     /**
      * @param  callable  $transformerFn `fn(Context){...}`
      */
-    public static function transformer(mixed $transformerID, callable $transformerFn, Options $options = null): Transformer
+    public static function transformer(string $transformerID, callable $transformerFn, Options $options = null): Transformer
     {
         $options = Options::build($options, func_get_args());
 
         return new Transformer($transformerID, $transformerFn, $options->getErrorMessage());
     }
 
-    public static function callback($id, callable $callbackFn, Options $options = null): Callback
+    public static function callback(string $id, callable $callbackFn, Options $options = null): Callback
     {
         $options = Options::build($options, func_get_args());
 
@@ -89,151 +80,80 @@ final class V
     public static function registerPlugin(VivyPlugin $classname): void
     {
         $classname->register();
-        // if (Util::classImplements($classname, VivyPlugin::class)) {
-        // 	$classname::register();
-        // 	}
     }
 
-    public static function register($setups): void
+    private static function initMagicCaller(): void
     {
-        $args = func_get_args();
-        if ($args === []) {
-            return;
-        }
-
-        if (count($args) === 1) {
-            // multiple setups
-
-            if (is_array($args[0])) {
-                // array of setups
-                self::registerMany($args[0]);
-
-                return;
-            }
-            $obj = $args[0];
-            self::registerPlugin($obj);
-        }
-        // one setup
-        $availableForTypes = $args[0] ?? [];
-        $availableForTypes = Arr::wrap($availableForTypes);
-        // V::BASE experiment
-        // foreach ($availableForTypes as $i => $availableForType) {
-        // 	if ($availableForType === V::BASE) {
-        // 		$availableForTypes[] = \Kedniko\Vivy\V::class;
-        // 		$availableForTypes[] = \Kedniko\Vivy\Types\Type::class;
-        // 		unset($availableForTypes[$i]);
-        // 	}
-        // }
-        $availableForTypes = array_values(array_unique($availableForTypes));
-        $methodName = $args[1];
-        $function_or_class = $args[2] ?? null;
-        $returnType = $args[3] ?? null;
-        self::registerOne($methodName, $function_or_class, $availableForTypes, $returnType);
+        self::$magicCaller ??= new MagicCaller();
     }
 
-    private static function registerOne(string $methodName, $middleware, array $availableForTypes = [], $returnType = null): void
+    public static function registerMany(array $setups): void
     {
-        if ($middleware instanceof MiddlewareInterface) {
-            $function_or_class = fn () => $middleware;
-        } elseif (is_bool($middleware)) {
-            $bool = $middleware;
+        foreach ($setups as $setup) {
+            V::register($setup);
+        }
+    }
+
+    public static function register(Registrar $registrar): void
+    {
+        if ($registrar->callback instanceof MiddlewareInterface) {
+            $function_or_class = fn (): array|string|null => $registrar->callback;
+        } elseif (is_bool($registrar->callback)) {
+            $bool = $registrar->callback;
             $function_or_class = fn (): \Kedniko\Vivy\Core\Rule => self::rule('::', fn (): bool => $bool);
         } else {
-            $function_or_class = $middleware;
+            $function_or_class = $registrar->callback;
         }
 
-        // if (is_array($function_or_class)) {
-        // 	$function_or_class = $function_or_class[0] . '::' . $function_or_class[1];
-        // }
+        $returnType = $registrar->return;
 
-        // if (is_callable($function)) {
-        //     $function = $function();
-        // }
+        self::initMagicCaller();
 
-        // if (!$function instanceof Middleware) {
-        //     throw new \Exception('This is not a midleware', 1);
-        // }
+        foreach (Arr::wrap($registrar->for) as $availableForType) {
+            $methodName = $registrar->id;
+            $id = $availableForType.'::'.$methodName;
 
-        if (!$returnType) {
-            $returnType ??= Type::class;
-        }
-
-        foreach ($availableForTypes as $avForType) {
-            $classMethod = $avForType . '::' . $methodName;
-            self::$registeredMiddlewares[$classMethod] = [
-                'methodName' => $methodName,
-                'function' => $function_or_class,
-                'availableForType' => $avForType,
-                'returnType' => $returnType,
-            ];
-        }
-    }
-
-    private static function registerMany($setups): void
-    {
-        foreach ($setups as $key => $setup) {
-            if ((is_countable($setup) ? count($setup) : 0) === 3) {
-                $methodName = $key;
-                $callback = $setup[0];
-                $availableForType = $setup[1] ?? [];
-                $returnType = $setup[2] ?? null;
-            } elseif ((is_countable($setup) ? count($setup) : 0) === 4) {
-                $methodName = $setup[0];
-                $callback = $setup[1];
-                $availableForType = $setup[2] ?? [];
-                $returnType = $setup[3] ?? null;
-            }
-
-            V::register($methodName, $callback, $availableForType, $returnType);
+            self::$magicCaller->register(
+                $id,
+                $methodName,
+                $function_or_class,
+                $availableForType,
+                $returnType,
+            );
         }
     }
 
     /**
      * @param  Middleware|Middleware[]  $middlewares
      */
-    public static function registerMiddleware(MiddlewareInterface|array $middlewares, $overwriteExisting = false)
-    {
-        if (!is_array($middlewares)) {
+    public static function registerMiddleware(
+        MiddlewareInterface|array $middlewares,
+        bool $overwriteExisting = false
+    ) {
+        if (! is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (!$middleware instanceof MiddlewareInterface) {
+            if (! $middleware instanceof MiddlewareInterface) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
+            if (! $overwriteExisting && self::$magicCaller->hasId($id)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
-            self::$registeredMiddlewares[$id] = $middleware;
-
-            // if ($middleware instanceof Rule) {
-            // 	if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
-            // 		throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
-            // 	}
-            // 	self::$registeredMiddlewares[$id] = $middleware;
-            // } else if ($middleware instanceof Transformer) {
-            // 	if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
-            // 		throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
-            // 	}
-            // 	self::$registeredMiddlewares[$id] = $middleware;
-            // } else if ($middleware instanceof Callback) {
-            // 	if (!$overwriteExisting && array_key_exists($id, self::$registeredMiddlewares)) {
-            // 		throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
-            // 	}
-            // 	self::$registeredMiddlewares[$id] = $middleware;
-            // }
+            self::$magicCaller->addToId($id, $middleware);
         }
     }
 
-    public static function hasFailHandler($id = 'default')
+    public static function hasFailHandler(string $id = 'default')
     {
         return isset(self::$failHandler[$id]);
     }
 
-    public static function getFailHandler($id = 'default')
+    public static function getFailHandler(string $id = 'default')
     {
         return self::$failHandler[$id];
     }
@@ -243,9 +163,9 @@ final class V
         self::$failHandler[$id] = $handler;
     }
 
-    public static function issetVar(&$variable, $varname, $errormessage = null): Validated
+    public static function issetVar(&$variable, string $varname, string $errormessage = null): Validated
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
@@ -256,26 +176,28 @@ final class V
         return new Validated($variable, []);
     }
 
-    public static function issetVarOrDefault(&$variable, $defaultValue)
+    public static function issetVarOrDefault(mixed &$variable, mixed $defaultValue)
     {
         return Helpers::issetOrDefault($variable, $defaultValue);
     }
 
     /**
-     * @param  array  $array
      * @param  mixed  $path dot.separated.path
      * @param  null  $errormessage
      */
-    public static function issetVarPath($array, mixed $path, $errormessage = null): Validated
-    {
-        if (!Arr::get($array, $path)) {
+    public static function issetVarPath(
+        array $array,
+        string|int $path,
+        string $errormessage = null
+    ): Validated {
+        if (! Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new \Kedniko\Vivy\Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -284,11 +206,10 @@ final class V
     }
 
     /**
-     * @param  array  $array
      * @param  mixed  $path dot.separated.path
      * @return mixed
      */
-    public static function issetVarPathOrDefault($array, mixed $path, mixed $defaultValue)
+    public static function issetVarPathOrDefault(array $array, mixed $path, mixed $defaultValue)
     {
         if (Arr::get($array, $path)) {
             return $array;
@@ -298,13 +219,11 @@ final class V
     }
 
     /**
-     * @param  bool  $bool
-     * @param  string  $name
      * @param  null  $errormessage
      */
-    public static function assertTrue($bool, $name, $errormessage = null): Validated
+    public static function assertTrue(bool $bool, string $name, string $errormessage = null): Validated
     {
-        if (!$bool) {
+        if (! $bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);
@@ -313,9 +232,9 @@ final class V
         return new Validated(true, []);
     }
 
-    public static function assertTrueOrDefault($bool, $defaultValue)
+    public static function assertTrueOrDefault(bool $bool, $defaultValue)
     {
-        return $bool === true ? true : $defaultValue;
+        return $bool ? true : $defaultValue;
     }
 
     /**
@@ -329,7 +248,7 @@ final class V
         return $type;
     }
 
-    public static function requiredIf($value): TypeAny
+    public static function requiredIf(mixed $value): TypeAny
     {
         $type = new TypeAny();
         $type->state->requiredIf = $value;
@@ -337,10 +256,10 @@ final class V
         return $type;
     }
 
-    public static function requiredIfField(string $fieldname, $value): TypeAny
+    public static function requiredIfField(string $fieldname, mixed $value): TypeAny
     {
         $type = new TypeAny();
-        $getContextFn = fn (Context $c) => $c->fatherContext->getFieldContext($fieldname);
+        $getContextFn = fn (ContextInterface $c) => $c->fatherContext->getFieldContext($fieldname);
         $type->state->requiredIfField = [
             'fieldname' => $fieldname,
             'value' => $value,
@@ -353,5 +272,13 @@ final class V
     // public static function registerCustom($name)
     // {
     // 	return new Registrar($name);
+    // }
+
+    // /**
+    //  * @return Type
+    //  */
+    // public static function useBuilder()
+    // {
+    // 	return self::$currentType;
     // }
 }

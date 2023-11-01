@@ -4,7 +4,7 @@ namespace Tests;
 
 use App\App;
 use DateTime;
-use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
 
@@ -91,7 +91,7 @@ test('type-or-basic', function () {
         V::date('Y-m-d'),
         V::date('Y-m'),
         V::null()->setValue('yes!')->asString()->startsWith('a'),
-    ], O::message(function (Context $c) {
+    ], O::message(function (ContextInterface $c) {
         return 'Valore non accettato per nessuno dei test';
     }))->validate(null);
     $this->assertFalse($validated->isValid());

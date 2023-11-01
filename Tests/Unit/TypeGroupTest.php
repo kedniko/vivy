@@ -33,7 +33,7 @@ beforeAll(function () {
 
 test('form-1', function () {
     $validated = V::group([
-        'name' => V::string(true, true, true, O::message('name is not a string')),
+        'name' => V::string(O::message('name is not a string')),
         'count' => V::int()->max(100, O::message('count is too big')),
         'address' => [
             'via' => V::string(),

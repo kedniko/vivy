@@ -37,7 +37,7 @@ final class O
         return self::options()->stopOnFailure();
     }
 
-    public static function message(string|callable $message)
+    public static function message(string|callable|null $message)
     {
         return self::options()->message($message);
     }

@@ -3,14 +3,14 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
-final class NullContext implements Context
+final class NullContext implements ContextInterface
 {
-  use ContextTrait;
+    use ContextTrait;
 
-  public function __construct(Context $cloneFrom = null, Context $fatherContext = null)
-  {
-    $this->init($cloneFrom, $fatherContext);
-  }
+    public function __construct(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
+    {
+        $this->init($cloneFrom, $fatherContext);
+    }
 }

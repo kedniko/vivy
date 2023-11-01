@@ -2,51 +2,60 @@
 
 namespace Kedniko\Vivy\Commands;
 
-use Kedniko\PhpIdeHelper\IdeHelper;
-use Kedniko\PhpIdeHelper\Register;
 use Kedniko\Vivy\V;
 
 final class ScanCommand
 {
-    public function handle($exportPath = null): void
+    public function handle(): void
     {
-        $exportPath ??= 'ide-helper.rules.php';
-        $registered = array_map(function ($item): Register {
-            $r = new Register();
+        $exportPath ??= '.tmp/ide-helper.rules.php';
+        $registered = $this->getRegistered();
+        $file = $this->generateFromRegistered($registered);
+        file_put_contents($exportPath, $file);
+    }
 
-            $returnType = $item['returnType'];
-            $availableForType = $item['availableForType'];
-            $fn = $item['function'];
-            if (is_array($fn)) {
-                $classname = $item['function'][0];
-                $methodname = $item['function'][1];
-                $r->useMethod($classname, $methodname);
-            } else {
-                $r->useFunction($fn);
+    private function getRegistered()
+    {
+        return V::$magicCaller->toArray();
+    }
+
+    private function generateFromRegistered($registered)
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+
+        foreach ($registered as $className => $methods) {
+            $class = $file->addClass($className);
+            foreach ($methods as $methodArr) {
+                $fromClassName = $methodArr['function'][0];
+                $fromMethodName = $methodArr['function'][1];
+
+                $method = \Nette\PhpGenerator\Method::from([$fromClassName, $fromMethodName]);
+                $method = $method->cloneWithName($methodArr['methodName']);
+                if ($methodArr['returnType']) {
+                    $method->setReturnType($methodArr['returnType']);
+                }
+                if ($className === V::class) {
+                    $method->setStatic(true);
+                }
+                $class->addMember($method);
             }
-            $name = $item['methodName'];
-            $is_static = $availableForType === V::class;
-            $r->name($name)->asStatic($is_static)->to($availableForType)->setReturn($returnType);
+        }
 
-            return $r;
-        }, V::$registeredMiddlewares);
+        return <<<PHP
+        <?php
+        
+        {$this->getHeader()}
+        {$this->removeFirstLineFromString($file)}
+        PHP;
+    }
 
-        $ih = new IdeHelper($registered);
-        $ih->setHeader($this->getHeader());
-        $ih->generate($exportPath);
+    private function removeFirstLineFromString(\Nette\PhpGenerator\PhpFile $str): string
+    {
+        return substr($str, strpos($str, "\n") + 1);
     }
 
     private function getHeader(): string
     {
-        return <<<'HEADER'
-
-        // @formatter:off
-        /**
-         * A helper file for your Vivy validators.
-         *
-         * @author @kedniko
-         */
-        
-        HEADER;
+        return file_get_contents(__DIR__.'/../stubs/header.txt');
     }
 }

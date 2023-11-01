@@ -7,5 +7,5 @@ use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 final class Rule implements MiddlewareInterface
 {
-  use MiddlewareTrait;
+    use MiddlewareTrait;
 }

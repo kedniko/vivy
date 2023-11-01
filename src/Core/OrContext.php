@@ -3,20 +3,19 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\Context;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
-final class OrContext implements Context
+final class OrContext implements ContextInterface
 {
-
     use ContextTrait;
 
     /**
      * TODO: childErrors is not used
-     * 
-     * @param private $childErrors
-     * @param Context|null $c
+     *
+     * @param  private  $childErrors
+     * @param  ContextInterface|null  $c
      */
-    public function __construct(private $childErrors, Context $cloneFrom = null, Context $fatherContext = null)
+    public function __construct(private $childErrors, ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
     }

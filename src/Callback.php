@@ -9,32 +9,32 @@ final class Callback implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
-    public function getID()
+    public function getID(): string
     {
         return $this->id;
     }
 
-    public function getCallback()
+    public function getCallback(): ?callable
     {
         return $this->callback;
     }
 
-    public function getErrorMessage()
+    public function getErrorMessage(): string
     {
         return $this->errormessage;
     }
 
-    public function setErrorMessage($errmessage): void
+    public function setErrorMessage(mixed $errmessage): void
     {
         $this->errormessage = $errmessage;
     }
 
-    public function setStopOnFailure($stopOnFailure): void
+    public function setStopOnFailure(bool $stopOnFailure): void
     {
         $this->stopOnFailure = $stopOnFailure;
     }
 
-    public function getStopOnFailure()
+    public function getStopOnFailure(): bool
     {
         return $this->stopOnFailure;
     }

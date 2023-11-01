@@ -5,8 +5,9 @@
 		"psr-4": {
 			"Kedniko\\Vivy\\": "src/",
 			"Kedniko\\Vivy\\Call\\": "src/.svn/",
-			"App\\": "app/",
-			"Tests\\": "tests/"
+			"App\\": "tests/app/",
+			"Tests\\": "tests/",
+			"Kedniko\\Vivy\\Plugins\\StandardLibrary\\": "Plugins/StandardLibrary/"
 		}
 	},
 	"minimum-stability": "dev",
@@ -14,7 +15,7 @@
 	"require": {
 		"php": "^8.2.0",
 		"brick/math": "^0.11.0",
-		"kedniko/php-ide-helper": "dev-main",
+		"nette/php-generator": "^4.1",
 		"nikic/php-parser": "^4.15.5"
 	},
 	"require-dev": {
@@ -38,19 +39,13 @@
 		"test:refacto": "rector --dry-run",
 		"test:lint": "pint --test",
 		"test:types": "phpstan analyse --ansi",
-		"test:unit": "pest --colors=always",
+		"test": "pest --colors=always",
 		"scan": "php ./bin/scan",
-		"test": [
+		"test:all": [
 			"@test:refacto",
 			"@test:lint",
 			"@test:types",
 			"@test:unit"
 		]
-	},
-	"repositories": [
-		{
-			"type": "path",
-			"url": "~/code/.kedniko/php-ide-helper"
-		}
-	]
+	}
 }

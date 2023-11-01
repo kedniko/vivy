@@ -3,9 +3,9 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\Context as ContractsContext;
+use Kedniko\Vivy\Contracts\ContextInterface as ContractsContext;
 
-class Context implements ContractsContext
+final class Context implements ContractsContext
 {
     use ContextTrait;
 

@@ -3,25 +3,24 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\Context;
-use Kedniko\Vivy\Rules;
-use Kedniko\Vivy\Types\Type;
-use Kedniko\Vivy\TypesProxy\TypeProxy;
+use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\Vivy\Type;
 
-final class GroupContext implements Context
+final class GroupContext implements ContextInterface
 {
     use ContextTrait;
 
     private $fieldname;
 
-
-    public function __construct($fieldname, Context $cloneFrom = null, Context $fatherContext = null)
+    public function __construct($fieldname, ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
         $this->fieldname = $fieldname ?? Undefined::instance();
     }
 
-    public static function build($fieldname, $fatherContext, $value, Context $cloneFrom = null): GroupContext
+    public static function build($fieldname, $fatherContext, $value, ContextInterface $cloneFrom = null): GroupContext
     {
         $gc = new GroupContext($fieldname, $cloneFrom);
         $gc->fatherContext = $fatherContext;
@@ -50,10 +49,10 @@ final class GroupContext implements Context
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (!$permanent) {
+        if (! $permanent) {
             $type->once();
         }
-        if (!$typeProxy->getState()->issetRequired()) {
+        if (! $typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 
@@ -72,10 +71,10 @@ final class GroupContext implements Context
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (!$permanent) {
+        if (! $permanent) {
             $type->once();
         }
-        if (!$typeProxy->getState()->issetRequired()) {
+        if (! $typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 
