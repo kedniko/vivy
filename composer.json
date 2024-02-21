@@ -6,8 +6,7 @@
 			"Kedniko\\Vivy\\": "src/",
 			"Kedniko\\Vivy\\Call\\": "src/.svn/",
 			"App\\": "tests/app/",
-			"Tests\\": "tests/",
-			"Kedniko\\Vivy\\Plugins\\StandardLibrary\\": "Plugins/StandardLibrary/"
+			"Tests\\": "tests/"
 		}
 	},
 	"minimum-stability": "dev",
@@ -15,6 +14,7 @@
 	"require": {
 		"php": "^8.2.0",
 		"brick/math": "^0.11.0",
+		"kedniko/vivy-plugin-standard": "dev-main",
 		"nette/php-generator": "^4.1",
 		"nikic/php-parser": "^4.15.5"
 	},
@@ -33,6 +33,9 @@
 			"pestphp/pest-plugin": true
 		}
 	},
+	"bin": [
+		"bin/vivy"
+	],
 	"scripts": {
 		"refacto": "rector",
 		"lint": "pint",

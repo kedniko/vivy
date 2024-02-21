@@ -7,8 +7,8 @@ use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
 use Kedniko\Vivy\Exceptions\VivyException;
 use Kedniko\Vivy\Messages\TransformerMessage;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
+use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\Vivy\Plugin\Standard\TypeOr;
 use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Type;
@@ -52,9 +52,9 @@ final class Validator
         if ($this->type instanceof TypeOr) {
             $orChildCanBeNull = $this->type->state->_extra['childCanBeNull'] ?? false;
             $orChildCanBeEmptyString = $this->type->state->_extra['childCanBeEmptyString'] ?? false;
-            $emptyIsInvalid = (! $orChildCanBeEmptyString && $this->type->context->value === '') || (! $orChildCanBeNull && $this->type->context->value === null);
+            $emptyIsInvalid = (!$orChildCanBeEmptyString && $this->type->context->value === '') || (!$orChildCanBeNull && $this->type->context->value === null);
         } else {
-            $emptyIsInvalid = (! $this->type->canBeEmptyString && $this->type->context->value === '') || (! $this->type->canBeNull && $this->type->context->value === null);
+            $emptyIsInvalid = (!$this->type->canBeEmptyString && $this->type->context->value === '') || (!$this->type->canBeNull && $this->type->context->value === null);
         }
 
         if ($emptyIsInvalid) {
@@ -82,19 +82,19 @@ final class Validator
         while ($middlewares->hasNext()) {
             $middleware = $middlewares->getNext();
 
-            if (! $middleware instanceof MiddlewareInterface) {
+            if (!$middleware instanceof MiddlewareInterface) {
                 $middleware = Rules::equals($middleware, true);
             }
 
             /** @var Middleware $middleware */
             $skipThisMiddleware = $this->type->skipOtherMiddlewares || ($this->type->skipOtherRules && $middleware->isRule());
 
-            if (! $skipThisMiddleware) {
+            if (!$skipThisMiddleware) {
                 $idmiddleware = $middleware->getID();
                 $middlewaresIds = $this->type->fieldProxy->getState()->getMiddlewaresIds();
 
                 // OPTIMIZATION: if not bigger than 0 then it means that the middleware is not active
-                if (! (isset($middlewaresIds[$idmiddleware]) && $middlewaresIds[$idmiddleware] > 0)) {
+                if (!(isset($middlewaresIds[$idmiddleware]) && $middlewaresIds[$idmiddleware] > 0)) {
                     continue;
                 }
 
@@ -106,17 +106,17 @@ final class Validator
                 if ($options->hasIf()) {
                     $ifCallback = $options->getIf();
                     if (is_callable($ifCallback)) {
-                        if (! $ifCallback($context)) {
+                        if (!$ifCallback($context)) {
                             continue;
                         }
-                    } elseif (! $ifCallback) {
+                    } elseif (!$ifCallback) {
                         continue;
                     }
                 }
 
                 $isValid = $this->applyMiddleware($middleware);
 
-                if (! $isValid) {
+                if (!$isValid) {
                     $areAllValid = false;
                 }
 
@@ -129,11 +129,11 @@ final class Validator
             // if this is the last middleware
             // these callbacks could add more middlewares at runtime!
             // this is why we need to check this inside this while loop
-            if (! $middlewares->hasNext() || $this->type->skipOtherMiddlewares) {
+            if (!$middlewares->hasNext() || $this->type->skipOtherMiddlewares) {
                 if ($areAllValid) {
                     $this->applyOnValidFunctions();
                 }
-                if (! $areAllValid) {
+                if (!$areAllValid) {
                     $this->applyOnErrorFunctions();
                 }
             }
@@ -153,7 +153,7 @@ final class Validator
 
         if ($emptyIsValid) {
             // if current middleware check force empty value, don't skip other rules but continue to validate...
-            if (! in_array($middleware->getID(), [Rules::ID_NULL, Rules::ID_EMPTY_STRING])) {
+            if (!in_array($middleware->getID(), [Rules::ID_NULL, Rules::ID_EMPTY_STRING])) {
                 $this->type->skipOtherRules = true;
             }
         } else {
@@ -165,7 +165,7 @@ final class Validator
 
             if ($validated_or_bool instanceof Validated) {
                 if ($this->type instanceof TypeOr) {
-                    $isvalid = ! ($this->type->state->_extra['or_errors'] ?? []);
+                    $isvalid = !($this->type->state->_extra['or_errors'] ?? []);
                 } else {
                     $isvalid = $validated_or_bool->isValid();
                 }
@@ -174,7 +174,7 @@ final class Validator
                 $isvalid = $validated_or_bool;
             }
 
-            if (! $isvalid) {
+            if (!$isvalid) {
                 $newDefault = Helpers::tryToGetDefault($middleware->getID(), $this->type->fieldProxy, $this->type->context);
                 if (Helpers::isNotUndefined($newDefault)) {
                     $this->type->context->value = $newDefault;
@@ -211,7 +211,7 @@ final class Validator
                 $this->type->context->errors['error'] = $this->type->fieldProxy->getErrorMessageAny();
             } else {
                 $this->type->context->errors[$id] = $this->type->fieldProxy->getCustomErrorMessage($id) ?: $middleware->getErrorMessage()
-                  ?: TransformerMessage::getErrorMessage();
+                    ?: TransformerMessage::getErrorMessage();
             }
 
             if ($middleware->getStopOnFailure()) {
@@ -250,13 +250,13 @@ final class Validator
             $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
             // errors for types inside orRule are ignored. The main orRule will handle them
-            $canEditContextErrors = ! (isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
+            $canEditContextErrors = !(isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
             if ($canEditContextErrors) {
                 $this->type->context->errors = $errors;
             }
         }
 
-        return ! $errors;
+        return !$errors;
     }
 
     private function applyOnValidFunctions(): void
@@ -285,10 +285,10 @@ final class Validator
                 $fnAll($this->type->context);
             }
         }
-        if (! isset($fns['rules'])) {
+        if (!isset($fns['rules'])) {
             return;
         }
-        if (! ($fnsRules = $fns['rules'])) {
+        if (!($fnsRules = $fns['rules'])) {
             return;
         }
         foreach ($fnsRules as $ruleKey => $fnRuleArray) {
@@ -304,7 +304,7 @@ final class Validator
     {
         $errors = [];
 
-        if (! $this->type->canBeEmptyString && $this->type->context->value === '') {
+        if (!$this->type->canBeEmptyString && $this->type->context->value === '') {
             $ruleID = Rules::ID_NOT_EMPTY_STRING;
             $rule = $this->type->fieldProxy->hasRule($ruleID) ? $this->type->fieldProxy->getRule($ruleID) : Rules::notEmptyString();
 
@@ -314,7 +314,7 @@ final class Validator
             } else {
                 $errors = Helpers::getErrors($rule, $this->type->fieldProxy, $this->type->context);
             }
-        } elseif (! $this->type->canBeNull && $this->type->context->value === null) {
+        } elseif (!$this->type->canBeNull && $this->type->context->value === null) {
             $ruleID = Rules::ID_NOT_NULL;
             $rule = $this->type->fieldProxy->hasRule($ruleID) ? $this->type->fieldProxy->getRule($ruleID) : Rules::notNull();
 
@@ -334,7 +334,7 @@ final class Validator
         $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
         // errors for types inside orRule are ignored. The main orRule will handle them
-        $canEditContextErrors = ! (isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
+        $canEditContextErrors = !(isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
         if ($canEditContextErrors) {
             $this->type->context->errors = $errors;
         }
@@ -350,7 +350,7 @@ final class Validator
             throw new \Exception('No data to validate');
         }
 
-        if (! $this->validated) {
+        if (!$this->validated) {
             $this->validated = $this->type->validate($dataToValidate);
         }
 

@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Support\Util;
+
+$vendorPath = dirname(__DIR__, 4) . '/vendor/autoload.php';
+$localPath = dirname(__DIR__) . '/vendor/autoload.php';
+
+if (file_exists($vendorPath)) {
+  include_once $vendorPath;
+  $autoloadPath = $vendorPath;
+} else {
+  include_once $localPath;
+  $autoloadPath = $localPath;
+}
+
+$registerFunction = $argv[1] ?? 'App\App::boot';
+Util::runFunction($registerFunction);
+(new ScanCommand())->handle(getcwd() . '/ide-helper.rules.php');

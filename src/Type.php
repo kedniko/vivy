@@ -18,7 +18,7 @@ use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Core\Validator;
 use Kedniko\Vivy\Exceptions\VivyException;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Plugin\Standard\Rules;
 use Kedniko\Vivy\Support\TypeProxy;
 
 class Type
@@ -190,9 +190,9 @@ class Type
         $options = Helpers::getOptions($options);
 
         if (
-            ! $transformer instanceof Transformer &&
-            ! is_string($transformer) &&
-            ! is_callable($transformer)
+            !$transformer instanceof Transformer &&
+            !is_string($transformer) &&
+            !is_callable($transformer)
         ) {
             throw new VivyException('Expected type Transformer or function name', 1);
         }
@@ -292,7 +292,7 @@ class Type
     {
         $_this = $this->getThisUnwrapped();
 
-        if (! is_array($rulesID)) {
+        if (!is_array($rulesID)) {
             $rulesID = [$rulesID];
         }
         foreach ($rulesID as $ruleID) {
@@ -357,7 +357,7 @@ class Type
         $_this = $this->getThisUnwrapped();
 
         if ($rulesID) {
-            if (! is_array($rulesID)) {
+            if (!is_array($rulesID)) {
                 $rulesID = [$rulesID];
             }
             foreach ($rulesID as $ruleID) {
@@ -374,7 +374,7 @@ class Type
     {
         $_this = $this->getThisUnwrapped();
 
-        if (! is_array($rulesID)) {
+        if (!is_array($rulesID)) {
             $rulesID = [$rulesID];
         }
         foreach ($rulesID as $ruleID) {
@@ -396,7 +396,7 @@ class Type
 
     public function getStopOnFailure()
     {
-        if (! $this->state->hasStopOnFailure()) {
+        if (!$this->state->hasStopOnFailure()) {
             return false;
         }
 
@@ -493,7 +493,7 @@ class Type
 
     public function fails(): bool
     {
-        return ! $this->isValid();
+        return !$this->isValid();
     }
 
     public function isValidWith(mixed $value): bool
@@ -506,7 +506,7 @@ class Type
      */
     public function failsWith(mixed $value): bool
     {
-        return ! $this->isValidWith($value);
+        return !$this->isValidWith($value);
     }
 
     /**

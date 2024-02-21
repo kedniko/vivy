@@ -14,8 +14,8 @@ use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeAny;
+use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\Vivy\Plugin\Standard\TypeAny;
 use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Support\MagicCaller;
 use Kedniko\Vivy\Support\Registrar;
@@ -111,7 +111,7 @@ final class V
 
         foreach (Arr::wrap($registrar->for) as $availableForType) {
             $methodName = $registrar->id;
-            $id = $availableForType.'::'.$methodName;
+            $id = $availableForType . '::' . $methodName;
 
             self::$magicCaller->register(
                 $id,
@@ -130,18 +130,18 @@ final class V
         MiddlewareInterface|array $middlewares,
         bool $overwriteExisting = false
     ) {
-        if (! is_array($middlewares)) {
+        if (!is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (! $middleware instanceof MiddlewareInterface) {
+            if (!$middleware instanceof MiddlewareInterface) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (! $overwriteExisting && self::$magicCaller->hasId($id)) {
+            if (!$overwriteExisting && self::$magicCaller->hasId($id)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
             self::$magicCaller->addToId($id, $middleware);
@@ -165,7 +165,7 @@ final class V
 
     public static function issetVar(&$variable, string $varname, string $errormessage = null): Validated
     {
-        if (! isset($variable)) {
+        if (!isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
@@ -190,14 +190,14 @@ final class V
         string|int $path,
         string $errormessage = null
     ): Validated {
-        if (! Arr::get($array, $path)) {
+        if (!Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
                 $c = (new \Kedniko\Vivy\Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -223,7 +223,7 @@ final class V
      */
     public static function assertTrue(bool $bool, string $name, string $errormessage = null): Validated
     {
-        if (! $bool) {
+        if (!$bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);

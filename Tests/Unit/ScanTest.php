@@ -7,9 +7,14 @@ use Kedniko\Vivy\V;
 uses()->group('scan');
 
 test('scan', function () {
-    V::registerPlugin(new \Kedniko\Vivy\Plugins\StandardLibrary\StandardLibrary());
-    (new \Kedniko\Vivy\Commands\ScanCommand())->handle('_ide_helper_vivy.php');
+    $filename = '_ide_helper_vivy.php';
 
-    $fileExists = file_exists('_ide_helper_vivy.php');
+    V::registerPlugin(new \Kedniko\Vivy\Plugin\Standard\StandardLibrary());
+    (new \Kedniko\Vivy\Commands\ScanCommand())->handle($filename);
+
+    $fileExists = file_exists($filename);
     expect($fileExists)->toBeTrue();
-})->skip();
+    if ($fileExists) {
+        unlink($filename);
+    }
+});

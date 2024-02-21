@@ -17,5 +17,6 @@ composer.phar
 # composer.lock
 *.cache
 TODO.md
-_ide_helper_vivy.php
-.tmp
+ide-helper.rules.php
+/.tmp
+/packages

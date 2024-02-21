@@ -10,7 +10,7 @@ use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\Support\Registrar;
 use Kedniko\Vivy\V;
 
-class Regole implements VivyPlugin
+class Rules implements VivyPlugin
 {
     public function register()
     {
@@ -38,14 +38,14 @@ class Regole implements VivyPlugin
         return V::rule('pratica', function (ContextInterface $c) {
             return $c->value instanceof TypeToken;
         }, function (ContextInterface $c) {
-            return 'Non è una pratica ma '.gettype($c->value);
+            return 'Non è una pratica ma ' . gettype($c->value);
         });
     }
 
     public static function toIT(Options $options)
     {
         return V::transformer('toIT', function (ContextInterface $c) {
-            return '+39 '.$c->value;
+            return '+39 ' . $c->value;
         });
     }
 }

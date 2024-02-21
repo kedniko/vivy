@@ -1,6 +1,6 @@
 <?php
 
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Plugin\Standard\Rules;
 
 return [
     'default' => [

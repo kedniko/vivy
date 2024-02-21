@@ -4,7 +4,7 @@ namespace App\Types;
 
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeString;
+use Kedniko\Vivy\Plugin\Standard\TypeString;
 use Kedniko\Vivy\Support\Str;
 use Kedniko\Vivy\V;
 
@@ -23,7 +23,7 @@ class TypePhone extends TypeString
     public function toPL(Options $options = null)
     {
         $this->addTransformer(V::transformer('toPL', function (ContextInterface $c) {
-            return '+48 '.$c->value;
+            return '+48 ' . $c->value;
         }), $options);
 
         return $this;
@@ -32,7 +32,7 @@ class TypePhone extends TypeString
     public function toIT(Options $options = null)
     {
         $this->addTransformer(V::transformer('toIT', function (ContextInterface $c) {
-            return '+39 '.$c->value;
+            return '+39 ' . $c->value;
         }), $options);
 
         return $this;
@@ -50,7 +50,7 @@ class TypePhone extends TypeString
     public function toUS(Options $options = null)
     {
         $this->addTransformer(V::transformer('toUS', function (ContextInterface $c) {
-            return '+1 '.$c->value;
+            return '+1 ' . $c->value;
         }), $options);
 
         return $this;

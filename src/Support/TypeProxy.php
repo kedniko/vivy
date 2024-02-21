@@ -8,7 +8,7 @@ use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\State;
 use Kedniko\Vivy\Core\Undefined;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Plugin\Standard\Rules;
 use Kedniko\Vivy\Type;
 
 final class TypeProxy extends Type
@@ -152,7 +152,7 @@ final class TypeProxy extends Type
     public function isRequired(ContextInterface $gc)
     {
         $state = $this->type->state;
-        if (! ($state->requiredIf instanceof Undefined)) {
+        if (!($state->requiredIf instanceof Undefined)) {
             $value = $state->requiredIf;
             if (is_callable($value)) {
                 $value = $value($gc);
@@ -161,7 +161,7 @@ final class TypeProxy extends Type
             return (bool) $value;
         }
 
-        if (! ($state->requiredIfField instanceof Undefined)) {
+        if (!($state->requiredIfField instanceof Undefined)) {
             $requiredIfField = $state->requiredIfField;
             $c = $requiredIfField['getContextFn']($gc);
             $value = $requiredIfField['value'];
@@ -208,15 +208,15 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_NULL);
 
-        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
         $rule = $rule->getCallback();
-        if (! $rule) {
+        if (!$rule) {
             return;
         }
-        if (! is_callable($rule)) {
+        if (!is_callable($rule)) {
             return;
         }
 
@@ -227,15 +227,15 @@ final class TypeProxy extends Type
     {
         $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
 
-        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+        if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
         }
 
         $rule = $rule->getCallback();
-        if (! $rule) {
+        if (!$rule) {
             return;
         }
-        if (! is_callable($rule)) {
+        if (!is_callable($rule)) {
             return;
         }
 

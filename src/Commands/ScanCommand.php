@@ -6,9 +6,8 @@ use Kedniko\Vivy\V;
 
 final class ScanCommand
 {
-    public function handle(): void
+    public function handle(string $exportPath): void
     {
-        $exportPath ??= '.tmp/ide-helper.rules.php';
         $registered = $this->getRegistered();
         $file = $this->generateFromRegistered($registered);
         file_put_contents($exportPath, $file);
@@ -56,6 +55,6 @@ final class ScanCommand
 
     private function getHeader(): string
     {
-        return file_get_contents(__DIR__.'/../stubs/header.txt');
+        return file_get_contents(__DIR__ . '/../stubs/header.txt');
     }
 }

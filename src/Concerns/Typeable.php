@@ -2,7 +2,7 @@
 
 namespace Kedniko\Vivy\Concerns;
 
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Plugin\Standard\Rules;
 use Kedniko\Vivy\Transformer;
 
 trait Typeable

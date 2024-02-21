@@ -3,15 +3,15 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
-use Kedniko\Vivy\Plugins\StandardLibrary\TypeOr;
+use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\Vivy\Plugin\Standard\TypeOr;
 use Kedniko\Vivy\Support\TypeProxy;
 
 final class Helpers
 {
     public static function isNotUndefined($value)
     {
-        return ! self::isUndefined($value);
+        return !self::isUndefined($value);
     }
 
     public static function isUndefined($value)
@@ -124,7 +124,7 @@ final class Helpers
 
     public static function issetOrFail(&$variable, $message_or_var = null)
     {
-        if (! isset($variable)) {
+        if (!isset($variable)) {
             if ($message_or_var === null) {
                 $message_or_var = 'Variable not set';
             } elseif ($message_or_var !== null && str_starts_with((string) $message_or_var, '$')) {
@@ -138,7 +138,7 @@ final class Helpers
 
     public static function issetOrDefault(&$variable, $defaultValue)
     {
-        if (! isset($variable)) {
+        if (!isset($variable)) {
             return $defaultValue;
         }
 
@@ -147,7 +147,7 @@ final class Helpers
 
     public static function assertTrueOrFail($bool, $message_or_var = null)
     {
-        if (! $bool) {
+        if (!$bool) {
             $default = 'Assertion failed';
             throw new \Exception("{$default}: {$message_or_var}" ?: $default, 1);
         }
@@ -173,7 +173,7 @@ final class Helpers
         $method = null;
 
         if (is_array($value) && (count($value) === 2 && (is_string($value[0]) || is_object($value[0])))) {
-            if (is_string($value[1]) && ! empty($value[1])) {
+            if (is_string($value[1]) && !empty($value[1])) {
                 $class = $value[0];
                 $method = $value[1];
             } elseif (is_string($value[0])) {
@@ -182,7 +182,7 @@ final class Helpers
             }
         }
 
-        if (! $class && ! $method && is_string($value)) {
+        if (!$class && !$method && is_string($value)) {
             if (str_contains($value, '@')) {
                 $parts = explode('@', $value);
                 $class = $parts[0];
@@ -205,10 +205,10 @@ final class Helpers
         }
 
         if (is_string($class)) {
-            $class = '\\'.ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
+            $class = '\\' . ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
         }
 
-        if (! method_exists($class, $method)) {
+        if (!method_exists($class, $method)) {
             return false;
         }
 

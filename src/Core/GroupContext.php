@@ -4,7 +4,7 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
 use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Plugins\StandardLibrary\Rules;
+use Kedniko\Vivy\Plugin\Standard\Rules;
 use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Type;
 
@@ -49,10 +49,10 @@ final class GroupContext implements ContextInterface
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (! $permanent) {
+        if (!$permanent) {
             $type->once();
         }
-        if (! $typeProxy->getState()->issetRequired()) {
+        if (!$typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 
@@ -71,10 +71,10 @@ final class GroupContext implements ContextInterface
 
         $typeProxy = new TypeProxy($type);
         $typeProxy->setName($fieldname);
-        if (! $permanent) {
+        if (!$permanent) {
             $type->once();
         }
-        if (! $typeProxy->getState()->issetRequired()) {
+        if (!$typeProxy->getState()->issetRequired()) {
             $typeProxy->getState()->setRequired(true, Rules::required());
         }
 
