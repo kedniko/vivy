@@ -9,8 +9,8 @@ final class ScanCommand
     public function handle(string $exportPath): void
     {
         $registered = $this->getRegistered();
-        $file = $this->generateFromRegistered($registered);
-        file_put_contents($exportPath, $file);
+        $content = $this->generateFromRegistered($registered);
+        file_put_contents($exportPath, $content);
     }
 
     private function getRegistered()
@@ -18,7 +18,7 @@ final class ScanCommand
         return V::$magicCaller->toArray();
     }
 
-    private function generateFromRegistered($registered)
+    private function generateFromRegistered($registered): string
     {
         $file = new \Nette\PhpGenerator\PhpFile();
 
@@ -36,6 +36,8 @@ final class ScanCommand
                 if ($className === V::class) {
                     $method->setStatic(true);
                 }
+                $method->addComment("@see \\{$fromClassName} ::{$fromMethodName}()\t\\{$fromClassName}::{$fromMethodName}");
+                $method->addBody("return new \\{$methodArr['returnType']};");
                 $class->addMember($method);
             }
         }

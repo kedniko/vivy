@@ -4,26 +4,26 @@ namespace Kedniko\Vivy\Support;
 
 use Kedniko\Vivy\Callback;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\State;
 use Kedniko\Vivy\Transformer;
-use Kedniko\Vivy\Type;
 use Kedniko\Vivy\V;
 
 final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {
-        if (! $fn) {
+        if (!$fn) {
             throw new \Exception('Invalid register function', 1);
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
         }
         $result = Helpers::getClassAndMethod($fn);
-        if (! $result) {
+        if (!$result) {
             throw new \Exception('Invalid register function', 1);
         }
         $class = $result[0];
@@ -50,7 +50,7 @@ final class Util
     /**
      * @return class-string<object>[]
      */
-    private static function getParentClasses($class): array
+    private static function getParentsClasses($class): array
     {
         $classes = [];
         $reflection = new \ReflectionClass($class);
@@ -83,9 +83,17 @@ final class Util
     {
         $newField = null;
         $registered = V::$magicCaller->toArray();
+        $originalCallerObj = $callerObj;
 
-        if (! isset($registered[$className][$methodName])) {
-            $classes = self::getParentClasses($className);
+        if ($callerObj instanceof V) {
+            $callerObj = null;
+        }
+
+        if (!isset($registered[$className][$methodName])) {
+
+            // try to find the method in parent classes
+
+            $classes = self::getParentsClasses($className);
             $found = false;
             foreach ($classes as $classnameparent) {
                 if (isset($registered[$classnameparent][$methodName])) {
@@ -94,9 +102,9 @@ final class Util
                     break;
                 }
             }
-            if (! $found) {
-                $id = $className.'::'.$methodName;
-                throw new \Exception('Method "'.$id.'" does not exists in '.self::class, 1);
+            if (!$found) {
+                $id = $className . '::' . $methodName;
+                throw new \Exception('Method "' . $id . '" does not exists. Throwed in ' . self::class, 1);
             }
         }
 
@@ -117,7 +125,7 @@ final class Util
         // $result = call_user_func_array($setup['function'], $parameters);
         $isCallable = is_callable($result);
 
-        if (! $callerObj && ! ($result instanceof Type)) {
+        if (!$callerObj && !($result instanceof TypeInterface)) {
             if ($availableForType === V::class) {
                 //
             } else {
@@ -163,7 +171,7 @@ final class Util
 
             $newField = new $returntype();
             $newField->state = $type->state;
-        } elseif ($result instanceof Type) {
+        } elseif ($result instanceof TypeInterface) {
             $newField = $result;
             // if ($callerObj) {
             // 	$newField->state = $callerObj->state;
@@ -172,18 +180,29 @@ final class Util
         // continua
         // elseif ($result === null) {
         // 	$returntype = $setup['returnType'];
-        // 	/** @var Type */
+        // 	/** @var TypeInterface */
         // 	$newField = new $returntype();
         // 	$newField->state = $type->state;
         // }
+
+        /** @var TypeInterface $newField */
+
 
         $newField->state ??= new State();
         $newField->state->_extra ??= [];
         $newField->state->_extra['caller'] = $className;
 
-        return $newField;
+        /**
+         * example:
+         * $v = V::new();
+         * $v->setfailHandler($fn);
+         * $v->group([]); // transfer failHandler to group state
+         */
+        if ($originalCallerObj instanceof V) {
+            (new Invader($originalCallerObj))->transfer($newField);
+        }
 
-        // throw new \Exception('Invalid return type', 1);
+        return $newField;
     }
 
     public static function clone($var)
@@ -196,5 +215,20 @@ final class Util
         $interfaces = class_implements($classname);
 
         return in_array($interface, $interfaces);
+    }
+
+    public static function basePath($path = ''): string
+    {
+        $p = __DIR__ . '/../../' . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, ltrim((string) $path, '/'));
+        return realpath($p) ?: $p;
+    }
+
+    public static function fileContent(string $path = '')
+    {
+        $p = self::basePath($path);
+        if (file_exists($p)) {
+            return include $p;
+        }
+        return null;
     }
 }

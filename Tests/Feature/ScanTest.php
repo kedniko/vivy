@@ -9,7 +9,7 @@ uses()->group('scan');
 test('scan', function () {
     $filename = '_ide_helper_vivy.php';
 
-    V::registerPlugin(new \Kedniko\Vivy\Plugin\Standard\StandardLibrary());
+    V::registerPlugin(new \Kedniko\VivyPluginStandard\StandardLibrary());
     (new \Kedniko\Vivy\Commands\ScanCommand())->handle($filename);
 
     $fileExists = file_exists($filename);

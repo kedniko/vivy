@@ -11,7 +11,7 @@ use Kedniko\Vivy\V;
 
 class TypeToken extends Type implements VivyPlugin
 {
-    public function register()
+    public function register(): void
     {
         V::register(Registrar::make('token')->for([V::class, TypeAny::class])->callback([static::class, 'token'])->return(static::class));
     }
@@ -27,14 +27,13 @@ class TypeToken extends Type implements VivyPlugin
     public function notExpired(Options $options = null)
     {
         $options = Options::build($options, func_get_args());
-        // $errormessage = $options->getErrormessage() ?: RuleMessage::getErrorMessage('string.min');
         $this->addRule(V::rule('notExpired', function (ContextInterface $c) {
             /** @var \App\Token */
             $value = $c->value;
 
             return $value->expired === false;
         }, function (ContextInterface $c) use ($options) {
-            return 'Il token è scaduto'.$options->getErrorMessage();
+            return 'Il token è scaduto' . $options->getErrorMessage();
         }), $options);
 
         return $this;

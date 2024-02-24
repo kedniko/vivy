@@ -12,7 +12,7 @@ use Kedniko\Vivy\V;
 
 class Rules implements VivyPlugin
 {
-    public function register()
+    public function register(): void
     {
         V::register(Registrar::make('phone')->for([V::class])->callback([TypePhone::class, 'phone'])->return(TypePhone::class));
     }

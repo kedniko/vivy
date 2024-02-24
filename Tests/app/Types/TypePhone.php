@@ -4,7 +4,7 @@ namespace App\Types;
 
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Plugin\Standard\TypeString;
+use Kedniko\VivyPluginStandard\TypeString;
 use Kedniko\Vivy\Support\Str;
 use Kedniko\Vivy\V;
 

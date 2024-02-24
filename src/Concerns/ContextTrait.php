@@ -2,12 +2,13 @@
 
 namespace Kedniko\Vivy\Concerns;
 
-use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Core\GroupContext;
-use Kedniko\Vivy\Core\Undefined;
-use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Type;
+use Kedniko\Vivy\ArrayContext;
+use Kedniko\Vivy\Core\Undefined;
+use Kedniko\Vivy\Core\GroupContext;
+use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
 trait ContextTrait
 {
@@ -29,11 +30,9 @@ trait ContextTrait
     // /** @var Context[] */
     // public $childrenContext;
 
-    /** @var bool */
-    private $isRootContext;
+    private bool $isRootContext;
 
-    /** @var Type */
-    protected $type;
+    protected TypeInterface $type;
 
     /** @var array */
     public $args;
@@ -182,7 +181,7 @@ trait ContextTrait
 
     public function issetValue()
     {
-        return ! ($this->value instanceof Undefined);
+        return !($this->value instanceof Undefined);
     }
 
     /**
@@ -197,7 +196,7 @@ trait ContextTrait
 
     public function isValid()
     {
-        return ! $this->errors;
+        return !$this->errors;
     }
 
     public function getFieldContext(string $fieldname): ?ContextInterface

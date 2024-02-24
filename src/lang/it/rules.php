@@ -1,16 +1,16 @@
 <?php
 
-use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 
 return [
     'default' => [
         'generic' => 'Validazione fallita',
         'type' => 'Tipo errato',
-        Rules::ID_REQUIRED => 'Questo campo è obbligatorio',
-        Rules::ID_NOT_NULL => 'Questo campo non può essere null',
-        Rules::ID_NULL => 'Questo campo deve essere null',
+        RulesEnum::ID_REQUIRED->value => 'Questo campo è obbligatorio',
+        RulesEnum::ID_NOT_NULL->value => 'Questo campo non può essere null',
+        RulesEnum::ID_NULL->value => 'Questo campo deve essere null',
         'notEmpty' => 'Questo campo non può essere vuoto',
-        Rules::ID_NOT_EMPTY_STRING => 'Questo campo non può essere una stringa vuota',
+        RulesEnum::ID_NOT_EMPTY_STRING->value => 'Questo campo non può essere una stringa vuota',
         'riceived' => 'Ricevuto',
         'minLength' => 'Valore troppo corto',
         'valuesNotAllowed' => 'Valori non ammessi',
@@ -19,10 +19,10 @@ return [
 
     'string' => [
         'type' => 'Questa non è una stringa',
-        Rules::ID_REQUIRED => 'Questa stringa è obbligatoria',
-        Rules::ID_NOT_NULL => 'Questa stringa non può essere null',
+        RulesEnum::ID_REQUIRED->value => 'Questa stringa è obbligatoria',
+        RulesEnum::ID_NOT_NULL->value => 'Questa stringa non può essere null',
         'notEmpty' => 'Questa string non può essere vuota',
-        Rules::ID_NOT_EMPTY_STRING => 'Questa stringa non può essere vuota',
+        RulesEnum::ID_NOT_EMPTY_STRING->value => 'Questa stringa non può essere vuota',
         'minLength' => 'Stringa troppo corta',
         'maxLength' => 'Stringa troppo lunga',
         'length' => 'Lunghezza stringa non permessa',
@@ -30,21 +30,21 @@ return [
     ],
     'array' => [
         'type' => 'Questo non è un array',
-        Rules::ID_REQUIRED => 'Array obbligatorio',
-        Rules::ID_NOT_NULL => 'Questo campo non può essere null',
+        RulesEnum::ID_REQUIRED->value => 'Array obbligatorio',
+        RulesEnum::ID_NOT_NULL->value => 'Questo campo non può essere null',
         'notEmpty' => 'Questo campo non può essere vuoto',
-        Rules::ID_NOT_EMPTY_STRING => 'Questo campo non può essere una stringa vuota',
+        RulesEnum::ID_NOT_EMPTY_STRING->value => 'Questo campo non può essere una stringa vuota',
     ],
-    Rules::ID_GROUP => [
+    RulesEnum::ID_GROUP->value => [
         'type' => 'Questo non è un group',
-        Rules::ID_REQUIRED => 'Array obbligatorio',
-        Rules::ID_NOT_NULL => 'Questo campo non può essere null',
+        RulesEnum::ID_REQUIRED->value => 'Array obbligatorio',
+        RulesEnum::ID_NOT_NULL->value => 'Questo campo non può essere null',
         'notEmpty' => 'Questo campo non può essere vuoto',
-        Rules::ID_NOT_EMPTY_STRING => 'Questo campo non può essere una stringa vuota',
+        RulesEnum::ID_NOT_EMPTY_STRING->value => 'Questo campo non può essere una stringa vuota',
     ],
     'bool' => [
         'type' => 'Tipo errato',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'number' => [
         'between' => 'Numero fuori range',
@@ -54,27 +54,27 @@ return [
     ],
     'float' => [
         'type' => 'float: Tipo errato',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'int' => [
         'type' => 'int: Tipo errato',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'intString' => [
         'type' => 'La stringa deve contenere un valore intero',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'intBool' => [
         'type' => 'Si accettano solo i valori 0 e 1',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'boolString' => [
         'type' => 'La stringa deve essere o "true" o "false"',
-        Rules::ID_REQUIRED => 'Valore obbligatorio',
+        RulesEnum::ID_REQUIRED->value => 'Valore obbligatorio',
     ],
     'date' => [
         'type' => 'La data non è valida',
-        Rules::ID_REQUIRED => 'Data obbligatoria',
+        RulesEnum::ID_REQUIRED->value => 'Data obbligatoria',
         'min' => 'Data troppo lontana',
         'max' => 'Data troppo recente',
         'between' => 'Data non nell\'intervallo permesso',
@@ -82,13 +82,13 @@ return [
     ],
     'email' => [
         'type' => 'Email non valida',
-        Rules::ID_REQUIRED => 'L\'email è obbligatoria',
-        Rules::ID_NOT_NULL => 'L\'email non può essere null',
-        Rules::ID_NOT_EMPTY_STRING => 'L\'email non può essere vuota',
+        RulesEnum::ID_REQUIRED->value => 'L\'email è obbligatoria',
+        RulesEnum::ID_NOT_NULL->value => 'L\'email non può essere null',
+        RulesEnum::ID_NOT_EMPTY_STRING->value => 'L\'email non può essere vuota',
     ],
     'phone' => [
         'type' => 'Telefono non valido',
-        Rules::ID_REQUIRED => 'Il telefono è obbliatorio',
+        RulesEnum::ID_REQUIRED->value => 'Il telefono è obbliatorio',
         'notEmpty' => 'Il telefono non può essere vuoto',
     ],
 ];

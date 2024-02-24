@@ -2,10 +2,13 @@
 
 namespace Kedniko\Vivy;
 
+use Closure;
 use Kedniko\Vivy\Commands\ScanCommand;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Core\Args;
+use Kedniko\Vivy\Core\hasMagicCall;
 use Kedniko\Vivy\Core\hasMagicCallStatic;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Middleware;
@@ -14,40 +17,48 @@ use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Interfaces\VivyPlugin;
 use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Plugin\Standard\Rules;
-use Kedniko\Vivy\Plugin\Standard\TypeAny;
+use Kedniko\VivyPluginStandard\TypeAny;
 use Kedniko\Vivy\Support\Arr;
 use Kedniko\Vivy\Support\MagicCaller;
 use Kedniko\Vivy\Support\Registrar;
+use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 
 final class V
 {
-    use hasMagicCallStatic;
+    use hasMagicCallStatic, hasMagicCall;
 
-    // const BASE = 'VIVY_BASE';
-
-    /**
-     * @var callable
-     */
-    public static $failHandler;
-
+    public static array $globalFailHandlers;
     public static ?MagicCaller $magicCaller = null;
 
-    /**
-     * Private constructor
-     */
-    // private function __construct()
-    // {
-    // }
+    public array $failHandlers;
+
+
+    public function setFailHandler(string $id, callable $handler)
+    {
+        $this->failHandlers[$id] = $handler;
+        return $this;
+    }
+
+    private function transfer(TypeInterface $obj)
+    {
+        $obj->state->failHandlers = $this->failHandlers;
+    }
+
 
     /**
-     * @param  callable  $registerFunction
-     * @param  null  $exportFile The file will be overwritten if it exists
-     * @param  bool  $auto
+     * STATIC METHODS
      */
-    public static function scan($registerFunction = null, $exportFile = null): void
+
+
+    public static function new()
     {
-        (new ScanCommand())->handle();
+        return new self();
+    }
+
+
+    public static function scan(string $exportFile): void
+    {
+        (new ScanCommand())->handle(exportPath: $exportFile);
     }
 
     public static function rule(string $ruleID, callable $ruleFn, $errormessage = null): Rule
@@ -148,19 +159,19 @@ final class V
         }
     }
 
-    public static function hasFailHandler(string $id = 'default')
+    public static function hasGlobalFailHandler(string $id = 'default')
     {
-        return isset(self::$failHandler[$id]);
+        return isset(self::$globalFailHandlers[$id]);
     }
 
-    public static function getFailHandler(string $id = 'default')
+    public static function getGlobalFailHandler(string $id = 'default')
     {
-        return self::$failHandler[$id];
+        return self::$globalFailHandlers[$id];
     }
 
-    public static function setFailHandler(string $id, callable $handler): void
+    public static function setGlobalFailHandler(string $id, callable $handler): void
     {
-        self::$failHandler[$id] = $handler;
+        self::$globalFailHandlers[$id] = $handler;
     }
 
     public static function issetVar(&$variable, string $varname, string $errormessage = null): Validated
@@ -168,7 +179,7 @@ final class V
         if (!isset($variable)) {
             return new Validated(null, [
                 $varname => [
-                    Rules::ID_REQUIRED => $errormessage ?: RuleMessage::getErrorMessage(Rules::ID_REQUIRED),
+                    RulesEnum::ID_REQUIRED->value => $errormessage ?: RuleMessage::getErrorMessage(RulesEnum::ID_REQUIRED->value),
                 ],
             ]);
         }

@@ -4,7 +4,11 @@
 	"autoload": {
 		"psr-4": {
 			"Kedniko\\Vivy\\": "src/",
-			"Kedniko\\Vivy\\Call\\": "src/.svn/",
+			"Kedniko\\Vivy\\Call\\": "src/.svn/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
 			"App\\": "tests/app/",
 			"Tests\\": "tests/"
 		}
@@ -33,6 +37,12 @@
 			"pestphp/pest-plugin": true
 		}
 	},
+	"repositories": [
+		{
+			"type": "path",
+			"url": "../vivy-plugin-standard"
+		}
+	],
 	"bin": [
 		"bin/vivy"
 	],
@@ -43,7 +53,7 @@
 		"test:lint": "pint --test",
 		"test:types": "phpstan analyse --ansi",
 		"test": "pest --colors=always",
-		"scan": "php ./bin/scan",
+		"scan": "php ./bin/vivy",
 		"test:all": [
 			"@test:refacto",
 			"@test:lint",

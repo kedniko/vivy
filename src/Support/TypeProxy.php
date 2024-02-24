@@ -3,18 +3,23 @@
 namespace Kedniko\Vivy\Support;
 
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\State;
 use Kedniko\Vivy\Core\Undefined;
-use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\Vivy\Traits\Typeable;
 use Kedniko\Vivy\Type;
+use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 
-final class TypeProxy extends Type
+final class TypeProxy extends Type implements TypeInterface
 {
+
+    // use Typeable;
+
     /**
-     * @param  Type  $type
+     * @param  TypeInterface  $type
      */
     public function __construct(public $type)
     {
@@ -182,14 +187,14 @@ final class TypeProxy extends Type
         // return parent::prependRule($rule, $options);
 
         $rule = $this->prepareRule($rule, $options);
-        $this->type->prependMiddleware($rule);
+        (new Invader($this->type))->prependMiddleware($rule);
 
         return $this;
     }
 
     // public function checkRequired($fieldname, $body)
     // {
-    // 	$rule = $this->getRule(Rules::ID_REQUIRED);
+    // 	$rule = $this->getRule(RulesEnum::ID_REQUIRED->value);
 
     // 	if (!$rule) {
     // 		return;
@@ -206,7 +211,7 @@ final class TypeProxy extends Type
 
     public function checkNotNull($fieldname, $body)
     {
-        $rule = $this->getRule(Rules::ID_NOT_NULL);
+        $rule = $this->getRule(RulesEnum::ID_NOT_NULL->value);
 
         if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
@@ -225,7 +230,7 @@ final class TypeProxy extends Type
 
     public function checkNotEmptyString($fieldname, $body)
     {
-        $rule = $this->getRule(Rules::ID_NOT_EMPTY_STRING);
+        $rule = $this->getRule(RulesEnum::ID_NOT_EMPTY_STRING->value);
 
         if (!$rule instanceof \Kedniko\Vivy\Core\Rule) {
             return;
@@ -245,13 +250,13 @@ final class TypeProxy extends Type
     public function canBeNull(): bool
     {
         return $this->type->state->canBeNull();
-        // return !$this->hasRule(Rules::ID_NOT_NULL);
+        // return !$this->hasRule(RulesEnum::ID_NOT_NULL->value);
     }
 
     public function canBeEmptyString(): bool
     {
         return $this->type->state->canBeEmptyString();
-        // return !$this->hasRule(Rules::ID_NOT_EMPTY_STRING);
+        // return !$this->hasRule(RulesEnum::ID_NOT_EMPTY_STRING->value);
     }
 
     // public function hasTransformCallback()
@@ -262,10 +267,9 @@ final class TypeProxy extends Type
     // {
     // 	return $this->transformCallback;
     // }
-    /**
-     * @param  string  $propertyName
-     */
-    public function setChildStateProperty($propertyName, mixed $value): void
+
+
+    public function setChildStateProperty(string $propertyName, mixed $value): void
     {
         $parts = explode('.', $propertyName);
         $propertyName = array_shift($parts);

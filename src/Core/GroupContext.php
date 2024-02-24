@@ -4,9 +4,9 @@ namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Concerns\ContextTrait;
 use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Plugin\Standard\Rules;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\VivyPluginStandard\Rules;
 use Kedniko\Vivy\Support\TypeProxy;
-use Kedniko\Vivy\Type;
 
 final class GroupContext implements ContextInterface
 {
@@ -40,7 +40,7 @@ final class GroupContext implements ContextInterface
     /**
      * Appends field at the end
      *
-     * @param  Type  $type
+     * @param  TypeInterface  $type
      * @param  mixed  $permanent Mutate the setup permanently
      */
     public function appendField(mixed $fieldname, $type, mixed $permanent = false)

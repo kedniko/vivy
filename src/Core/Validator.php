@@ -2,23 +2,25 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Callback;
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Contracts\MiddlewareInterface;
-use Kedniko\Vivy\Exceptions\VivyException;
-use Kedniko\Vivy\Messages\TransformerMessage;
-use Kedniko\Vivy\Plugin\Standard\Rules;
-use Kedniko\Vivy\Plugin\Standard\TypeOr;
-use Kedniko\Vivy\Support\TypeProxy;
-use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\Type;
+use Kedniko\Vivy\Callback;
+use Kedniko\Vivy\Transformer;
+use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\VivyPluginStandard\Rules;
+use Kedniko\VivyPluginStandard\TypeOr;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Exceptions\VivyException;
+use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Messages\TransformerMessage;
+use Kedniko\VivyPluginStandard\Enum\RulesEnum;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 final class Validator
 {
     public Validated $validated;
 
     public function __construct(
-        public Type $type
+        public TypeInterface $type
     ) {
     }
 
@@ -153,7 +155,7 @@ final class Validator
 
         if ($emptyIsValid) {
             // if current middleware check force empty value, don't skip other rules but continue to validate...
-            if (!in_array($middleware->getID(), [Rules::ID_NULL, Rules::ID_EMPTY_STRING])) {
+            if (!in_array($middleware->getID(), [RulesEnum::ID_NULL->value, RulesEnum::ID_EMPTY_STRING->value])) {
                 $this->type->skipOtherRules = true;
             }
         } else {
@@ -305,7 +307,7 @@ final class Validator
         $errors = [];
 
         if (!$this->type->canBeEmptyString && $this->type->context->value === '') {
-            $ruleID = Rules::ID_NOT_EMPTY_STRING;
+            $ruleID = RulesEnum::ID_NOT_EMPTY_STRING->value;
             $rule = $this->type->fieldProxy->hasRule($ruleID) ? $this->type->fieldProxy->getRule($ruleID) : Rules::notEmptyString();
 
             $newDefault = Helpers::tryToGetDefault($rule->getID(), $this->type->fieldProxy, $this->type->context);
@@ -315,7 +317,7 @@ final class Validator
                 $errors = Helpers::getErrors($rule, $this->type->fieldProxy, $this->type->context);
             }
         } elseif (!$this->type->canBeNull && $this->type->context->value === null) {
-            $ruleID = Rules::ID_NOT_NULL;
+            $ruleID = RulesEnum::ID_NOT_NULL->value;
             $rule = $this->type->fieldProxy->hasRule($ruleID) ? $this->type->fieldProxy->getRule($ruleID) : Rules::notNull();
 
             $newDefault = Helpers::tryToGetDefault($rule->getID(), $this->type->fieldProxy, $this->type->context);
@@ -386,7 +388,7 @@ final class Validator
     public function setValue(mixed $callback_or_value)
     {
         $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
-        $transformer = new Transformer(Rules::ID_SET_VALUE, $callback);
+        $transformer = new Transformer(RulesEnum::ID_SET_VALUE->value, $callback);
         $type = (new Type())->from($this->type);
         $type->addTransformer($transformer);
 

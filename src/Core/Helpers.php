@@ -3,9 +3,10 @@
 namespace Kedniko\Vivy\Core;
 
 use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Plugin\Standard\Rules;
-use Kedniko\Vivy\Plugin\Standard\TypeOr;
+use Kedniko\VivyPluginStandard\Rules;
+use Kedniko\VivyPluginStandard\TypeOr;
 use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 
 final class Helpers
 {
@@ -64,7 +65,11 @@ final class Helpers
 
         // get error message and key
 
-        $idEmptyRules = [Rules::ID_REQUIRED, Rules::ID_NOT_NULL, Rules::ID_NOT_EMPTY_STRING];
+        $idEmptyRules = [
+            RulesEnum::ID_REQUIRED->value,
+            RulesEnum::ID_NOT_NULL->value,
+            RulesEnum::ID_NOT_EMPTY_STRING->value
+        ];
 
         if ($typeProxy->hasCustomErrorMessage($ruleID)) {
             $errormessage = $typeProxy->getCustomErrorMessage($ruleID);

@@ -1,5 +1,13 @@
 <?php
 
+use App\Rules;
+use Kedniko\Vivy\V;
+use App\Types\TypeToken;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\Messages\Error;
+use Kedniko\VivyPluginStandard\StandardLibrary;
+
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -14,6 +22,13 @@
 // uses(Tests\TestCase::class)->in('Feature');
 
 uses()->group('Unit')->in('Unit');
+
+Error::setLocale('it');
+V::registerPlugin(new TypeToken());
+V::registerPlugin(new Rules());
+V::registerPlugin(new StandardLibrary());
+Error::addPath(Util::basePath('src/lang'));
+
 
 /*
 |--------------------------------------------------------------------------

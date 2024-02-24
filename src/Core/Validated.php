@@ -16,27 +16,22 @@ final class Validated
     {
     }
 
-    /**
-     * @param  callable  $handler
-     */
-    private function fail($handler)
+    private function fail(callable $handler)
     {
-        if ($handler && is_callable($handler)) {
-            return $handler($this);
-        }
-        if (V::getFailHandler()) {
-            $handler = V::getFailHandler();
+        return $handler($this);
+    }
 
-            return $handler($this);
+    private function getFailHandler(string|callable $handler)
+    {
+        if (is_string($handler)) {
+            $handler = $this->chain->state->failHandlers[$handler] ?? V::getGlobalFailHandler($handler);
         }
-        throw new VivyValidationFailedException();
+        return $handler;
     }
 
     public function forceFailWith(string|callable $handler)
     {
-        if (is_string($handler)) {
-            $handler = V::getFailHandler($handler);
-        }
+        $handler = $this->getFailHandler($handler);
 
         return $this->fail($handler);
     }
@@ -47,9 +42,8 @@ final class Validated
     public function orFailWith(string|callable $handler): Validated
     {
         if ($this->fails()) {
-            if (is_string($handler)) {
-                $handler = V::getFailHandler($handler);
-            }
+            $handler = $this->getFailHandler($handler);
+
             $this->fail($handler);
         }
 

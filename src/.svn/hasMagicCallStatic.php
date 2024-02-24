@@ -7,14 +7,16 @@
 namespace Kedniko\Vivy\Call;
 
 use Kedniko\Vivy\Support\Util;
-use Kedniko\Vivy\Type;
 
 trait hasMagicCallStatic
 {
 	public static function __callStatic($methodName, $args)
 	{
-		$callerClass = static::class;
-		$callerObj = null;
-		return Util::handleUserDefinedCall($callerClass, $methodName, $callerObj, $args);
+		return Util::handleUserDefinedCall(
+			className: static::class,
+			methodName: $methodName,
+			callerObj: null,
+			parameters: $args
+		);
 	}
 }
