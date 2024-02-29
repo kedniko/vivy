@@ -3,25 +3,27 @@
 namespace Kedniko\Vivy;
 
 use Closure;
+use Kedniko\Vivy\Context;
+use Kedniko\Vivy\Core\Args;
+use Kedniko\Vivy\Core\Rule;
+use Kedniko\Vivy\Support\Arr;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\Type\TypeAny;
+use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Enum\RulesEnum;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Core\hasMagicCall;
+use Kedniko\Vivy\Support\Registrar;
+use Kedniko\Vivy\Support\MagicCaller;
 use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Messages\RuleMessage;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\hasMagicCallStatic;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
-use Kedniko\Vivy\Contracts\TypeInterface;
-use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\hasMagicCall;
-use Kedniko\Vivy\Core\hasMagicCallStatic;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
-use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\VivyPluginStandard\TypeAny;
-use Kedniko\Vivy\Support\Arr;
-use Kedniko\Vivy\Support\MagicCaller;
-use Kedniko\Vivy\Support\Registrar;
-use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 
 final class V
 {
@@ -71,14 +73,14 @@ final class V
      */
     public static function transformer(string $transformerID, callable $transformerFn, Options $options = null): Transformer
     {
-        $options = Options::build($options, func_get_args());
+        $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
 
         return new Transformer($transformerID, $transformerFn, $options->getErrorMessage());
     }
 
     public static function callback(string $id, callable $callbackFn, Options $options = null): Callback
     {
-        $options = Options::build($options, func_get_args());
+        $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
 
         return new Callback($id, $callbackFn, $options->getErrorMessage());
     }
@@ -164,7 +166,7 @@ final class V
         return isset(self::$globalFailHandlers[$id]);
     }
 
-    public static function getGlobalFailHandler(string $id = 'default')
+    public static function getGlobalFailHandler(string $id = 'default'): Closure
     {
         return self::$globalFailHandlers[$id];
     }
@@ -199,13 +201,13 @@ final class V
     public static function issetVarPath(
         array $array,
         string|int $path,
-        string $errormessage = null
+        string|Closure $errormessage = null
     ): Validated {
         if (!Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
-            if ($errormessage && is_callable($errormessage)) {
-                $c = (new \Kedniko\Vivy\Context())->setArgs(func_get_args());
+            if ($errormessage && ($errormessage instanceof Closure)) {
+                $c = (new Context())->setArgs(Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
                 $errormessage = $errormessage($c);
             }
             $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");

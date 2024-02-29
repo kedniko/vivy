@@ -3,39 +3,31 @@
 namespace Kedniko\Vivy\Concerns;
 
 use Kedniko\Vivy\Type;
+use Kedniko\Vivy\Context;
 use Kedniko\Vivy\ArrayContext;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 trait ContextTrait
 {
-    /**
-     * @var mixed|array<mixed>
-     */
-    public $value;
 
-    public $errors;
+    public mixed $value;
 
-    public array $childrenErrors;
+    public array $errors;
 
-    /** @var \Kedniko\Vivy\Context|null */
-    public $rootContext;
+    public ContextInterface|null $rootContext;
 
-    /** @var ContextInterface */
-    public $fatherContext;
-
-    // /** @var Context[] */
-    // public $childrenContext;
+    public ContextInterface|null $fatherContext;
 
     private bool $isRootContext;
 
     protected TypeInterface $type;
 
-    /** @var array */
-    public $args;
+    public array $args;
 
     public $fields;
 
@@ -43,13 +35,14 @@ trait ContextTrait
 
     public $index;
 
-    public $failCount;
+    public MiddlewareInterface|null $middleware;
 
-    public $successCount;
 
     private function init(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null): void
     {
-        if ($cloneFrom instanceof \Kedniko\Vivy\Context) {
+        // TODO - if instance of GroupContext/ArrayContext/OrContext
+
+        if ($cloneFrom instanceof Context) {
             $this->value = $cloneFrom->value;
             $this->errors = $cloneFrom->errors;
             $this->args = $cloneFrom->args();
@@ -213,7 +206,7 @@ trait ContextTrait
     // 	return $this;
     // }
 
-    public function getField(): Type
+    public function getField(): TypeInterface
     {
         $type = new Type();
 
@@ -240,5 +233,22 @@ trait ContextTrait
     public function getRawField(): Type
     {
         return $this->type;
+    }
+
+    public function addError($key, $errormessage): void
+    {
+        $this->errors[$key][] = $errormessage;
+    }
+
+    public function setMiddleware(MiddlewareInterface $middleware): self
+    {
+        $this->middleware = $middleware;
+
+        return $this;
+    }
+
+    public function getMiddleware(): MiddlewareInterface|null
+    {
+        return $this->middleware;
     }
 }

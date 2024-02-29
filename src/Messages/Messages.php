@@ -28,6 +28,6 @@ class Messages
             return $err;
         }
 
-        return null;
+        return Error::getDefaultError();
     }
 }

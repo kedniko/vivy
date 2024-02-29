@@ -2,6 +2,8 @@
 
 namespace Kedniko\Vivy\Contracts;
 
+use Kedniko\Vivy\Core\Undefined;
+
 interface ContextInterface
 {
     public function fatherContext();
@@ -10,7 +12,7 @@ interface ContextInterface
 
     public function rootContext();
 
-    public function setRootContext(ContextInterface|\Kedniko\Vivy\Core\Undefined $rootContext);
+    public function setRootContext(ContextInterface|Undefined $rootContext);
 
     public function setErrors($errors);
 
@@ -34,6 +36,9 @@ interface ContextInterface
 
     public function getFieldContext(string $fieldname): ?ContextInterface;
 
-    // public function setValue($value);
-    public function getField();
+    public function getField(): TypeInterface;
+
+    public function setMiddleware(MiddlewareInterface $middleware): self;
+
+    public function getMiddleware(): MiddlewareInterface|null;
 }

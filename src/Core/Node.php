@@ -4,11 +4,9 @@ namespace Kedniko\Vivy\Core;
 
 final class Node
 {
-    /** @var Node|null */
-    public $next;
+    public Node|null $next;
 
-    /** @var Node|null */
-    public $prev;
+    public Node|null $prev;
 
     public function __construct(public $data)
     {

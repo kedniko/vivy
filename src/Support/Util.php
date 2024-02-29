@@ -123,7 +123,6 @@ final class Util
 
         $result = Util::runFunction($setup['function'], $parameters);
         // $result = call_user_func_array($setup['function'], $parameters);
-        $isCallable = is_callable($result);
 
         if (!$callerObj && !($result instanceof TypeInterface)) {
             if ($availableForType === V::class) {
@@ -133,7 +132,7 @@ final class Util
             }
         }
 
-        if ($isCallable) {
+        if (is_callable($result)) {
             // $c = new Context();
             // (new ContextProxy($c))->setField($callerObj);
             $result = $result($callerObj);
@@ -185,8 +184,7 @@ final class Util
         // 	$newField->state = $type->state;
         // }
 
-        /** @var TypeInterface $newField */
-
+        assert($newField instanceof TypeInterface);
 
         $newField->state ??= new State();
         $newField->state->_extra ??= [];
@@ -229,6 +227,69 @@ final class Util
         if (file_exists($p)) {
             return include $p;
         }
+        return null;
+    }
+
+
+    public static function isOrderedIndexedArray($arr)
+    {
+        if (!is_array($arr)) {
+            return false;
+        }
+        if ($arr === []) {
+            return true;
+        }
+        $len = count($arr) - 1;
+        for ($i = 0; $i <= $len; $i++) {
+            if (!array_key_exists($i, $arr)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function getRuleArgs($func, $func_get_args = [])
+    {
+
+        if ((is_string($func) && function_exists($func)) || $func instanceof \Closure) {
+            $ref = new \ReflectionFunction($func);
+        } else if (is_string($func) && !call_user_func_array('method_exists', explode('::', $func))) {
+            return $func_get_args;
+        } else if (is_array($func) && !call_user_func_array('method_exists', $func)) {
+            return $func_get_args;
+        } else {
+            $ref = new \ReflectionMethod($func);
+        }
+
+        $params = $ref->getParameters();
+        foreach ($params as $key => $param) {
+
+            // TODO optimize this
+
+            if (!isset($func_get_args[$key]) && $param->isDefaultValueAvailable()) {
+                $type = $param->getType();
+                if ($type instanceof \ReflectionNamedType) {
+                    $typeName = $type->getName();
+                    if ($typeName !== Options::class) {
+                        $func_get_args[$key] = $param->getDefaultValue();
+                    }
+                } else {
+                    $func_get_args[$key] = $param->getDefaultValue();
+                }
+            }
+        }
+        return $func_get_args;
+    }
+
+    public static function getFunctionName(string $func): string|null
+    {
+        if ((is_string($func) && function_exists($func))) {
+            return $func;
+        } else if (is_string($func) && call_user_func_array('method_exists', explode('::', $func))) {
+            return explode('::', $func)[1];
+        }
+
         return null;
     }
 }

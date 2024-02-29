@@ -17,6 +17,7 @@ use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\ArrayContext;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Support\Util;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Core\Validator;
@@ -24,6 +25,7 @@ use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Core\hasMagicCall;
 use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\Vivy\Rules as CoreRules;
 use Kedniko\VivyPluginStandard\Rules;
 use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Contracts\TypeInterface;
@@ -31,6 +33,8 @@ use Kedniko\Vivy\Exceptions\VivyException;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Enum\RulesEnum as CoreRulesEnum;
+use Kedniko\Vivy\Serializer;
 
 trait Typeable
 {
@@ -38,8 +42,6 @@ trait Typeable
   use hasMagicCall;
 
   public State $state;
-
-  public ContextInterface $context;
 
   public TypeProxy $typeProxy;
 
@@ -71,11 +73,11 @@ trait Typeable
     $_this = $this->getThisUnwrapped();
 
     $options = Helpers::getOptions($options);
-    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(RulesEnum::ID_REQUIRED->value);
-    if ((new TypeProxy($this))->hasRule(RulesEnum::ID_REQUIRED->value)) {
-      (new TypeProxy($this))->removeRule(RulesEnum::ID_REQUIRED->value);
+    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(CoreRulesEnum::ID_REQUIRED->value);
+    if ((new TypeProxy($this))->hasRule(CoreRulesEnum::ID_REQUIRED->value)) {
+      (new TypeProxy($this))->removeRule(CoreRulesEnum::ID_REQUIRED->value);
     }
-    $rule = $this->prepareRule(Rules::required($errormessage), $options);
+    $rule = $this->prepareRule(CoreRules::required($errormessage), $options);
     $_this->state->setRequired(true, $rule);
 
     return $this;
@@ -86,8 +88,8 @@ trait Typeable
     $_this = $this->getThisUnwrapped();
 
     $options = Helpers::getOptions($options);
-    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(RulesEnum::ID_NOT_NULL->value);
-    $this->addRule(Rules::notNull($errormessage), $options);
+    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(CoreRulesEnum::ID_NOT_NULL->value);
+    $this->addRule(CoreRules::notNull($errormessage), $options);
     $_this->state->setNotNull(true);
 
     return $this;
@@ -105,8 +107,9 @@ trait Typeable
   {
     $_this = $this->getThisUnwrapped();
 
-    /** @var LinkedList $linkedlist */
     $linkedlist = $_this->state->getMiddlewares();
+    assert($linkedlist instanceof LinkedList);
+
     if ($options && $options->getAppendAfterCurrent()) {
       $linkedlist->appendAfterCurrent(new Node($middleware));
     } else {
@@ -124,8 +127,8 @@ trait Typeable
   {
     $_this = $this->getThisUnwrapped();
 
-    /** @var LinkedList $linkedlist */
     $linkedlist = $_this->state->getMiddlewares();
+    assert($linkedlist instanceof LinkedList);
     $linkedlist->prepend(new Node($middleware));
     $_this->state->addMiddlewareId($middleware->getID());
   }
@@ -139,13 +142,14 @@ trait Typeable
     }
 
     if ($hardRemove) {
-      /** @var LinkedList $linkedlist */
       $linkedlist = $type->state->getMiddlewares();
+      assert($linkedlist instanceof LinkedList);
+
       $linkedlist->remove(fn (MiddlewareInterface $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
     }
 
-    /** @var TypeInterface $type */
     $ids = $type->state->getMiddlewaresIds();
+    assert($type instanceof TypeInterface);
     unset($ids[$middlewareid]);
   }
 
@@ -232,6 +236,15 @@ trait Typeable
    */
   public function addTransformer(Transformer|callable|string $transformer, Options $options = null)
   {
+
+    $transformer = $this->prepareTransformer($transformer, $options);
+    $this->addMiddleware($transformer);
+
+    return $this;
+  }
+
+  public function prepareTransformer(Transformer|callable|string $transformer, Options $options = null)
+  {
     $options = Helpers::getOptions($options);
 
     if (
@@ -241,8 +254,6 @@ trait Typeable
     ) {
       throw new VivyException('Expected type Transformer or function name', 1);
     }
-
-    $args = array_slice(func_get_args(), 2);
 
     if (is_callable($transformer)) {
       if (is_string($transformer)) {
@@ -258,15 +269,14 @@ trait Typeable
     if ($stopOnFailure !== null) {
       $transformer->setStopOnFailure($stopOnFailure);
     }
-    $transformer->setArgs($args);
 
     if ($errormessage) {
       $transformer->setErrorMessage($errormessage);
     }
 
-    $this->addMiddleware($transformer);
+    $transformer->setOptions($options);
 
-    return $this;
+    return $transformer;
   }
 
   public function tap(callable $callback)
@@ -278,14 +288,24 @@ trait Typeable
 
   public function addCallback(Callback $callback, Options $options = null)
   {
+
+    $callback = $this->prepareCallBack($callback, $options);
+    $this->addMiddleware($callback);
+
+    return $this;
+  }
+
+  public function prepareCallBack(Callback $callback, Options $options = null)
+  {
     $options = Helpers::getOptions($options);
 
     if (is_callable($callback)) {
       $callback = V::callback('_call', $callback, $options);
     }
-    $this->addMiddleware($callback);
 
-    return $this;
+    $callback->setOptions($options);
+
+    return $callback;
   }
 
   /**
@@ -510,7 +530,8 @@ trait Typeable
 
   public function validate(mixed $value = null, ContextInterface $fatherContext = null): Validated
   {
-    return (new Validator($this))->validate($value, $fatherContext);
+    $validator = new Validator($this, $fatherContext);
+    return $validator->validate($value);
   }
 
   /**
@@ -518,7 +539,8 @@ trait Typeable
    */
   public function errors(mixed $value = null): array
   {
-    return (new Validator($this))->errors($value);
+    $validator = new Validator($this);
+    return $validator->errors($value);
   }
 
   public function isValid(): bool
@@ -545,22 +567,17 @@ trait Typeable
   }
 
   /**
-   * @param  callable|mixed  $callback_or_value
+   * @param  Closure|mixed  $callback_or_value
    */
-  // public function setValue(mixed $callback_or_value)
-  // {
-  //   return (new Validator($this))->setValue($callback_or_value);
-  // }
-
-  /**
-   * @param  callable|mixed  $callback_or_value
-   */
-  public function setValue(mixed $callback_or_value)
+  public function setValue($callback_or_value, Options $options = null)
   {
-    $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
+    $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
+
+
+    $callback = ($callback_or_value instanceof Closure) ? $callback_or_value : fn () => $callback_or_value;
     $transformer = new Transformer(RulesEnum::ID_SET_VALUE->value, $callback);
-    $type = (new \Kedniko\Vivy\Type())->from($this);
-    $type->addTransformer($transformer);
+    $type = Type::new(from: $this);
+    $type->addTransformer($transformer, $options);
 
     return $type;
   }
@@ -693,4 +710,19 @@ trait Typeable
   // 	$this->prependMiddleware($rule);
   // 	return $this;
   // }
+
+
+  public function allowNull()
+  {
+    $this->removeRule(CoreRulesEnum::ID_NOT_NULL->value);
+    $this->state->setNotNull(false);
+
+    return $this;
+  }
+
+  public function serialize(): array
+  {
+    assert($this instanceof TypeInterface);
+    return (new Serializer)->encode($this);
+  }
 }

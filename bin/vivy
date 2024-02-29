@@ -24,4 +24,4 @@ if ($argv[1] ?? false) {
   V::registerPlugin(new StandardLibrary());
 }
 
-(new ScanCommand())->handle(getcwd() . '/ide-helper.rules.php');
+V::scan(getcwd() . '/ide-helper.rules.php');

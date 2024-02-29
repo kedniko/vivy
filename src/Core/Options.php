@@ -2,46 +2,49 @@
 
 namespace Kedniko\Vivy\Core;
 
+use Closure;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Support\Util;
 
 final class Options
 {
     private bool $stopOnFailure = true;
 
-    private $errormessage;
+    private string|Closure|null $errormessage = null;
 
     private bool $once = false;
 
-    private $if;
+    private Closure|Undefined $if;
 
     private ?bool $appendAfterCurrent = null;
 
     private array $args = [];
 
-    /**
-     * @var Type
-     */
-    private $builder;
+    private string|null $functionName = null;
 
-    /**
-     * @param  null|string  $errormessage
-     * @param  bool  $stopOnFailure
-     */
+    private TypeInterface|null $builder = null;
+
     public function __construct()
     {
         $this->if = Undefined::instance();
     }
 
-    public static function build(Options $options = null, array $args = [], string $errormessage = null)
+    public static function build(Options $options = null, array $args = [], string $fn = null)
     {
+
         if (!($options instanceof Options)) {
             $options = new Options();
         }
-        $options->setArgs($args); // TODO: not implemented
+
+        $options->setArgs($args);
+        $fnName = Util::getFunctionName($fn);
+        assert(is_string($fnName) && !empty($fnName));
+        $options->setFunctionName($fnName);
 
         return $options;
     }
 
-    public function message(string|callable $errormessage = null)
+    public function message(string|Closure $errormessage = null)
     {
         $this->errormessage = $errormessage;
 
@@ -111,6 +114,19 @@ final class Options
         return $this;
     }
 
+
+    public function getFunctionName(): string
+    {
+        return $this->functionName;
+    }
+
+    public function setFunctionName(string $name)
+    {
+        $this->functionName = $name;
+
+        return $this;
+    }
+
     /**
      * @param  array  $args
      */
@@ -176,7 +192,7 @@ final class Options
      * @param  callable  $callback function(Context $context) {...}
      * @return  self
      */
-    public function ifRule($if)
+    public function ifRule(callable $if)
     {
         $this->if = $if;
 

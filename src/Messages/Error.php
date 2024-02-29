@@ -2,6 +2,7 @@
 
 namespace Kedniko\Vivy\Messages;
 
+use Closure;
 use Kedniko\Vivy\Support\Arr;
 
 class Error
@@ -12,9 +13,21 @@ class Error
 
     private static array $messages = [];
 
+    private static Closure|string $defaultError;
+
     public static function addPath(string $path)
     {
         self::$paths[] = $path;
+    }
+
+    public static function setDefault(Closure|string $errormessage)
+    {
+        self::$defaultError = $errormessage;
+    }
+
+    public static function getDefaultError()
+    {
+        return self::$defaultError ?? null;
     }
 
     public static function setLocale(string $locale)

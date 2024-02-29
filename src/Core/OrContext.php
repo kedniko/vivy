@@ -9,18 +9,29 @@ final class OrContext implements ContextInterface
 {
     use ContextTrait;
 
-    /**
-     * TODO: childErrors is not used
-     *
-     * @param  private  $childErrors
-     * @param  ContextInterface|null  $c
-     */
-    public function __construct(private $childErrors, ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
-    {
+    private function __construct(
+        public array $childErrors = [],
+        ContextInterface $cloneFrom = null,
+        ContextInterface $fatherContext = null
+    ) {
         $this->init($cloneFrom, $fatherContext);
     }
 
-    public function childErrors()
+    public static function new(
+        array $childErrors,
+        ContextInterface $cloneFrom = null,
+        ContextInterface $fatherContext = null
+    ) {
+        $oc = new OrContext(
+            $childErrors,
+            $cloneFrom,
+            $fatherContext
+        );
+        $oc->init($cloneFrom, $fatherContext);
+        return $oc;
+    }
+
+    public function getChildErrors()
     {
         return $this->childErrors;
     }

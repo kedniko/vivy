@@ -2,26 +2,22 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Exceptions\VivyValidationFailedException;
 use Kedniko\Vivy\V;
 
 final class Validated
 {
     public $chain;
 
-    /**
-     * @param  array  $errors
-     */
     public function __construct(private readonly mixed $value, private $errors)
     {
     }
 
-    private function fail(callable $handler)
+    private function fail(callable $handler): mixed
     {
         return $handler($this);
     }
 
-    private function getFailHandler(string|callable $handler)
+    private function getFailHandler(string|callable $handler): callable
     {
         if (is_string($handler)) {
             $handler = $this->chain->state->failHandlers[$handler] ?? V::getGlobalFailHandler($handler);
@@ -57,9 +53,7 @@ final class Validated
 
     public function isValid(): bool
     {
-        $errors = $this->errors;
-
-        return (is_countable($errors) ? count($errors) : 0) === 0;
+        return (is_countable($this->errors) ? count($this->errors) : 0) === 0;
     }
 
     public function errors(): array
