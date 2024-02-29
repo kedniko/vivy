@@ -230,4 +230,23 @@ final class Util
         }
         return null;
     }
+
+
+    public static function isOrderedIndexedArray($arr)
+    {
+        if (!is_array($arr)) {
+            return false;
+        }
+        if ($arr === []) {
+            return true;
+        }
+        $len = count($arr) - 1;
+        for ($i = 0; $i <= $len; $i++) {
+            if (!array_key_exists($i, $arr)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
