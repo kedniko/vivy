@@ -168,7 +168,7 @@ final class Validator
 
             if ($validated_or_bool instanceof Validated) {
                 if ($this->type instanceof TypeOr) {
-                    $isvalid = !($this->type->state->_extra['errors'] ?? []);
+                    $isvalid = !($this->type->state->_extra['or_errors'] ?? []);
                 } else {
                     $isvalid = $validated_or_bool->isValid();
                 }
@@ -226,7 +226,7 @@ final class Validator
     private function applyCallback(Callback $middleware): void
     {
         $fn = $middleware->getCallback();
-        $this->type->state->context->errors = Helpers::issetOrDefault($this->type->_extra['errors'], []); // ??
+        $this->type->state->context->errors = Helpers::issetOrDefault($this->type->_extra['or_errors'], []); // ??
         $fn = $middleware->getCallback();
         $fn($this->type->state->context);
     }
@@ -250,7 +250,7 @@ final class Validator
             $errors = array_replace_recursive($this->type->state->context->errors, $errors);
             // $this->type->state->context->errors = $errors;
 
-            $this->type->_extra['errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
+            $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
             // errors for types inside orRule are ignored. The main orRule will handle them
             $canEditContextErrors = !(isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
@@ -334,7 +334,7 @@ final class Validator
         $errors = array_replace_recursive($this->type->state->context->errors, $errors);
         // $this->type->state->context->errors = $errors;
 
-        $this->type->_extra['errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
+        $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
         // errors for types inside orRule are ignored. The main orRule will handle them
         $canEditContextErrors = !(isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);

@@ -233,4 +233,9 @@ trait ContextTrait
     {
         return $this->type;
     }
+
+    public function addError($key, $errormessage): void
+    {
+        $this->errors[$key][] = $errormessage;
+    }
 }
