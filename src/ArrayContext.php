@@ -44,7 +44,7 @@ final class ArrayContext implements ContextInterface
 
     public function setFailsCount(int $value): ArrayContext
     {
-        $this->failCount = $value;
+        $this->failsCount = $value;
 
         return $this;
     }

@@ -3,25 +3,26 @@
 namespace Kedniko\Vivy;
 
 use Closure;
-use Kedniko\Vivy\Commands\ScanCommand;
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Contracts\MiddlewareInterface;
-use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Context;
 use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\hasMagicCall;
-use Kedniko\Vivy\Core\hasMagicCallStatic;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
-use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\VivyPluginStandard\TypeAny;
 use Kedniko\Vivy\Support\Arr;
-use Kedniko\Vivy\Support\MagicCaller;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Core\hasMagicCall;
 use Kedniko\Vivy\Support\Registrar;
+use Kedniko\Vivy\Support\MagicCaller;
+use Kedniko\Vivy\Commands\ScanCommand;
+use Kedniko\Vivy\Messages\RuleMessage;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\VivyPluginStandard\TypeAny;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\hasMagicCallStatic;
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\VivyPluginStandard\Enum\RulesEnum;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 final class V
 {
@@ -164,7 +165,7 @@ final class V
         return isset(self::$globalFailHandlers[$id]);
     }
 
-    public static function getGlobalFailHandler(string $id = 'default')
+    public static function getGlobalFailHandler(string $id = 'default'): Closure
     {
         return self::$globalFailHandlers[$id];
     }
@@ -199,13 +200,13 @@ final class V
     public static function issetVarPath(
         array $array,
         string|int $path,
-        string $errormessage = null
+        string|Closure $errormessage = null
     ): Validated {
         if (!Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && is_callable($errormessage)) {
-                $c = (new \Kedniko\Vivy\Context())->setArgs(func_get_args());
+                $c = (new Context())->setArgs(func_get_args());
                 $errormessage = $errormessage($c);
             }
             $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");

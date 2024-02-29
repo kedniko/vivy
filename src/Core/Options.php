@@ -2,6 +2,8 @@
 
 namespace Kedniko\Vivy\Core;
 
+use Closure;
+
 
 final class Options
 {
@@ -11,7 +13,7 @@ final class Options
 
     private bool $once = false;
 
-    private $if;
+    private Closure|Undefined $if;
 
     private ?bool $appendAfterCurrent = null;
 
@@ -176,7 +178,7 @@ final class Options
      * @param  callable  $callback function(Context $context) {...}
      * @return  self
      */
-    public function ifRule($if)
+    public function ifRule(callable $if)
     {
         $this->if = $if;
 

@@ -12,30 +12,22 @@ use Kedniko\Vivy\Contracts\ContextInterface;
 
 trait ContextTrait
 {
-    /**
-     * @var mixed|array<mixed>
-     */
-    public $value;
 
-    public $errors;
+    public mixed $value;
+
+    public array $errors;
 
     public array $childrenErrors;
 
-    /** @var \Kedniko\Vivy\Context|null */
-    public $rootContext;
+    public ContextInterface|null $rootContext;
 
-    /** @var ContextInterface */
-    public $fatherContext;
-
-    // /** @var Context[] */
-    // public $childrenContext;
+    public ContextInterface|null $fatherContext;
 
     private bool $isRootContext;
 
     protected TypeInterface $type;
 
-    /** @var array */
-    public $args;
+    public array $args;
 
     public $fields;
 
@@ -43,9 +35,9 @@ trait ContextTrait
 
     public $index;
 
-    public $failCount;
+    // public $failCount;
 
-    public $successCount;
+    // public $successCount;
 
     private function init(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null): void
     {

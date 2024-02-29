@@ -2,9 +2,13 @@
 
 namespace Kedniko\Vivy\Core;
 
+use Kedniko\Vivy\Contracts\ContextInterface;
+
 final class State
 {
     private $data;
+
+    public ContextInterface $context;
 
     private string|Undefined $name;
 

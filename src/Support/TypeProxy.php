@@ -300,6 +300,6 @@ final class TypeProxy extends Type implements TypeInterface
      */
     public function getChildrenErrors()
     {
-        return $this->type->state->_extra['or_errors'] ?? [];
+        return $this->type->state->_extra['errors'] ?? [];
     }
 }

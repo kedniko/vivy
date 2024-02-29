@@ -39,8 +39,6 @@ trait Typeable
 
   public State $state;
 
-  public ContextInterface $context;
-
   public TypeProxy $typeProxy;
 
   public bool $skipOtherMiddlewares = false;

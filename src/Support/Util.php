@@ -123,7 +123,6 @@ final class Util
 
         $result = Util::runFunction($setup['function'], $parameters);
         // $result = call_user_func_array($setup['function'], $parameters);
-        $isCallable = is_callable($result);
 
         if (!$callerObj && !($result instanceof TypeInterface)) {
             if ($availableForType === V::class) {
@@ -133,7 +132,7 @@ final class Util
             }
         }
 
-        if ($isCallable) {
+        if (is_callable($result)) {
             // $c = new Context();
             // (new ContextProxy($c))->setField($callerObj);
             $result = $result($callerObj);
