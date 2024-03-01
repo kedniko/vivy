@@ -2,14 +2,7 @@
 
 namespace Tests;
 
-use App\Rules;
-use App\Token;
-use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
-use App\Types\TypeToken;
-use Kedniko\Vivy\Contracts\TypeInterface;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Messages\Error;
 use Kedniko\Vivy\Serializer;
 
 uses()->group('serializer');
@@ -57,4 +50,4 @@ test('serializer-encode-decode', function () {
     $v = (new Serializer)->decode($json);
     $validated = $v->validate($data);
     expect($validated->isValid())->toBeTrue();
-})->only();
+});

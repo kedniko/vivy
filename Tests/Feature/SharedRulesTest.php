@@ -29,3 +29,24 @@ test('test-1', function () {
 
     expect($validated->isValid())->toBeFalse();
 });
+
+
+test('group-5', function () {
+
+    $sharedRule = V::int()->in([1, 2, 3, 4]);
+
+    $v = V::group([
+        'var_a' => $sharedRule,
+        'var_b' => V::or([
+            V::undefined()->setValue(null),
+            $sharedRule,
+        ]),
+    ]);
+
+    $validated = V::group($v)->validate([
+        'var_a' => 1,
+        'var_b' => 3,
+    ]);
+
+    expect($validated->isValid())->toBeTrue();
+});

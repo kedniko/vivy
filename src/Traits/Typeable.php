@@ -239,7 +239,7 @@ trait Typeable
     return $this;
   }
 
-  public function prepareTransformer(Transformer $transformer, Options $options = null)
+  public function prepareTransformer(Transformer|callable|string $transformer, Options $options = null)
   {
     $options = Helpers::getOptions($options);
 
