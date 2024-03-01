@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kedniko\Vivy\Traits;
 
-use Closure;
 use Kedniko\Vivy\V;
 use Kedniko\Vivy\Type;
 use Kedniko\Vivy\Context;

@@ -8,6 +8,7 @@ use Kedniko\Vivy\Contracts\MiddlewareInterface;
 use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\Rule;
 
 class Serializer
 {
@@ -28,7 +29,15 @@ class Serializer
 
       $middleware = $linkedList->getNext();
       assert($middleware instanceof MiddlewareInterface);
-      $serialized['rules'][$middleware->getOptions()->getFunctionName()] = $middleware->getArgs();
+      $name = $middleware->getOptions()->getFunctionName();
+      $serialized['rules'][$name] = $middleware->getArgs();
+
+      if ($middleware instanceof Rule && $name === 'group') {
+        $setup = $middleware->getArgs()[0];
+        foreach ($setup as $key => $value) {
+          $serialized['rules'][$name][0][$key] = $this->encode($value);
+        }
+      }
     }
 
     return $serialized;

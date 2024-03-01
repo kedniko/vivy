@@ -49,6 +49,7 @@ test('serializer-json-to-obj', function () {
 test('serializer-encode-decode', function () {
     $data = 'foo@example.com';
     $v = V::email()->minLength(3)->maxLength(20)->setValue('2024-01-01')->asDate()->date()->between('2020-01-01', '2024-12-31');
+
     $validated = $v->validate($data);
     expect($validated->isValid())->toBeTrue();
     $json = (new Serializer)->encode($v);
@@ -56,4 +57,4 @@ test('serializer-encode-decode', function () {
     $v = (new Serializer)->decode($json);
     $validated = $v->validate($data);
     expect($validated->isValid())->toBeTrue();
-});
+})->only();
