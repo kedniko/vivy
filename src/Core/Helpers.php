@@ -59,6 +59,8 @@ final class Helpers
         $errors ??= $c->errors;
         $ruleID = $middleware->getID();
 
+        $c->setMiddleware($middleware);
+
         if ($typeProxy->type instanceof TypeOr) {
             $c->childrenErrors = $typeProxy->getChildrenErrors();
         }

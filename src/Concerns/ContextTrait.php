@@ -9,6 +9,7 @@ use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 trait ContextTrait
 {
@@ -35,9 +36,8 @@ trait ContextTrait
 
     public $index;
 
-    // public $failCount;
+    public MiddlewareInterface|null $middleware;
 
-    // public $successCount;
 
     private function init(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null): void
     {
@@ -205,7 +205,7 @@ trait ContextTrait
     // 	return $this;
     // }
 
-    public function getField(): Type
+    public function getField(): TypeInterface
     {
         $type = new Type();
 
@@ -237,5 +237,17 @@ trait ContextTrait
     public function addError($key, $errormessage): void
     {
         $this->errors[$key][] = $errormessage;
+    }
+
+    public function setMiddleware(MiddlewareInterface $middleware): self
+    {
+        $this->middleware = $middleware;
+
+        return $this;
+    }
+
+    public function getMiddleware(): MiddlewareInterface|null
+    {
+        return $this->middleware;
     }
 }

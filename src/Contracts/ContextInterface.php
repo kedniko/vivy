@@ -34,6 +34,9 @@ interface ContextInterface
 
     public function getFieldContext(string $fieldname): ?ContextInterface;
 
-    // public function setValue($value);
-    public function getField();
+    public function getField(): TypeInterface;
+
+    public function setMiddleware(MiddlewareInterface $middleware): self;
+
+    public function getMiddleware(): MiddlewareInterface|null;
 }
