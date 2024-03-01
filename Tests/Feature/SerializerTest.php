@@ -14,6 +14,7 @@ use Kedniko\Vivy\Serializer;
 
 uses()->group('serializer');
 
+
 test('serializer-obj-to-json', function () {
 
     $v = V::email()->minLength(3)->maxLength(5)->date()->between('2020-01-01', '2020-12-31');
