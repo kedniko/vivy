@@ -24,4 +24,4 @@ test('context-get-middleware-id', function () {
     ]);
 
     expect($itWorks)->toBeTrue();
-})->only();
+});

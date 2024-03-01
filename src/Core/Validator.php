@@ -174,7 +174,7 @@ final class Validator
                 }
                 $validated_or_bool->value();
             } else {
-                $isvalid = $validated_or_bool;
+                $isvalid = !!$validated_or_bool;
             }
 
             if (!$isvalid) {
