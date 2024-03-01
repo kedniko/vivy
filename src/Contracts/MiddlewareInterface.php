@@ -24,7 +24,7 @@ interface MiddlewareInterface
 
     public function setArgs(array $args);
 
-    public function getOptions();
+    public function getOptions(): Options;
 
     public function setOptions(Options $options);
 }

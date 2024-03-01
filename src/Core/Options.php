@@ -3,7 +3,7 @@
 namespace Kedniko\Vivy\Core;
 
 use Closure;
-
+use Kedniko\Vivy\Support\Util;
 
 final class Options
 {
@@ -19,6 +19,8 @@ final class Options
 
     private array $args = [];
 
+    private ?string $functionName;
+
     /**
      * @var Type
      */
@@ -33,12 +35,15 @@ final class Options
         $this->if = Undefined::instance();
     }
 
-    public static function build(Options $options = null, array $args = [], string $errormessage = null)
+    public static function build(Options $options = null, array $args = [], string $fn = null)
     {
+
         if (!($options instanceof Options)) {
             $options = new Options();
         }
-        $options->setArgs($args); // TODO: not implemented
+
+        $options->setArgs($args);
+        $options->setFunctionName(Util::getFunctionName($fn));
 
         return $options;
     }
@@ -109,6 +114,19 @@ final class Options
     public function setArgs(array $args)
     {
         $this->args = array_filter($args, fn ($arg): bool => !($arg instanceof Options));
+
+        return $this;
+    }
+
+
+    public function getFunctionName(): string
+    {
+        return $this->functionName;
+    }
+
+    public function setFunctionName(string $name)
+    {
+        $this->functionName = $name;
 
         return $this;
     }

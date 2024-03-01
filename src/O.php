@@ -3,6 +3,7 @@
 namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Support\Util;
 
 final class O
 {
@@ -19,7 +20,7 @@ final class O
             $options = $o;
         }
 
-        $options = Options::build($options, func_get_args());
+        $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
         $o = new Options();
         $o->message($options->getErrorMessage());
         $o->stopOnFailure();

@@ -17,6 +17,7 @@ use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\ArrayContext;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Support\Util;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Core\Validator;
@@ -103,8 +104,9 @@ trait Typeable
   {
     $_this = $this->getThisUnwrapped();
 
-    /** @var LinkedList $linkedlist */
     $linkedlist = $_this->state->getMiddlewares();
+    assert($linkedlist instanceof LinkedList);
+
     if ($options && $options->getAppendAfterCurrent()) {
       $linkedlist->appendAfterCurrent(new Node($middleware));
     } else {
@@ -122,8 +124,8 @@ trait Typeable
   {
     $_this = $this->getThisUnwrapped();
 
-    /** @var LinkedList $linkedlist */
     $linkedlist = $_this->state->getMiddlewares();
+    assert($linkedlist instanceof LinkedList);
     $linkedlist->prepend(new Node($middleware));
     $_this->state->addMiddlewareId($middleware->getID());
   }
@@ -137,13 +139,14 @@ trait Typeable
     }
 
     if ($hardRemove) {
-      /** @var LinkedList $linkedlist */
       $linkedlist = $type->state->getMiddlewares();
+      assert($linkedlist instanceof LinkedList);
+
       $linkedlist->remove(fn (MiddlewareInterface $middleware): bool => $middleware->getID() === $middlewareid, $removeOnlyOne);
     }
 
-    /** @var TypeInterface $type */
     $ids = $type->state->getMiddlewaresIds();
+    assert($type instanceof TypeInterface);
     unset($ids[$middlewareid]);
   }
 
@@ -230,6 +233,15 @@ trait Typeable
    */
   public function addTransformer(Transformer|callable|string $transformer, Options $options = null)
   {
+
+    $transformer = $this->prepareTransformer($transformer, $options);
+    $this->addMiddleware($transformer);
+
+    return $this;
+  }
+
+  public function prepareTransformer(Transformer $transformer, Options $options = null)
+  {
     $options = Helpers::getOptions($options);
 
     if (
@@ -239,8 +251,6 @@ trait Typeable
     ) {
       throw new VivyException('Expected type Transformer or function name', 1);
     }
-
-    $args = array_slice(func_get_args(), 2);
 
     if (is_callable($transformer)) {
       if (is_string($transformer)) {
@@ -256,15 +266,14 @@ trait Typeable
     if ($stopOnFailure !== null) {
       $transformer->setStopOnFailure($stopOnFailure);
     }
-    $transformer->setArgs($args);
 
     if ($errormessage) {
       $transformer->setErrorMessage($errormessage);
     }
 
-    $this->addMiddleware($transformer);
+    $transformer->setOptions($options);
 
-    return $this;
+    return $transformer;
   }
 
   public function tap(callable $callback)
@@ -276,14 +285,24 @@ trait Typeable
 
   public function addCallback(Callback $callback, Options $options = null)
   {
+
+    $callback = $this->prepareCallBack($callback, $options);
+    $this->addMiddleware($callback);
+
+    return $this;
+  }
+
+  public function prepareCallBack(Callback $callback, Options $options = null)
+  {
     $options = Helpers::getOptions($options);
 
     if (is_callable($callback)) {
       $callback = V::callback('_call', $callback, $options);
     }
-    $this->addMiddleware($callback);
 
-    return $this;
+    $callback->setOptions($options);
+
+    return $callback;
   }
 
   /**
@@ -545,20 +564,14 @@ trait Typeable
   /**
    * @param  callable|mixed  $callback_or_value
    */
-  // public function setValue(mixed $callback_or_value)
-  // {
-  //   return (new Validator($this))->setValue($callback_or_value);
-  // }
-
-  /**
-   * @param  callable|mixed  $callback_or_value
-   */
-  public function setValue(mixed $callback_or_value)
+  public function setValue($callback_or_value, Options $options = null)
   {
+    $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
+
     $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
     $transformer = new Transformer(RulesEnum::ID_SET_VALUE->value, $callback);
-    $type = (new \Kedniko\Vivy\Type())->from($this);
-    $type->addTransformer($transformer);
+    $type = Type::new(from: $this);
+    $type->addTransformer($transformer, $options);
 
     return $type;
   }

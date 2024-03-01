@@ -89,8 +89,8 @@ final class Validator
                 $middleware = Rules::equals($middleware, true);
             }
 
-            /** @var Middleware $middleware */
             $skipThisMiddleware = $this->type->skipOtherMiddlewares || ($this->type->skipOtherRules && $middleware->isRule());
+            assert($middleware instanceof MiddlewareInterface);
 
             if (!$skipThisMiddleware) {
                 $idmiddleware = $middleware->getID();
@@ -384,15 +384,5 @@ final class Validator
         $this->type->state->setData($dataToValidate);
 
         return $this->isValid();
-    }
-
-    public function setValue(mixed $callback_or_value)
-    {
-        $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
-        $transformer = new Transformer(RulesEnum::ID_SET_VALUE->value, $callback);
-        $type = (new Type())->from($this->type);
-        $type->addTransformer($transformer);
-
-        return $type;
     }
 }

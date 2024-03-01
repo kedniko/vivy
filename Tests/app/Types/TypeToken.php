@@ -2,12 +2,14 @@
 
 namespace App\Types;
 
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
-use Kedniko\Vivy\Support\Registrar;
-use Kedniko\Vivy\Type;
 use Kedniko\Vivy\V;
+use Kedniko\Vivy\Type;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\Support\Registrar;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\VivyPluginStandard\TypeAny;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
 class TypeToken extends Type implements VivyPlugin
 {
@@ -26,10 +28,10 @@ class TypeToken extends Type implements VivyPlugin
 
     public function notExpired(Options $options = null)
     {
-        $options = Options::build($options, func_get_args());
+        $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
         $this->addRule(V::rule('notExpired', function (ContextInterface $c) {
-            /** @var \App\Token */
             $value = $c->value;
+            assert($value instanceof \App\Token);
 
             return $value->expired === false;
         }, function (ContextInterface $c) use ($options) {

@@ -14,4 +14,4 @@ test('is-ordered-indexed-array', function () {
   expect(Util::isOrderedIndexedArray(['a', 'b', '' => 'c']))->toBeFalse();
   expect(Util::isOrderedIndexedArray(['a', 'b', 'key' => 'c']))->toBeFalse();
   expect(Util::isOrderedIndexedArray(['a', 'b', null => 'c']))->toBeFalse();
-})->only();
+});

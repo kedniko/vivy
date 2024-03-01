@@ -58,8 +58,8 @@ final class GroupContext implements ContextInterface
 
         // add field
 
-        /** @var LinkedList $types */
         $types = $this->getFields();
+        assert($types instanceof LinkedList);
         $types->append($type);
 
         return $this;
@@ -80,8 +80,8 @@ final class GroupContext implements ContextInterface
 
         // add field
 
-        /** @var LinkedList $types */
         $types = $this->getFields();
+        assert($types instanceof LinkedList);
         $types->appendAfterCurrent($type);
 
         return $this;

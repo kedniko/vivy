@@ -188,18 +188,14 @@ final class Helpers
         }
 
         if (!$class && !$method && is_string($value)) {
-            if (str_contains($value, '@')) {
-                $parts = explode('@', $value);
-                $class = $parts[0];
-                $method = $parts[1];
-            } elseif (str_contains($value, '::')) {
-                $parts = explode('::', $value);
-                $class = $parts[0];
-                $method = $parts[1];
-            } elseif (str_contains($value, ',')) {
-                $parts = explode(',', $value);
-                $class = $parts[0];
-                $method = $parts[1];
+            $separators = ['::', '@', ','];
+            foreach ($separators as $separator) {
+                if (str_contains($value, $separator)) {
+                    $parts = explode($separator, $value);
+                    $class = $parts[0];
+                    $method = $parts[1];
+                    break;
+                }
             }
         }
         if ($class === null) {

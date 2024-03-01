@@ -132,8 +132,8 @@ final class TypeProxy extends Type implements TypeInterface
     // }
     public function getRule(mixed $ruleID): ?Rule
     {
-        /** @var LinkedList $middlewares */
         $middlewares = $this->type->state->getMiddlewares();
+        assert($middlewares instanceof LinkedList);
 
         $middlewares->rewind();
         while ($middlewares->hasNext()) {

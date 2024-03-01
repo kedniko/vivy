@@ -4,33 +4,29 @@ namespace Kedniko\Vivy\Core;
 
 final class LinkedList
 {
-    /** @var Node|null */
-    public $head;
+    public Node|null $head;
 
-    /** @var Node|null */
-    public $tail;
+    public Node|null $tail;
 
-    /** @var Node|null */
-    public $current;
+    public Node|null $current;
 
-    /** @var Node|null */
-    public $prev;
+    public Node|null $prev;
 
-    /**
-     * @var int
-     */
-    public $length = 0;
+    public int $length = 0;
 
     /**
      * Iteration started
      * */
     private bool $advance = false;
 
-    /**
-     * @param  array  $items
-     */
-    public function __construct($items = [])
+
+    public function __construct(array $items = [])
     {
+        $this->head = null;
+        $this->tail = null;
+        $this->current = null;
+        $this->prev = null;
+
         if ($items !== []) {
             $this->fromArray($items);
         }
@@ -58,9 +54,6 @@ final class LinkedList
         return $this->length;
     }
 
-    /**
-     * @return mixed[]
-     */
     public function toArray(): array
     {
         $items = [];
@@ -71,10 +64,7 @@ final class LinkedList
         return $items;
     }
 
-    /**
-     * @param  array  $items
-     */
-    public function fromArray($items)
+    public function fromArray(array $items)
     {
         foreach ($items as $item) {
             $this->append(new Node($item));
@@ -84,11 +74,13 @@ final class LinkedList
     }
 
     /**
-     * @param  Node|mixed  $node
+     * @param Node|mixed $node
+     * 
+     * @return void
      */
     public function prepend($node): void
     {
-        if (! $node instanceof Node) {
+        if (!$node instanceof Node) {
             $node = new Node($node);
         }
         $node->next = $this->head;
@@ -98,17 +90,19 @@ final class LinkedList
     }
 
     /**
-     * @param  Node|mixed  $node
+     * @param Node|mixed $node
+     * 
+     * @return void
      */
     public function append($node): void
     {
         $this->incrementLength();
 
-        if (! $node instanceof Node) {
+        if (!$node instanceof Node) {
             $node = new Node($node);
         }
 
-        if (! $this->tail instanceof \Kedniko\Vivy\Core\Node) {
+        if (!$this->tail instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -121,7 +115,7 @@ final class LinkedList
 
         $this->tail = $node;
 
-        if (! $this->current instanceof \Kedniko\Vivy\Core\Node) {
+        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->current = $node;
         }
     }
@@ -133,10 +127,10 @@ final class LinkedList
     {
         $this->decrementLength();
 
-        if (! $node instanceof Node) {
+        if (!$node instanceof Node) {
             $node = new Node($node);
         }
-        if (! $this->current instanceof \Kedniko\Vivy\Core\Node) {
+        if (!$this->current instanceof \Kedniko\Vivy\Core\Node) {
             $this->prepend($node);
             $this->tail = $node;
 
@@ -160,7 +154,7 @@ final class LinkedList
 
     public function hasNext(): bool
     {
-        if (! $this->advance) {
+        if (!$this->advance) {
             return $this->current instanceof \Kedniko\Vivy\Core\Node;
         }
 

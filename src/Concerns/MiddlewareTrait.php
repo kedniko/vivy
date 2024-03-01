@@ -31,7 +31,7 @@ trait MiddlewareTrait
         if ($errormessage === null) {
             $errormessage = RuleMessage::getErrorMessage();
         }
-        if (! is_scalar($id)) {
+        if (!is_scalar($id)) {
             throw new VivyException('Middleware ID must be a scalar value');
         }
         $this->id = $id;
@@ -74,12 +74,12 @@ trait MiddlewareTrait
         return $this->options->getStopOnFailure();
     }
 
-    public function getArgs()
+    public function getArgs(): array
     {
         return $this->options->getArgs();
     }
 
-    public function isRule()
+    public function isRule(): bool
     {
         return $this instanceof Rule;
     }
@@ -96,21 +96,11 @@ trait MiddlewareTrait
     // 	return $this;
     // }
 
-    /**
-     * Get the value of options
-     *
-     * @return Options
-     */
-    public function getOptions()
+    public function getOptions(): Options
     {
         return $this->options;
     }
 
-    /**
-     * Set the value of options
-     *
-     * @return  self
-     */
     public function setOptions($options)
     {
         $this->options = $options;
