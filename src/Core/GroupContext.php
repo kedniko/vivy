@@ -2,11 +2,11 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\Vivy\Contracts\TypeInterface;
-use Kedniko\VivyPluginStandard\Rules;
+use Kedniko\Vivy\Rules;
 use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\Vivy\Concerns\ContextTrait;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
 final class GroupContext implements ContextInterface
 {
@@ -14,8 +14,11 @@ final class GroupContext implements ContextInterface
 
     private $fieldname;
 
-    public function __construct($fieldname, ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
-    {
+    public function __construct(
+        $fieldname,
+        ContextInterface $cloneFrom = null,
+        ContextInterface $fatherContext = null
+    ) {
         $this->init($cloneFrom, $fatherContext);
         $this->fieldname = $fieldname ?? Undefined::instance();
     }

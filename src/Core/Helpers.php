@@ -2,11 +2,10 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\VivyPluginStandard\Rules;
-use Kedniko\VivyPluginStandard\TypeOr;
+use Kedniko\Vivy\Type\TypeOr;
+use Kedniko\Vivy\Enum\RulesEnum;
 use Kedniko\Vivy\Support\TypeProxy;
-use Kedniko\VivyPluginStandard\Enum\RulesEnum;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
 final class Helpers
 {
@@ -89,7 +88,7 @@ final class Helpers
 
         $errormessage = Helpers::valueOrFunction($errormessage, $c);
 
-        $isInvisibleKey = in_array($errorKey, Rules::getInvisibleKeys(), true);
+        $isInvisibleKey = in_array($errorKey, self::getInvisibleKeys(), true);
 
         if ($isInvisibleKey) {
             $errors = $errormessage;
@@ -216,5 +215,13 @@ final class Helpers
         }
 
         return [$class, $method];
+    }
+
+    public static function getInvisibleKeys(): array
+    {
+        return [
+            RulesEnum::ID_GROUP->value,
+            RulesEnum::ID_EACH->value,
+        ];
     }
 }

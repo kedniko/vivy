@@ -11,6 +11,7 @@ use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Support\Util;
 use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Enum\RulesEnum;
 use Kedniko\Vivy\Core\Middleware;
 use Kedniko\Vivy\Core\hasMagicCall;
 use Kedniko\Vivy\Support\Registrar;
@@ -22,7 +23,6 @@ use Kedniko\VivyPluginStandard\TypeAny;
 use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Core\hasMagicCallStatic;
 use Kedniko\Vivy\Contracts\ContextInterface;
-use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
 
 final class V

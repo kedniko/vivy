@@ -2,13 +2,14 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Core\Undefined;
+// use Kedniko\Vivy\Contracts\ContextInterface;
 
 final class State
 {
     private $data;
 
-    public ContextInterface $context;
+    // public ContextInterface $context;
 
     private string|Undefined $name;
 
@@ -38,7 +39,7 @@ final class State
 
     private \Closure|string|Undefined $errorMessageEmpty;
 
-    private \Kedniko\Vivy\Core\Undefined $valueIfOptionalNotExists;
+    private \Closure|Undefined $valueIfOptionalNotExists;
 
     private LinkedList $middlewares;
 
@@ -97,19 +98,11 @@ final class State
         return !$this->isUndefined($this->data);
     }
 
-    /**
-     * Get the value of data
-     */
     public function getData()
     {
         return $this->data;
     }
 
-    /**
-     * Set the value of data
-     *
-     * @return  self
-     */
     public function setData($data)
     {
         $this->data = $data;
@@ -131,19 +124,11 @@ final class State
         return !$this->isUndefined($this->notEmptyString);
     }
 
-    /**
-     * Get the value of notEmptyString
-     */
     public function getNotEmptyString(): bool|Undefined
     {
         return $this->notEmptyString;
     }
 
-    /**
-     * Set the value of notEmptyString
-     *
-     * @return  self
-     */
     public function setNotEmptyString(bool|Undefined $notEmptyString, $rule = null)
     {
         $this->notEmptyString = $notEmptyString;
@@ -159,9 +144,6 @@ final class State
         return $this->required === true;
     }
 
-    /**
-     * Get the value of required
-     */
     public function getRequired(): bool|Undefined
     {
         return $this->required;
@@ -172,11 +154,7 @@ final class State
         return !$this->isUndefined($this->required);
     }
 
-    /**
-     * @param  bool  $required
-     * @param  Rule  $rule
-     */
-    public function setRequired(bool|Undefined $required, $rule = null)
+    public function setRequired(bool|Undefined $required, ?Rule $rule = null)
     {
         $this->required = $required;
         if ($rule instanceof Rule) {
@@ -246,19 +224,11 @@ final class State
         return !$this->isUndefined($this->notNull);
     }
 
-    /**
-     * Get the value of notNull
-     */
     public function getNotNull(): bool|Undefined
     {
         return $this->notNull;
     }
 
-    /**
-     * Set the value of notNull
-     *
-     * @return  self
-     */
     public function setNotNull(bool|Undefined $notNull)
     {
         $this->notNull = $notNull;
@@ -276,11 +246,6 @@ final class State
         return !$this->middlewares->isEmpty();
     }
 
-    /**
-     * Set the value of middlewares
-     *
-     * @return  self
-     */
     public function setMiddlewares(LinkedList $middlewares)
     {
         $this->middlewares = $middlewares;
@@ -288,9 +253,6 @@ final class State
         return $this;
     }
 
-    /**
-     * Get the value of middlewaresid
-     */
     public function getMiddlewaresIds(): array
     {
         return $this->middlewaresid;
@@ -301,11 +263,6 @@ final class State
         return isset($this->middlewaresid[$id]);
     }
 
-    /**
-     * Set the value of middlewaresid
-     *
-     * @return  self
-     */
     public function addMiddlewareId($middlewaresid)
     {
         if (!isset($this->middlewaresid[$middlewaresid])) {
@@ -328,21 +285,12 @@ final class State
         return !$this->isUndefined($this->valueIfOptionalNotExists);
     }
 
-    /**
-     * Get the value of callbackIfOptionalNotExists
-     */
     public function getValueIfOptionalNotExists()
     {
         return $this->valueIfOptionalNotExists;
     }
 
-    /**
-     * Set the value of callbackIfOptionalNotExists
-     *
-     * @param  callable  $value
-     * @return  self
-     */
-    public function setValueIfOptionalNotExists($value)
+    public function setValueIfOptionalNotExists(callable $value): self
     {
         $this->valueIfOptionalNotExists = $value;
 
@@ -354,20 +302,12 @@ final class State
         return !$this->isUndefined($this->name);
     }
 
-    /**
-     * Get the value of name
-     */
     public function getName(): string|Undefined
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @return  self
-     */
-    public function setName(string|Undefined $name)
+    public function setName(string|Undefined $name): self
     {
         $this->name = $name;
 
@@ -379,19 +319,11 @@ final class State
         return !$this->isUndefined($this->stopOnFailure);
     }
 
-    /**
-     * Get the value of stopOnFailure
-     */
     public function getStopOnFailure(): bool
     {
         return $this->stopOnFailure;
     }
 
-    /**
-     * Set the value of stopOnFailure
-     *
-     * @return  self
-     */
     public function setStopOnFailure(bool $stopOnFailure)
     {
         $this->stopOnFailure = $stopOnFailure;
@@ -399,20 +331,12 @@ final class State
         return $this;
     }
 
-    /**
-     * Get the value of customErrMessages
-     */
     public function getCustomErrMessages(): array
     {
         return $this->customErrMessages;
     }
 
-    /**
-     * Set the value of customErrMessages
-     *
-     * @return  self
-     */
-    public function setCustomErrMessages(array $customErrMessages)
+    public function setCustomErrMessages(array $customErrMessages): self
     {
         $this->customErrMessages = $customErrMessages;
 
@@ -420,7 +344,7 @@ final class State
     }
 
     /**
-     * @return LinkedList[Type]
+     * @return LinkedList[TypeInterface]
      */
     public function getFields(): LinkedList
     {
@@ -430,10 +354,10 @@ final class State
     /**
      * Set the value of fields
      *
-     * @param LinkedList[Type] $types
+     * @param LinkedList[TypeInterface] $types
      * @return  self
      */
-    public function setFields(LinkedList $types)
+    public function setFields(LinkedList $types): self
     {
         $this->fields = $types;
 
@@ -448,37 +372,24 @@ final class State
     /**
      * Get the value of errorMessageAny
      */
-    public function getErrorMessageAny(): \Closure|string|\Kedniko\Vivy\Core\Undefined
+    public function getErrorMessageAny(): \Closure|string|Undefined
     {
         return $this->errorMessageAny;
     }
 
-    /**
-     * Set the value of errorMessageAny
-     *
-     * @return  self
-     */
-    public function setErrorMessageAny(\Closure|string|\Kedniko\Vivy\Core\Undefined $errorMessageAny)
+    public function setErrorMessageAny(\Closure|string|Undefined $errorMessageAny): self
     {
         $this->errorMessageAny = $errorMessageAny;
 
         return $this;
     }
 
-    /**
-     * Get the value of onValid
-     */
     public function getOnValid(): array
     {
         return $this->onValid;
     }
 
-    /**
-     * Set the value of onValid
-     *
-     * @return  self
-     */
-    public function setOnValid(array $onValid)
+    public function setOnValid(array $onValid): self
     {
         $this->onValid = $onValid;
 
@@ -492,20 +403,12 @@ final class State
         return $this;
     }
 
-    /**
-     * Get the value of onError
-     */
     public function getOnError(): array
     {
         return $this->onError;
     }
 
-    /**
-     * Set the value of onError
-     *
-     * @return  self
-     */
-    public function setOnError(array $onError)
+    public function setOnError(array $onError): self
     {
         $this->onError = $onError;
 
@@ -531,7 +434,7 @@ final class State
     /**
      * Get the value of errorMessageEmpty
      */
-    public function getErrorMessageEmpty(): \Closure|string|\Kedniko\Vivy\Core\Undefined
+    public function getErrorMessageEmpty(): \Closure|string|Undefined
     {
         return $this->errorMessageEmpty;
     }
@@ -541,7 +444,7 @@ final class State
      *
      * @return  self
      */
-    public function setErrorMessageEmpty(\Closure|string|\Kedniko\Vivy\Core\Undefined $errorMessageEmpty)
+    public function setErrorMessageEmpty(\Closure|string|Undefined $errorMessageEmpty)
     {
         $this->errorMessageEmpty = $errorMessageEmpty;
 

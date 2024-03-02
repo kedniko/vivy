@@ -24,6 +24,7 @@ use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Core\hasMagicCall;
 use Kedniko\Vivy\Support\TypeProxy;
+use Kedniko\Vivy\Rules as CoreRules;
 use Kedniko\VivyPluginStandard\Rules;
 use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Contracts\TypeInterface;
@@ -31,6 +32,7 @@ use Kedniko\Vivy\Exceptions\VivyException;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\VivyPluginStandard\Enum\RulesEnum;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Enum\RulesEnum as CoreRulesEnum;
 
 trait Typeable
 {
@@ -69,11 +71,11 @@ trait Typeable
     $_this = $this->getThisUnwrapped();
 
     $options = Helpers::getOptions($options);
-    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(RulesEnum::ID_REQUIRED->value);
-    if ((new TypeProxy($this))->hasRule(RulesEnum::ID_REQUIRED->value)) {
-      (new TypeProxy($this))->removeRule(RulesEnum::ID_REQUIRED->value);
+    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(CoreRulesEnum::ID_REQUIRED->value);
+    if ((new TypeProxy($this))->hasRule(CoreRulesEnum::ID_REQUIRED->value)) {
+      (new TypeProxy($this))->removeRule(CoreRulesEnum::ID_REQUIRED->value);
     }
-    $rule = $this->prepareRule(Rules::required($errormessage), $options);
+    $rule = $this->prepareRule(CoreRules::required($errormessage), $options);
     $_this->state->setRequired(true, $rule);
 
     return $this;
@@ -84,8 +86,8 @@ trait Typeable
     $_this = $this->getThisUnwrapped();
 
     $options = Helpers::getOptions($options);
-    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(RulesEnum::ID_NOT_NULL->value);
-    $this->addRule(Rules::notNull($errormessage), $options);
+    $errormessage = $options->getErrorMessage() ?: RuleMessage::getErrorMessage(CoreRulesEnum::ID_NOT_NULL->value);
+    $this->addRule(CoreRules::notNull($errormessage), $options);
     $_this->state->setNotNull(true);
 
     return $this;
@@ -526,7 +528,8 @@ trait Typeable
 
   public function validate(mixed $value = null, ContextInterface $fatherContext = null): Validated
   {
-    return (new Validator($this))->validate($value, $fatherContext);
+    $validator = new Validator($this, $fatherContext);
+    return $validator->validate($value);
   }
 
   /**
@@ -534,7 +537,8 @@ trait Typeable
    */
   public function errors(mixed $value = null): array
   {
-    return (new Validator($this))->errors($value);
+    $validator = new Validator($this);
+    return $validator->errors($value);
   }
 
   public function isValid(): bool
@@ -703,4 +707,13 @@ trait Typeable
   // 	$this->prependMiddleware($rule);
   // 	return $this;
   // }
+
+
+  public function allowNull()
+  {
+    $this->removeRule(CoreRulesEnum::ID_NOT_NULL->value);
+    $this->state->setNotNull(false);
+
+    return $this;
+  }
 }
