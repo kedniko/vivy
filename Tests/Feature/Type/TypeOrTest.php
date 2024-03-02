@@ -177,3 +177,14 @@ test('or-1', function () {
     ])->validate(34);
     expect($validated->isValid())->toBe(false);
 });
+
+test('or-2', function () {
+    $validated = V::or([
+        V::undefined(),
+        V::null(),
+        V::date()->setValue('date'),
+        V::string(),
+    ])->validate('2000-01-01');
+    expect($validated->isValid())->toBeTrue();
+    expect($validated->value())->toBe('date');
+});

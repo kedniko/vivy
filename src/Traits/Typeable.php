@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kedniko\Vivy\Traits;
 
+use Closure;
 use Kedniko\Vivy\V;
 use Kedniko\Vivy\Type;
 use Kedniko\Vivy\Context;
@@ -565,13 +566,14 @@ trait Typeable
   }
 
   /**
-   * @param  callable|mixed  $callback_or_value
+   * @param  Closure|mixed  $callback_or_value
    */
   public function setValue($callback_or_value, Options $options = null)
   {
     $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
 
-    $callback = is_callable($callback_or_value) ? $callback_or_value : fn () => $callback_or_value;
+
+    $callback = ($callback_or_value instanceof Closure) ? $callback_or_value : fn () => $callback_or_value;
     $transformer = new Transformer(RulesEnum::ID_SET_VALUE->value, $callback);
     $type = Type::new(from: $this);
     $type->addTransformer($transformer, $options);

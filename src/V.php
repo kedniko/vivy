@@ -206,7 +206,7 @@ final class V
         if (!Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
-            if ($errormessage && is_callable($errormessage)) {
+            if ($errormessage && ($errormessage instanceof Closure)) {
                 $c = (new Context())->setArgs(Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
                 $errormessage = $errormessage($c);
             }
