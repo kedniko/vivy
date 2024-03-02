@@ -103,7 +103,7 @@ final class TypeOr extends Type
             $types->rewind();
 
             if (!$isValid) {
-                // $this->state->_extra['or_errors'] = $all_errors;
+                $this->state->_extra['or_errors'] = $all_errors;
                 // $c->errors = [1];
                 // $middleware = $this->state->getMiddlewares()->getCurrent();
                 // $oc = new OrContext($all_errors);

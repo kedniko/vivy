@@ -8,9 +8,18 @@ use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
 use App\Types\TypeToken;
 use Kedniko\Vivy\Messages\Error;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\VivyPluginStandard\StandardLibrary;
 
 uses()->group('custom');
 
+beforeAll(function () {
+    Error::setLocale('it');
+    V::registerPlugin(new TypeToken());
+    V::registerPlugin(new Rules());
+    V::registerPlugin(new StandardLibrary());
+    Error::addPath(Util::basePath('src/lang'));
+});
 
 test('custom-rule-1', function () {
     $token = new Token();
