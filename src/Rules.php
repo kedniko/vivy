@@ -6,6 +6,7 @@ namespace Kedniko\Vivy;
 
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Enum\RulesEnum;
 use Kedniko\Vivy\Messages\RuleMessage;
 use Kedniko\Vivy\Contracts\ContextInterface;
@@ -117,6 +118,19 @@ class Rules
 
       return $c->value === '';
     };
+    $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
+
+    return new Rule($ruleID, $ruleFn, $errormessage);
+  }
+
+
+  public static function undefined(string|callable $errormessage = null): Rule
+  {
+    $ruleID = RulesEnum::ID_UNDEFINED->value;
+    $ruleFn = function (ContextInterface $c): bool {
+      return $c->value instanceof Undefined;
+    };
+
     $errormessage = $errormessage ?: RuleMessage::getErrorMessage('default.' . $ruleID);
 
     return new Rule($ruleID, $ruleFn, $errormessage);

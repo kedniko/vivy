@@ -15,4 +15,5 @@ enum RulesEnum: string
   case ID_AND = 'and';
   case ID_NULL = 'null';
   case ID_EMPTY_STRING = 'emptyString';
+  case ID_UNDEFINED = 'undefined';
 }
