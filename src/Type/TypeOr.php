@@ -65,11 +65,16 @@ final class TypeOr extends Type
         $ruleID = RulesEnum::ID_OR->value;
         $types = new LinkedList($types);
         $ruleFn = function (ContextInterface $c) use (&$types, $isNot): bool|Validated {
-            $all_errors = [];
-
             $isValid = false;
             $types->rewind();
             $index = -1;
+
+            $oc = OrContext::new(
+                [],
+                $c,
+                $c,
+            );
+
             while ($types->hasNext()) {
                 $index++;
                 $type = $types->getNext();
@@ -78,18 +83,12 @@ final class TypeOr extends Type
 
                 $clonedValue = Util::clone($c->value);
 
-                $oc = OrContext::new(
-                    $all_errors,
-                    $c,
-                    $c,
-                );
-
                 $validated = $type->validate($c->value, $oc);
                 $errors = $type->_extra['or_errors'] ?? [];
 
                 if ($errors !== []) {
                     $c->value = $clonedValue;
-                    $all_errors[$index] = $errors;
+                    $oc->childErrors[$index] = $errors;
                 } else {
                     if ($isNot) {
                         return false;
@@ -102,9 +101,12 @@ final class TypeOr extends Type
             }
             $types->rewind();
 
-            if (!$isValid) {
-                $this->state->_extra['or_errors'] = $all_errors;
-                // $c->errors = [1];
+            if ($isValid) {
+                $this->state->_extra['or_errors'] = [];
+                $c->extra['or_errors'] = [];
+            } else {
+                $this->state->_extra['or_errors'] = $oc->childErrors;
+                $c->extra['or_errors'] = $oc->childErrors;
                 // $middleware = $this->state->getMiddlewares()->getCurrent();
                 // $oc = new OrContext($all_errors);
                 // $oc->fatherContext = $c;

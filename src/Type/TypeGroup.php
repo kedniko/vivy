@@ -50,6 +50,8 @@ final class TypeGroup extends TypeCompound
                 $type = $typeFields->getNext();
                 $fieldname = $type->getName();
 
+                assert($type instanceof TypeInterface);
+
                 $typeProxy = (new TypeProxy($type));
                 $middlewares = $type->state->getMiddlewares();
                 $middlewares->rewind();

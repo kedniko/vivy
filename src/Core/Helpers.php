@@ -60,9 +60,9 @@ final class Helpers
 
         $c->setMiddleware($middleware);
 
-        if ($typeProxy->type instanceof TypeOr) {
-            $c->childrenErrors = $typeProxy->getChildrenErrors();
-        }
+        // if ($typeProxy->type instanceof TypeOr) {
+        //     $c->childrenErrors = $typeProxy->getChildrenErrors();
+        // }
 
         // get error message and key
 

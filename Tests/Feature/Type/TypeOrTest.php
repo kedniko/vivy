@@ -7,6 +7,7 @@ use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
 use Kedniko\Vivy\Core\OrContext;
 use Kedniko\Vivy\Messages\Error;
+use Kedniko\Vivy\Contracts\ContextInterface;
 
 uses()->group('or');
 
@@ -88,28 +89,19 @@ test('or', function () {
 test('type-or-basic', function () {
 
 
-    // $validated = V::or([
-    //     V::date('Y-m-d H:i:s', O::continueOnFailure())->setValue(1)->asInt()->min(10),
-    //     V::date('Y-m-d'),
-    //     V::date('Y-m'),
-    //     V::null()->setValue('yes!')->asString()->startsWith('a'),
-    // ], O::message(function (ContextInterface $c) {
-    //     return 'Valore non accettato per nessuno dei test';
-    // }))->validate(null);
-
-
     $validated = V::or([
-        // V::date('Y-m-d H:i:s', O::continueOnFailure())->setValue(1)->asInt()->min(10),
-        // V::date('Y-m-d'),
-        // V::date('Y-m'),
-        V::string(), //->setValue('yes!')->asString()->startsWith('a'),
-    ])
-        ->validate(3);
+        V::date('Y-m-d H:i:s', O::continueOnFailure())->setValue(1)->asInt()->min(10),
+        V::date('Y-m-d'),
+        V::date('Y-m'),
+        V::null()->setValue('yes!')->asString()->startsWith('a'),
+    ], O::message(function (ContextInterface $c) {
+        return 'Valore non accettato per nessuno dei test';
+    }))->validate(null);
 
     expect($validated->isValid())->toBeFalse();
-    // expect($validated->errors())->toBe([
-    //     'or' => ['Valore non accettato per nessuno dei test'],
-    // ]);
+    expect($validated->errors())->toBe([
+        'or' => ['Valore non accettato per nessuno dei test'],
+    ]);
 });
 
 test('allow-null', function () {

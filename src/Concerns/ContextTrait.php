@@ -3,6 +3,7 @@
 namespace Kedniko\Vivy\Concerns;
 
 use Kedniko\Vivy\Type;
+use Kedniko\Vivy\Context;
 use Kedniko\Vivy\ArrayContext;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\GroupContext;
@@ -17,8 +18,6 @@ trait ContextTrait
     public mixed $value;
 
     public array $errors;
-
-    public array $childrenErrors;
 
     public ContextInterface|null $rootContext;
 
@@ -41,7 +40,9 @@ trait ContextTrait
 
     private function init(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null): void
     {
-        if ($cloneFrom instanceof \Kedniko\Vivy\Context) {
+        // TODO - if instance of GroupContext/ArrayContext/OrContext
+
+        if ($cloneFrom instanceof Context) {
             $this->value = $cloneFrom->value;
             $this->errors = $cloneFrom->errors;
             $this->args = $cloneFrom->args();

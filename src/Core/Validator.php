@@ -291,7 +291,6 @@ final class Validator
     private function applyTransformer(Transformer $middleware): void
     {
 
-
         try {
             $fn = $middleware->getCallback();
 

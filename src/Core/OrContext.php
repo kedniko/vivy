@@ -10,7 +10,7 @@ final class OrContext implements ContextInterface
     use ContextTrait;
 
     private function __construct(
-        private array $childErrors = [],
+        public array $childErrors = [],
         ContextInterface $cloneFrom = null,
         ContextInterface $fatherContext = null
     ) {
