@@ -7,6 +7,7 @@ use Kedniko\Vivy\Type;
 use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\Support\Proxy;
 use Kedniko\Vivy\Core\OrContext;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Enum\RulesEnum;
@@ -14,6 +15,7 @@ use Kedniko\Vivy\Core\LinkedList;
 use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Core\Undefined;
 
 final class TypeOr extends Type
 {
@@ -75,19 +77,45 @@ final class TypeOr extends Type
                 $c,
             );
 
+            // loop through all types
+
             while ($types->hasNext()) {
                 $index++;
                 $type = $types->getNext();
                 assert($type instanceof TypeInterface);
                 $type->_extra = ['isInsideOr' => true];
 
-                $clonedValue = Util::clone($c->value);
+                // TODO clone for performance and data integrity reasons - check if it's necessary
+                // users should not change value inside a rule - it's a bad practice - elaborate more...
+                // IDEA: lazy-clone after ->setValue() call inside rules
+                // $clonedValue = Util::clone($c->value);
+
+                $clonedValue = $c->value;
+
+                // $clonedValue = Undefined::instance();
+                // $cProxy = new Proxy($c, [
+                //     'set' => function (ContextInterface $target, string $property, mixed $value) use ($c, &$clonedValue) {
+                //         if ($property === 'value') {
+                //             if ($clonedValue instanceof Undefined) {
+                //                 // save the original value before it's changed
+                //                 $clonedValue = Util::clone($c->value);
+                //             }
+                //             $target->{$property} = $value;
+                //         } else {
+                //             $target->{$property} = $value;
+                //         }
+                //     },
+                // ]);
 
                 $validated = $type->validate($c->value, $oc);
                 $errors = $type->_extra['or_errors'] ?? [];
 
-                if ($errors !== []) {
-                    $c->value = $clonedValue;
+                $hasErrors = $errors !== [];
+
+                if ($hasErrors) {
+                    if (!($clonedValue instanceof Undefined)) {
+                        $c->value = $clonedValue; // restore original value
+                    }
                     $oc->childErrors[$index] = $errors;
                 } else {
                     if ($isNot) {
@@ -99,6 +127,8 @@ final class TypeOr extends Type
                     break;
                 }
             }
+
+
             $types->rewind();
 
             if ($isValid) {
