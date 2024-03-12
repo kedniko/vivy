@@ -3,60 +3,56 @@
 namespace Kedniko\Vivy;
 
 use Closure;
-use Kedniko\Vivy\Context;
-use Kedniko\Vivy\Core\Args;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Support\Arr;
-use Kedniko\Vivy\Core\Helpers;
-use Kedniko\Vivy\Core\Options;
-use Kedniko\Vivy\Support\Util;
-use Kedniko\Vivy\Type\TypeAny;
-use Kedniko\Vivy\Core\Validated;
-use Kedniko\Vivy\Enum\RulesEnum;
-use Kedniko\Vivy\Core\Middleware;
-use Kedniko\Vivy\Core\hasMagicCall;
-use Kedniko\Vivy\Support\Registrar;
-use Kedniko\Vivy\Support\MagicCaller;
 use Kedniko\Vivy\Commands\ScanCommand;
-use Kedniko\Vivy\Messages\RuleMessage;
-use Kedniko\Vivy\Interfaces\VivyPlugin;
-use Kedniko\Vivy\Contracts\TypeInterface;
-use Kedniko\Vivy\Core\hasMagicCallStatic;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\Args;
+use Kedniko\Vivy\Core\hasMagicCall;
+use Kedniko\Vivy\Core\hasMagicCallStatic;
+use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\Middleware;
+use Kedniko\Vivy\Core\Options;
+use Kedniko\Vivy\Core\Rule;
+use Kedniko\Vivy\Core\Validated;
+use Kedniko\Vivy\Enum\RulesEnum;
+use Kedniko\Vivy\Interfaces\VivyPlugin;
+use Kedniko\Vivy\Messages\RuleMessage;
+use Kedniko\Vivy\Support\Arr;
+use Kedniko\Vivy\Support\MagicCaller;
+use Kedniko\Vivy\Support\Registrar;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\Type\TypeAny;
 
 final class V
 {
-    use hasMagicCallStatic, hasMagicCall;
+    use hasMagicCall, hasMagicCallStatic;
 
     public static array $globalFailHandlers;
+
     public static ?MagicCaller $magicCaller = null;
 
     public array $failHandlers;
 
-
     public function setFailHandler(string $id, callable $handler)
     {
         $this->failHandlers[$id] = $handler;
+
         return $this;
     }
 
     private function transfer(TypeInterface $obj)
     {
-        $obj->state->failHandlers = $this->failHandlers;
+        $obj->getSetup()->failHandlers = $this->failHandlers;
     }
-
 
     /**
      * STATIC METHODS
      */
-
-
     public static function new()
     {
         return new self();
     }
-
 
     public static function scan(string $exportFile): void
     {
@@ -69,16 +65,16 @@ final class V
     }
 
     /**
-     * @param  callable  $transformerFn `fn(Context){...}`
+     * @param  callable  $transformerFn  `fn(Context){...}`
      */
-    public static function transformer(string $transformerID, callable $transformerFn, Options $options = null): Transformer
+    public static function transformer(string $transformerID, callable $transformerFn, ?Options $options = null): Transformer
     {
         $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
 
         return new Transformer($transformerID, $transformerFn, $options->getErrorMessage());
     }
 
-    public static function callback(string $id, callable $callbackFn, Options $options = null): Callback
+    public static function callback(string $id, callable $callbackFn, ?Options $options = null): Callback
     {
         $options = Options::build($options, Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
 
@@ -124,7 +120,7 @@ final class V
 
         foreach (Arr::wrap($registrar->for) as $availableForType) {
             $methodName = $registrar->id;
-            $id = $availableForType . '::' . $methodName;
+            $id = $availableForType.'::'.$methodName;
 
             self::$magicCaller->register(
                 $id,
@@ -143,18 +139,18 @@ final class V
         MiddlewareInterface|array $middlewares,
         bool $overwriteExisting = false
     ) {
-        if (!is_array($middlewares)) {
+        if (! is_array($middlewares)) {
             $middlewares = [$middlewares];
         }
 
         foreach ($middlewares as $middleware) {
-            if (!$middleware instanceof MiddlewareInterface) {
+            if (! $middleware instanceof MiddlewareInterface) {
                 return;
             }
 
             $id = $middleware->getID();
 
-            if (!$overwriteExisting && self::$magicCaller->hasId($id)) {
+            if (! $overwriteExisting && self::$magicCaller->hasId($id)) {
                 throw new \Exception("Middleware \"{$id}\" already exists in this application", 1);
             }
             self::$magicCaller->addToId($id, $middleware);
@@ -176,9 +172,9 @@ final class V
         self::$globalFailHandlers[$id] = $handler;
     }
 
-    public static function issetVar(&$variable, string $varname, string $errormessage = null): Validated
+    public static function issetVar(&$variable, string $varname, ?string $errormessage = null): Validated
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             return new Validated(null, [
                 $varname => [
                     RulesEnum::ID_REQUIRED->value => $errormessage ?: RuleMessage::getErrorMessage(RulesEnum::ID_REQUIRED->value),
@@ -195,22 +191,22 @@ final class V
     }
 
     /**
-     * @param  mixed  $path dot.separated.path
+     * @param  mixed  $path  dot.separated.path
      * @param  null  $errormessage
      */
     public static function issetVarPath(
         array $array,
         string|int $path,
-        string|Closure $errormessage = null
+        string|Closure|null $errormessage = null
     ): Validated {
-        if (!Arr::get($array, $path)) {
+        if (! Arr::get($array, $path)) {
             $chunks = explode('.', (string) $path);
             $varname = end($chunks);
             if ($errormessage && ($errormessage instanceof Closure)) {
                 $c = (new Context())->setArgs(Util::getRuleArgs(__METHOD__, func_get_args()), __METHOD__);
                 $errormessage = $errormessage($c);
             }
-            $errors = Arr::set($array, $path . '.required', $errormessage ?: "{$varname} is not set");
+            $errors = Arr::set($array, $path.'.required', $errormessage ?: "{$varname} is not set");
 
             return new Validated(null, $errors);
         }
@@ -219,7 +215,7 @@ final class V
     }
 
     /**
-     * @param  mixed  $path dot.separated.path
+     * @param  mixed  $path  dot.separated.path
      * @return mixed
      */
     public static function issetVarPathOrDefault(array $array, mixed $path, mixed $defaultValue)
@@ -234,9 +230,9 @@ final class V
     /**
      * @param  null  $errormessage
      */
-    public static function assertTrue(bool $bool, string $name, string $errormessage = null): Validated
+    public static function assertTrue(bool $bool, string $name, ?string $errormessage = null): Validated
     {
-        if (!$bool) {
+        if (! $bool) {
             $errormessage = $errormessage ?: 'Assertion failed';
 
             return new Validated(null, [$name => $errormessage]);
@@ -256,7 +252,7 @@ final class V
     public static function optional(): TypeAny
     {
         $type = new TypeAny();
-        $type->state->requiredIf = false;
+        $type->getSetup()->requiredIf = false;
 
         return $type;
     }
@@ -264,7 +260,7 @@ final class V
     public static function requiredIf(mixed $value): TypeAny
     {
         $type = new TypeAny();
-        $type->state->requiredIf = $value;
+        $type->getSetup()->requiredIf = $value;
 
         return $type;
     }
@@ -273,7 +269,7 @@ final class V
     {
         $type = new TypeAny();
         $getContextFn = fn (ContextInterface $c) => $c->fatherContext->getFieldContext($fieldname);
-        $type->state->requiredIfField = [
+        $type->getSetup()->requiredIfField = [
             'fieldname' => $fieldname,
             'value' => $value,
             'getContextFn' => $getContextFn,

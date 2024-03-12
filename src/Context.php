@@ -9,7 +9,7 @@ final class Context implements ContractsContext
 {
     use ContextTrait;
 
-    public function __construct(ContractsContext $cloneFrom = null, ContractsContext $fatherContext = null)
+    public function __construct(?ContractsContext $cloneFrom = null, ?ContractsContext $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
     }

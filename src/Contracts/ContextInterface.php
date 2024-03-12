@@ -3,6 +3,7 @@
 namespace Kedniko\Vivy\Contracts;
 
 use Kedniko\Vivy\Core\Undefined;
+use Kedniko\Vivy\Type;
 
 interface ContextInterface
 {
@@ -36,9 +37,9 @@ interface ContextInterface
 
     public function getFieldContext(string $fieldname): ?ContextInterface;
 
-    public function getField(): TypeInterface;
+    public function getField(): Type;
 
     public function setMiddleware(MiddlewareInterface $middleware): self;
 
-    public function getMiddleware(): MiddlewareInterface|null;
+    public function getMiddleware(): ?MiddlewareInterface;
 }

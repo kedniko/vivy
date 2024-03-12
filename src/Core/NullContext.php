@@ -9,7 +9,7 @@ final class NullContext implements ContextInterface
 {
     use ContextTrait;
 
-    public function __construct(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
+    public function __construct(?ContextInterface $cloneFrom = null, ?ContextInterface $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Kedniko\Vivy\V;
-use Kedniko\Vivy\Support\Util;
 use Kedniko\Vivy\Messages\Error;
+use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\V;
 use Kedniko\VivyPluginStandard\StandardLibrary;
 
 /*
@@ -18,14 +18,11 @@ use Kedniko\VivyPluginStandard\StandardLibrary;
 
 // uses(Tests\TestCase::class)->in('Feature');
 
-
 uses()->group('Unit')->in('Unit');
-
 
 Error::setLocale('it');
 V::registerPlugin(new StandardLibrary());
 Error::addPath(Util::basePath('src/lang'));
-
 
 /*
 |--------------------------------------------------------------------------

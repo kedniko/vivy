@@ -4,9 +4,9 @@ namespace Kedniko\Vivy\Core;
 
 final class Node
 {
-    public Node|null $next;
+    public ?Node $next;
 
-    public Node|null $prev;
+    public ?Node $prev;
 
     public function __construct(public $data)
     {

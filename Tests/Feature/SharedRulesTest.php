@@ -30,6 +30,30 @@ test('test-1', function () {
     expect($validated->isValid())->toBeFalse();
 });
 
+test('test-shared-mutable-rule-to-fail', function () {
+    $sharedMutableRule = V::string();
+    $validated = V::group([
+        'username' => $sharedMutableRule->minLength(5),
+        'password' => $sharedMutableRule,
+    ])->validate([
+        'username' => 'kedniko',
+        'password' => '123',
+    ]);
+    expect($validated->isValid())->toBeFalse();
+});
+
+test('test-function that returns a rule', function () {
+
+    $sharedRuleFn = fn () => V::string();
+    $validated = V::group([
+        'username' => $sharedRuleFn()->minLength(5),
+        'password' => $sharedRuleFn(),
+    ])->validate([
+        'username' => 'kedniko',
+        'password' => '123',
+    ]);
+    expect($validated->isValid())->toBeTrue();
+});
 
 test('group-5', function () {
 

@@ -15,7 +15,7 @@ final class ArrayContext implements ContextInterface
 
     public $successCount;
 
-    public function __construct(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null)
+    public function __construct(?ContextInterface $cloneFrom = null, ?ContextInterface $fatherContext = null)
     {
         $this->init($cloneFrom, $fatherContext);
     }

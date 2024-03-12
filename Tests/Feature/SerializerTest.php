@@ -2,11 +2,10 @@
 
 namespace Tests;
 
-use Kedniko\Vivy\V;
 use Kedniko\Vivy\Serializer;
+use Kedniko\Vivy\V;
 
 uses()->group('serializer');
-
 
 test('serializer-obj-to-json', function () {
 

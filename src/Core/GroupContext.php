@@ -2,11 +2,10 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Rules;
-use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Concerns\ContextTrait;
-use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Rules;
 
 final class GroupContext implements ContextInterface
 {
@@ -16,14 +15,14 @@ final class GroupContext implements ContextInterface
 
     public function __construct(
         $fieldname,
-        ContextInterface $cloneFrom = null,
-        ContextInterface $fatherContext = null
+        ?ContextInterface $cloneFrom = null,
+        ?ContextInterface $fatherContext = null
     ) {
         $this->init($cloneFrom, $fatherContext);
         $this->fieldname = $fieldname ?? Undefined::instance();
     }
 
-    public static function build($fieldname, $fatherContext, $value, ContextInterface $cloneFrom = null): GroupContext
+    public static function build($fieldname, $fatherContext, $value, ?ContextInterface $cloneFrom = null): GroupContext
     {
         $gc = new GroupContext($fieldname, $cloneFrom);
         $gc->fatherContext = $fatherContext;
@@ -44,19 +43,18 @@ final class GroupContext implements ContextInterface
      * Appends field at the end
      *
      * @param  TypeInterface  $type
-     * @param  mixed  $permanent Mutate the setup permanently
+     * @param  mixed  $permanent  Mutate the setup permanently
      */
     public function appendField(mixed $fieldname, $type, mixed $permanent = false)
     {
         // setup field
 
-        $typeProxy = new TypeProxy($type);
-        $typeProxy->setName($fieldname);
-        if (!$permanent) {
+        $type->getSetup()->setName($fieldname);
+        if (! $permanent) {
             $type->once();
         }
-        if (!$typeProxy->getState()->issetRequired()) {
-            $typeProxy->getState()->setRequired(true, Rules::required());
+        if (! $type->getSetup()->issetRequired()) {
+            $type->getSetup()->setRequired(true, Rules::required());
         }
 
         // add field
@@ -68,17 +66,16 @@ final class GroupContext implements ContextInterface
         return $this;
     }
 
-    public function appendFieldAfterCurrent($fieldname, $type, $permanent = false)
+    public function appendFieldAfterCurrent(string $fieldname, TypeInterface $type, $permanent = false)
     {
         // setup field
 
-        $typeProxy = new TypeProxy($type);
-        $typeProxy->setName($fieldname);
-        if (!$permanent) {
+        $type->getSetup()->setName($fieldname);
+        if (! $permanent) {
             $type->once();
         }
-        if (!$typeProxy->getState()->issetRequired()) {
-            $typeProxy->getState()->setRequired(true, Rules::required());
+        if (! $type->getSetup()->issetRequired()) {
+            $type->getSetup()->setRequired(true, Rules::required());
         }
 
         // add field
@@ -91,10 +88,13 @@ final class GroupContext implements ContextInterface
     }
 
     /**
-     * @return LinkedList
+     * @return LinkedList<TypeInterface>
      */
     public function getFields()
     {
-        return (new TypeProxy($this->fatherContext()->type))->getState()->getFields();
+        /** @var TypeInterface */
+        $type = $this->fatherContext()->type;
+
+        return $type->getSetup()->getFields();
     }
 }

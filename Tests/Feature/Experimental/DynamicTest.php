@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Kedniko\Vivy\V;
 use Kedniko\Vivy\Core\GroupContext;
+use Kedniko\Vivy\V;
 
 uses()->group('dynamic');
 

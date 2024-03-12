@@ -26,12 +26,12 @@ trait MiddlewareTrait
     public function __construct(
         $id,
         protected $callback,
-        string|callable $errormessage = null
+        string|callable|null $errormessage = null
     ) {
         if ($errormessage === null) {
             $errormessage = RuleMessage::getErrorMessage();
         }
-        if (!is_scalar($id)) {
+        if (! is_scalar($id)) {
             throw new VivyException('Middleware ID must be a scalar value');
         }
         $this->id = $id;

@@ -8,7 +8,7 @@ use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Core\Helpers;
 use Kedniko\Vivy\Core\Options;
 use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Core\State;
+use Kedniko\Vivy\Core\Setup;
 use Kedniko\Vivy\Transformer;
 use Kedniko\Vivy\V;
 
@@ -16,14 +16,14 @@ final class Util
 {
     public static function runFunction($fn, $parameters = [])
     {
-        if (!$fn) {
+        if (! $fn) {
             throw new \Exception('Invalid register function', 1);
         }
         if (is_callable($fn)) {
             return call_user_func_array($fn, $parameters);
         }
         $result = Helpers::getClassAndMethod($fn);
-        if (!$result) {
+        if (! $result) {
             throw new \Exception('Invalid register function', 1);
         }
         $class = $result[0];
@@ -89,7 +89,7 @@ final class Util
             $callerObj = null;
         }
 
-        if (!isset($registered[$className][$methodName])) {
+        if (! isset($registered[$className][$methodName])) {
 
             // try to find the method in parent classes
 
@@ -102,9 +102,9 @@ final class Util
                     break;
                 }
             }
-            if (!$found) {
-                $id = $className . '::' . $methodName;
-                throw new \Exception('Method "' . $id . '" does not exists. Throwed in ' . self::class, 1);
+            if (! $found) {
+                $id = $className.'::'.$methodName;
+                throw new \Exception('Method "'.$id.'" does not exists. Throwed in '.self::class, 1);
             }
         }
 
@@ -124,7 +124,7 @@ final class Util
         $result = Util::runFunction($setup['function'], $parameters);
         // $result = call_user_func_array($setup['function'], $parameters);
 
-        if (!$callerObj && !($result instanceof TypeInterface)) {
+        if (! $callerObj && ! ($result instanceof TypeInterface)) {
             if ($availableForType === V::class) {
                 //
             } else {
@@ -169,11 +169,11 @@ final class Util
             }
 
             $newField = new $returntype();
-            $newField->state = $type->state;
+            $newField->setup = $type->setup;
         } elseif ($result instanceof TypeInterface) {
             $newField = $result;
             // if ($callerObj) {
-            // 	$newField->state = $callerObj->state;
+            // 	$newField->setup = $callerObj->setup;
             // }
         }
         // continua
@@ -181,20 +181,20 @@ final class Util
         // 	$returntype = $setup['returnType'];
         // 	/** @var TypeInterface */
         // 	$newField = new $returntype();
-        // 	$newField->state = $type->state;
+        // 	$newField->setup = $type->setup;
         // }
 
         assert($newField instanceof TypeInterface);
 
-        $newField->state ??= new State();
-        $newField->state->_extra ??= [];
-        $newField->state->_extra['caller'] = $className;
+        $newField->setup ??= new Setup();
+        $newField->getSetup()->_extra ??= [];
+        $newField->getSetup()->_extra['caller'] = $className;
 
         /**
          * example:
          * $v = V::new();
          * $v->setfailHandler($fn);
-         * $v->group([]); // transfer failHandler to group state
+         * $v->group([]); // transfer failHandler to group setup
          */
         if ($originalCallerObj instanceof V) {
             (new Invader($originalCallerObj))->transfer($newField);
@@ -217,7 +217,8 @@ final class Util
 
     public static function basePath($path = ''): string
     {
-        $p = __DIR__ . '/../../' . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, ltrim((string) $path, '/'));
+        $p = __DIR__.'/../../'.str_replace(['/', '\\'], DIRECTORY_SEPARATOR, ltrim((string) $path, '/'));
+
         return realpath($p) ?: $p;
     }
 
@@ -227,13 +228,13 @@ final class Util
         if (file_exists($p)) {
             return include $p;
         }
+
         return null;
     }
 
-
     public static function isOrderedIndexedArray($arr)
     {
-        if (!is_array($arr)) {
+        if (! is_array($arr)) {
             return false;
         }
         if ($arr === []) {
@@ -241,7 +242,7 @@ final class Util
         }
         $len = count($arr) - 1;
         for ($i = 0; $i <= $len; $i++) {
-            if (!array_key_exists($i, $arr)) {
+            if (! array_key_exists($i, $arr)) {
                 return false;
             }
         }
@@ -254,9 +255,9 @@ final class Util
 
         if ((is_string($func) && function_exists($func)) || $func instanceof \Closure) {
             $ref = new \ReflectionFunction($func);
-        } else if (is_string($func) && !call_user_func_array('method_exists', explode('::', $func))) {
+        } elseif (is_string($func) && ! call_user_func_array('method_exists', explode('::', $func))) {
             return $func_get_args;
-        } else if (is_array($func) && !call_user_func_array('method_exists', $func)) {
+        } elseif (is_array($func) && ! call_user_func_array('method_exists', $func)) {
             return $func_get_args;
         } else {
             $ref = new \ReflectionMethod($func);
@@ -267,7 +268,7 @@ final class Util
 
             // TODO optimize this
 
-            if (!isset($func_get_args[$key]) && $param->isDefaultValueAvailable()) {
+            if (! isset($func_get_args[$key]) && $param->isDefaultValueAvailable()) {
                 $type = $param->getType();
                 if ($type instanceof \ReflectionNamedType) {
                     $typeName = $type->getName();
@@ -279,14 +280,15 @@ final class Util
                 }
             }
         }
+
         return $func_get_args;
     }
 
-    public static function getFunctionName(string $func): string|null
+    public static function getFunctionName(string $func): ?string
     {
         if ((is_string($func) && function_exists($func))) {
             return $func;
-        } else if (is_string($func) && call_user_func_array('method_exists', explode('::', $func))) {
+        } elseif (is_string($func) && call_user_func_array('method_exists', explode('::', $func))) {
             return explode('::', $func)[1];
         }
 

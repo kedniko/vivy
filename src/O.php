@@ -60,6 +60,8 @@ final class O
 
     public static function ifArrayIndex($index)
     {
-        return self::options()->ifRule(fn (ArrayContext $ac): bool => $ac->getIndex() === $index);
+        $options = self::options();
+
+        return $options->ifRule(fn (ArrayContext $ac): bool => $ac->getIndex() === $index);
     }
 }

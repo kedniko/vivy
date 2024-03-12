@@ -16,5 +16,7 @@ final class Constants
 
     public const REGEX_FLOAT_POSITIVE_OR_NEGATIVE = '/^(-?[1-9]\d*\.\d+)$/';
 
+    public const REGEX_INTEGER_OR_FLOAT_POSITIVE_OR_NEGATIVE = '/^(-?[1-9]\d*(\.\d+)?)$/';
+
     public const REGEX_DIGITS = '/^(\d+)$/';
 }

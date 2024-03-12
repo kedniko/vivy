@@ -11,16 +11,16 @@ final class OrContext implements ContextInterface
 
     private function __construct(
         public array $childErrors = [],
-        ContextInterface $cloneFrom = null,
-        ContextInterface $fatherContext = null
+        ?ContextInterface $cloneFrom = null,
+        ?ContextInterface $fatherContext = null
     ) {
         $this->init($cloneFrom, $fatherContext);
     }
 
     public static function new(
         array $childErrors,
-        ContextInterface $cloneFrom = null,
-        ContextInterface $fatherContext = null
+        ?ContextInterface $cloneFrom = null,
+        ?ContextInterface $fatherContext = null
     ) {
         $oc = new OrContext(
             $childErrors,
@@ -28,6 +28,7 @@ final class OrContext implements ContextInterface
             $fatherContext
         );
         $oc->init($cloneFrom, $fatherContext);
+
         return $oc;
     }
 

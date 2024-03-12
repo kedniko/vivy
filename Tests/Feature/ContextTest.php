@@ -2,9 +2,9 @@
 
 namespace Tests;
 
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
-use Kedniko\Vivy\Contracts\ContextInterface;
 
 uses()->group('context-test');
 

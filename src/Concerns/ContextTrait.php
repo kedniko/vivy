@@ -2,26 +2,24 @@
 
 namespace Kedniko\Vivy\Concerns;
 
-use Kedniko\Vivy\Type;
-use Kedniko\Vivy\Context;
 use Kedniko\Vivy\ArrayContext;
-use Kedniko\Vivy\Core\Undefined;
-use Kedniko\Vivy\Core\GroupContext;
-use Kedniko\Vivy\Support\TypeProxy;
-use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Context;
 use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Contracts\MiddlewareInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\GroupContext;
+use Kedniko\Vivy\Core\Undefined;
+use Kedniko\Vivy\Type;
 
 trait ContextTrait
 {
-
     public mixed $value;
 
     public array $errors;
 
-    public ContextInterface|null $rootContext;
+    public ?ContextInterface $rootContext;
 
-    public ContextInterface|null $fatherContext;
+    public ?ContextInterface $fatherContext;
 
     private bool $isRootContext;
 
@@ -35,10 +33,9 @@ trait ContextTrait
 
     public $index;
 
-    public MiddlewareInterface|null $middleware;
+    public ?MiddlewareInterface $middleware;
 
-
-    private function init(ContextInterface $cloneFrom = null, ContextInterface $fatherContext = null): void
+    private function init(?ContextInterface $cloneFrom = null, ?ContextInterface $fatherContext = null): void
     {
         // TODO - if instance of GroupContext/ArrayContext/OrContext
 
@@ -174,7 +171,7 @@ trait ContextTrait
 
     public function issetValue()
     {
-        return !($this->value instanceof Undefined);
+        return ! ($this->value instanceof Undefined);
     }
 
     /**
@@ -189,7 +186,7 @@ trait ContextTrait
 
     public function isValid()
     {
-        return !$this->errors;
+        return ! $this->errors;
     }
 
     public function getFieldContext(string $fieldname): ?ContextInterface
@@ -206,12 +203,12 @@ trait ContextTrait
     // 	return $this;
     // }
 
-    public function getField(): TypeInterface
+    public function getField(): Type
     {
         $type = new Type();
 
-        // share state
-        (new TypeProxy($type))->setChildState((new TypeProxy($this->type))->getState());
+        // share setup
+        $type->setSetup($this->type->getSetup());
 
         return $type;
     }
@@ -247,7 +244,7 @@ trait ContextTrait
         return $this;
     }
 
-    public function getMiddleware(): MiddlewareInterface|null
+    public function getMiddleware(): ?MiddlewareInterface
     {
         return $this->middleware;
     }

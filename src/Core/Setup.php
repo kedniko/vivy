@@ -2,10 +2,14 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Core\Undefined;
+use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Enum\RulesEnum;
+use Kedniko\Vivy\Support\Arr;
+use Kedniko\Vivy\Type;
+
 // use Kedniko\Vivy\Contracts\ContextInterface;
 
-final class State
+final class Setup
 {
     private $data;
 
@@ -95,7 +99,7 @@ final class State
 
     public function hasData()
     {
-        return !$this->isUndefined($this->data);
+        return ! $this->isUndefined($this->data);
     }
 
     public function getData()
@@ -112,7 +116,7 @@ final class State
 
     public function canBeEmptyString(): bool
     {
-        if (!$this->hasNotEmptyString()) {
+        if (! $this->hasNotEmptyString()) {
             return false;
         }
 
@@ -121,7 +125,7 @@ final class State
 
     public function hasNotEmptyString()
     {
-        return !$this->isUndefined($this->notEmptyString);
+        return ! $this->isUndefined($this->notEmptyString);
     }
 
     public function getNotEmptyString(): bool|Undefined
@@ -139,8 +143,26 @@ final class State
         return $this;
     }
 
-    public function isRequired(): bool
+    public function isRequired(ContextInterface $gc)
     {
+        if (! ($this->requiredIf instanceof Undefined)) {
+            $value = $this->requiredIf;
+            if (is_callable($value)) {
+                $value = $value($gc);
+            }
+
+            return (bool) $value;
+        }
+
+        if (! ($this->requiredIfField instanceof Undefined)) {
+            $requiredIfField = $this->requiredIfField;
+            $c = $requiredIfField['getContextFn']($gc);
+            $value = $requiredIfField['value'];
+            $value = is_callable($value) ? $value($c) : $c->value === $value;
+
+            return (bool) $value;
+        }
+
         return $this->required === true;
     }
 
@@ -151,7 +173,7 @@ final class State
 
     public function issetRequired()
     {
-        return !$this->isUndefined($this->required);
+        return ! $this->isUndefined($this->required);
     }
 
     public function setRequired(bool|Undefined $required, ?Rule $rule = null)
@@ -212,7 +234,7 @@ final class State
 
     public function canBeNull(): bool
     {
-        if (!$this->hasNotNull()) {
+        if (! $this->hasNotNull()) {
             return false;
         }
 
@@ -221,7 +243,7 @@ final class State
 
     public function hasNotNull()
     {
-        return !$this->isUndefined($this->notNull);
+        return ! $this->isUndefined($this->notNull);
     }
 
     public function getNotNull(): bool|Undefined
@@ -236,14 +258,9 @@ final class State
         return $this;
     }
 
-    public function getMiddlewares(): LinkedList
-    {
-        return $this->middlewares;
-    }
-
     public function hasMiddlewares()
     {
-        return !$this->middlewares->isEmpty();
+        return ! $this->middlewares->isEmpty();
     }
 
     public function setMiddlewares(LinkedList $middlewares)
@@ -265,7 +282,7 @@ final class State
 
     public function addMiddlewareId($middlewaresid)
     {
-        if (!isset($this->middlewaresid[$middlewaresid])) {
+        if (! isset($this->middlewaresid[$middlewaresid])) {
             $this->middlewaresid[$middlewaresid] = 0;
         }
         $this->middlewaresid[$middlewaresid]++;
@@ -282,7 +299,7 @@ final class State
 
     public function hasValueIfOptionalNotExists()
     {
-        return !$this->isUndefined($this->valueIfOptionalNotExists);
+        return ! $this->isUndefined($this->valueIfOptionalNotExists);
     }
 
     public function getValueIfOptionalNotExists()
@@ -299,7 +316,7 @@ final class State
 
     public function hasName()
     {
-        return !$this->isUndefined($this->name);
+        return ! $this->isUndefined($this->name);
     }
 
     public function getName(): string|Undefined
@@ -316,7 +333,7 @@ final class State
 
     public function hasStopOnFailure()
     {
-        return !$this->isUndefined($this->stopOnFailure);
+        return ! $this->isUndefined($this->stopOnFailure);
     }
 
     public function getStopOnFailure(): bool
@@ -344,7 +361,7 @@ final class State
     }
 
     /**
-     * @return LinkedList[TypeInterface]
+     * @return LinkedList<Type>
      */
     public function getFields(): LinkedList
     {
@@ -354,8 +371,7 @@ final class State
     /**
      * Set the value of fields
      *
-     * @param LinkedList[TypeInterface] $types
-     * @return  self
+     * @param  LinkedList<Type>  $types
      */
     public function setFields(LinkedList $types): self
     {
@@ -366,7 +382,7 @@ final class State
 
     public function hasErrorMessageAny()
     {
-        return !$this->isUndefined($this->errorMessageAny);
+        return ! $this->isUndefined($this->errorMessageAny);
     }
 
     /**
@@ -428,7 +444,7 @@ final class State
 
     public function hasErrorMessageEmpty()
     {
-        return !$this->isUndefined($this->errorMessageEmpty);
+        return ! $this->isUndefined($this->errorMessageEmpty);
     }
 
     /**
@@ -442,7 +458,7 @@ final class State
     /**
      * Set the value of errorMessageEmpty
      *
-     * @return  self
+     * @return self
      */
     public function setErrorMessageEmpty(\Closure|string|Undefined $errorMessageEmpty)
     {
@@ -462,7 +478,7 @@ final class State
     /**
      * Set the value of defaultValues
      *
-     * @return  self
+     * @return self
      */
     public function setDefaultValues(array $defaultValues)
     {
@@ -473,7 +489,7 @@ final class State
 
     public function hasDefaultValuesAny()
     {
-        return !$this->isUndefined($this->defaultValuesAny);
+        return ! $this->isUndefined($this->defaultValuesAny);
     }
 
     /**
@@ -487,7 +503,7 @@ final class State
     /**
      * Set the value of defaultValuesAny
      *
-     * @return  self
+     * @return self
      */
     public function setDefaultValuesAny($defaultValuesAny)
     {
@@ -507,7 +523,7 @@ final class State
     /**
      * Set the value of enableDefaultValueIfOptional
      *
-     * @return  self
+     * @return self
      */
     public function setEnableDefaultValueIfOptional(bool $enableDefaultValueIfOptional)
     {
@@ -527,7 +543,7 @@ final class State
     /**
      * Set the value of defaultValueIfOptional
      *
-     * @return  self
+     * @return self
      */
     public function setDefaultValueIfOptional($defaultValueIfOptional)
     {
@@ -552,12 +568,163 @@ final class State
     /**
      * Set the value of once
      *
-     * @return  self
+     * @return self
      */
     public function setOnce(bool $once)
     {
         $this->once = $once;
 
         return $this;
+    }
+
+    public function hasCustomErrorMessage($ruleID)
+    {
+        return isset($this->getCustomErrMessages()[$ruleID]);
+    }
+
+    public function getCustomErrorMessage($ruleID)
+    {
+        if (isset($this->getCustomErrMessages()[$ruleID])) {
+            return $this->getCustomErrMessages()[$ruleID];
+        }
+
+        return null;
+    }
+
+    public function hasRule($ruleID)
+    {
+        return isset($this->getMiddlewaresIds()[$ruleID]);
+    }
+
+    public function getRule(mixed $ruleID): ?Rule
+    {
+        $middlewares = $this->getMiddlewares();
+        assert($middlewares instanceof LinkedList);
+
+        $middlewares->rewind();
+        while ($middlewares->hasNext()) {
+            $middleware = $middlewares->getNext();
+            if ($middleware instanceof Rule && $middleware->getID() === $ruleID) {
+                $middlewares->rewind();
+
+                return $middleware;
+            }
+        }
+        $middlewares->rewind();
+
+        return null;
+    }
+
+    /// from proxy
+
+    public function getMiddlewares(): LinkedList
+    {
+        $linkedList = $this->middlewares;
+        // $linkedList->rewind();
+
+        return $linkedList;
+    }
+
+    public function getMiddlewaresAndRewind(): LinkedList
+    {
+        $linkedList = $this->middlewares;
+        $linkedList->rewind();
+
+        return $linkedList;
+    }
+
+    public function getRules(): ?array
+    {
+        return array_filter($this->getMiddlewares()->toArray(), fn ($e): bool => $e instanceof Rule);
+    }
+
+    // public function isDefaultValueEnabled(){
+    // 	return $this->field->getSetup()->getEnableDefaultValueIfOptional();
+    // }
+    // public function getDefaultValue(){
+    // 	return $this->field->getSetup()->getDefaultValueIfOptional();
+    // }
+
+    // public function checkRequired($fieldname, $body)
+    // {
+    // 	$rule = $this->getRule(RulesEnum::ID_REQUIRED->value);
+
+    // 	if (!$rule) {
+    // 		return;
+    // 	}
+
+    // 	$rule = $rule->getCallback();
+
+    // 	if (!$rule || !is_callable($rule)) {
+    // 		return;
+    // 	}
+
+    // 	return $rule($fieldname, $body);
+    // }
+
+    public function checkNotNull($fieldname, $body)
+    {
+        $rule = $this->getRule(RulesEnum::ID_NOT_NULL->value);
+
+        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+            return;
+        }
+
+        $rule = $rule->getCallback();
+        if (! $rule) {
+            return;
+        }
+        if (! is_callable($rule)) {
+            return;
+        }
+
+        return $rule($fieldname, $body);
+    }
+
+    public function checkNotEmptyString($fieldname, $body)
+    {
+        $rule = $this->getRule(RulesEnum::ID_NOT_EMPTY_STRING->value);
+
+        if (! $rule instanceof \Kedniko\Vivy\Core\Rule) {
+            return;
+        }
+
+        $rule = $rule->getCallback();
+        if (! $rule) {
+            return;
+        }
+        if (! is_callable($rule)) {
+            return;
+        }
+
+        return $rule($fieldname, $body);
+    }
+
+    // public function hasTransformCallback()
+    // {
+    // 	return property_exists($this, 'transformCallback') && is_array($this->transformCallback) && count($this->transformCallback) > 0;
+    // }
+    // public function getTransformCallbackArray()
+    // {
+    // 	return $this->transformCallback;
+    // }
+
+    // public function setChildStateProperty(string $propertyName, mixed $value): void
+    // {
+    //     $parts = explode('.', $propertyName);
+    //     $propertyName = array_shift($parts);
+    //     $path = implode('.', $parts);
+    //     $this->{$propertyName} = Arr::set($this->{$propertyName}, $path, $value);
+
+    //     // $this->{$propertyName} = $value;
+    //     // Arr::set($this->field->setup, $propertyName, $value);
+    // }
+
+    /**
+     * Used in orProxy
+     */
+    public function getChildrenErrors()
+    {
+        return $this->_extra['errors'] ?? [];
     }
 }

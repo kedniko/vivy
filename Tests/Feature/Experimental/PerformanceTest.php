@@ -7,7 +7,6 @@ use Kedniko\Vivy\V;
 
 uses()->group('performance');
 
-
 // test('performance-native', function () {
 //     if (function_exists('xdebug_is_debugger_active')) {
 //         $isDebugging = call_user_func('xdebug_is_debugger_active');
@@ -55,7 +54,6 @@ uses()->group('performance');
 //     expect($ms)->toBeLessThan(3000);
 // })->skip();
 
-
 // test('small-optimization', function () {
 //     $r = range(1, 50000);
 //     $post = [
@@ -76,8 +74,6 @@ uses()->group('performance');
 //     echo ('small-optimization: ' . $ms . ' ms') . PHP_EOL;
 //     expect($ms)->toBeLessThan(3000);
 // })->skip();
-
-
 
 // test('performance-with-functions', function () {
 //     // $isInt = function ($value) {

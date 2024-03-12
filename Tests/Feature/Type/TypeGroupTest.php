@@ -2,9 +2,9 @@
 
 namespace Tests;
 
+use Kedniko\Vivy\Messages\Error;
 use Kedniko\Vivy\O;
 use Kedniko\Vivy\V;
-use Kedniko\Vivy\Messages\Error;
 
 uses()->group('group');
 
@@ -161,12 +161,11 @@ test('group-3', function () {
     expect($err)->toBe($expectedErrors);
 });
 
-
 test('group-4', function () {
     $v = V::group([
         'person' => V::group([
             'name' => V::string(),
-        ])
+        ]),
     ]);
 
     $validated = V::group($v)->validate([
@@ -178,21 +177,20 @@ test('group-4', function () {
     expect($validated->isValid())->toBeTrue();
 });
 
-
 test('group-with-is', function () {
 
     $v = V::group([
-        "usage" => V::is('usato'),
-        "origin" => V::is('nazionale'),
-        "registration_date" => V::date('m/Y'),
-        "km" => V::is('11000'),
+        'usage' => V::is('usato'),
+        'origin' => V::is('nazionale'),
+        'registration_date' => V::date('m/Y'),
+        'km' => V::is('11000'),
     ]);
 
     $validated = $v->validate([
-        "usage" => "usato",
-        "origin" => "nazionale",
-        "registration_date" => "07/2018",
-        "km" => "11000",
+        'usage' => 'usato',
+        'origin' => 'nazionale',
+        'registration_date' => '07/2018',
+        'km' => '11000',
     ]);
 
     expect($validated->isValid())->toBeTrue();

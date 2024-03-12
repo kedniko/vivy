@@ -4,11 +4,11 @@ namespace Tests;
 
 use App\Rules;
 use App\Token;
-use Kedniko\Vivy\O;
-use Kedniko\Vivy\V;
 use App\Types\TypeToken;
 use Kedniko\Vivy\Messages\Error;
+use Kedniko\Vivy\O;
 use Kedniko\Vivy\Support\Util;
+use Kedniko\Vivy\V;
 use Kedniko\VivyPluginStandard\StandardLibrary;
 
 uses()->group('custom');

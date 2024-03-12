@@ -20,31 +20,31 @@ final class Options
 
     private array $args = [];
 
-    private string|null $functionName = null;
+    private ?string $functionName = null;
 
-    private TypeInterface|null $builder = null;
+    private ?TypeInterface $builder = null;
 
     public function __construct()
     {
         $this->if = Undefined::instance();
     }
 
-    public static function build(Options $options = null, array $args = [], string $fn = null)
+    public static function build(?Options $options = null, array $args = [], ?string $fn = null)
     {
 
-        if (!($options instanceof Options)) {
+        if (! ($options instanceof Options)) {
             $options = new Options();
         }
 
         $options->setArgs($args);
         $fnName = Util::getFunctionName($fn);
-        assert(is_string($fnName) && !empty($fnName));
+        assert(is_string($fnName) && ! empty($fnName));
         $options->setFunctionName($fnName);
 
         return $options;
     }
 
-    public function message(string|Closure $errormessage = null)
+    public function message(string|Closure|null $errormessage = null)
     {
         $this->errormessage = $errormessage;
 
@@ -109,11 +109,10 @@ final class Options
 
     public function setArgs(array $args)
     {
-        $this->args = array_filter($args, fn ($arg): bool => !($arg instanceof Options));
+        $this->args = array_filter($args, fn ($arg): bool => ! ($arg instanceof Options));
 
         return $this;
     }
-
 
     public function getFunctionName(): string
     {
@@ -150,7 +149,7 @@ final class Options
     /**
      * Get the value of errormessage
      *
-     * @return  string
+     * @return string
      */
     public function getErrorMessage()
     {
@@ -175,7 +174,7 @@ final class Options
 
     public function hasIf()
     {
-        return !($this->if instanceof Undefined);
+        return ! ($this->if instanceof Undefined);
     }
 
     /**
@@ -189,8 +188,8 @@ final class Options
     /**
      * Set the value of if
      *
-     * @param  callable  $callback function(Context $context) {...}
-     * @return  self
+     * @param  callable  $callback  function(Context $context) {...}
+     * @return self
      */
     public function ifRule(callable $if)
     {

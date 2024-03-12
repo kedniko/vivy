@@ -2,12 +2,9 @@
 
 namespace Kedniko\Vivy\Messages;
 
-use Kedniko\Vivy\Support\Arr;
-
 class Messages
 {
-
-    public static function getErrorMessage(string $errorID = null, string $lang = null)
+    public static function getErrorMessage(?string $errorID = null, ?string $lang = null)
     {
         if ($lang) {
             Error::setLocale($lang);
@@ -17,13 +14,13 @@ class Messages
             if ($err) {
                 return $err;
             }
-            $err = Error::get('default.' . $errorID);
+            $err = Error::get('default.'.$errorID);
             if ($err) {
                 return $err;
             }
         }
         $type = explode('.', $errorID)[0];
-        $err = Error::get($type . '.default.generic');
+        $err = Error::get($type.'.default.generic');
         if ($err) {
             return $err;
         }

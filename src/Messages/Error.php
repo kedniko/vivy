@@ -35,7 +35,6 @@ class Error
         self::$locale = $locale;
     }
 
-
     public static function getLocale()
     {
         return self::$locale;
@@ -50,11 +49,11 @@ class Error
             $arrkey = implode('.', $pc);
 
             $filename = "{$path}/{$locale}/{$file}.php";
-            if (!file_exists($filename)) {
+            if (! file_exists($filename)) {
                 continue;
             }
 
-            if (!isset(self::$messages[$filename])) {
+            if (! isset(self::$messages[$filename])) {
                 self::$messages[$filename] = require $filename;
             }
 

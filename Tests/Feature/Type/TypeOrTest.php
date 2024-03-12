@@ -3,11 +3,11 @@
 namespace Tests;
 
 use DateTime;
-use Kedniko\Vivy\O;
-use Kedniko\Vivy\V;
+use Kedniko\Vivy\Contracts\ContextInterface;
 use Kedniko\Vivy\Core\OrContext;
 use Kedniko\Vivy\Messages\Error;
-use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\O;
+use Kedniko\Vivy\V;
 
 uses()->group('or');
 
@@ -87,7 +87,6 @@ test('or', function () {
 });
 
 test('type-or-basic', function () {
-
 
     $validated = V::or([
         V::date('Y-m-d H:i:s', O::continueOnFailure())->setValue(1)->asInt()->min(10),

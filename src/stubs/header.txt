@@ -1,6 +1,0 @@
-// @formatter:off
-/**
-* A helper file for your Vivy validators.
-*
-* @author @kedniko
-*/

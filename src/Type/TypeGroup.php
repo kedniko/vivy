@@ -2,36 +2,32 @@
 
 namespace Kedniko\Vivy\Type;
 
-use Kedniko\Vivy\V;
-use Kedniko\Vivy\Rules;
-use Kedniko\Vivy\Core\Rule;
-use Kedniko\Vivy\Type\TypeOr;
+use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Core\GroupContext;
 use Kedniko\Vivy\Core\Helpers;
+use Kedniko\Vivy\Core\LinkedList;
+use Kedniko\Vivy\Core\Rule;
 use Kedniko\Vivy\Core\Undefined;
 use Kedniko\Vivy\Core\Validated;
 use Kedniko\Vivy\Enum\RulesEnum;
-use Kedniko\Vivy\Core\LinkedList;
-use Kedniko\Vivy\Core\GroupContext;
-use Kedniko\Vivy\Support\TypeProxy;
-use Kedniko\Vivy\Contracts\TypeInterface;
 use Kedniko\Vivy\Exceptions\VivyException;
-use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Rules;
+use Kedniko\Vivy\V;
 
 final class TypeGroup extends TypeCompound
 {
-
-
-    public function init(array|callable $setup = null)
+    public function init(array|callable|null $setup = null)
     {
-        if (!$setup) {
+        if (! $setup) {
             return $this;
         }
 
         if (is_array($setup)) {
             $types = $this->getTypeFromArray($setup);
-            $this->state->setFields($types);
+            $this->getSetup()->setFields($types);
         } elseif (is_callable($setup)) {
-            $this->state->setupFn = $setup;
+            $this->getSetup()->setupFn = $setup;
         }
 
         return $this;
@@ -52,9 +48,7 @@ final class TypeGroup extends TypeCompound
 
                 assert($type instanceof TypeInterface);
 
-                $typeProxy = (new TypeProxy($type));
-                $middlewares = $type->state->getMiddlewares();
-                $middlewares->rewind();
+                $middlewares = $type->getSetup()->getMiddlewaresAndRewind();
                 $hasNextMiddleare = $middlewares->hasNext();
                 if ($hasNextMiddleare) {
                     $nextMiddleware = $middlewares->getNext();
@@ -70,30 +64,30 @@ final class TypeGroup extends TypeCompound
                     $c
                 );
 
-                $isRequired = $typeProxy->isRequired($gc);
+                $isRequired = $type->getSetup()->isRequired($gc);
 
                 $isInOr = $type instanceof TypeOr;
 
-                if (!is_array($c->value)) {
+                if (! is_array($c->value)) {
                     throw new \Exception('$c->value in not an array', 1);
                 }
 
-                $caseRuleRequiredFailed = !array_key_exists($fieldname, $c->value) &&
+                $caseRuleRequiredFailed = ! array_key_exists($fieldname, $c->value) &&
                     $isRequired &&
-                    !$isInOr &&
-                    !$nextRuleIsUndefined;
+                    ! $isInOr &&
+                    ! $nextRuleIsUndefined;
 
                 if ($caseRuleRequiredFailed) {
 
                     // CASE: required rule failed
 
-                    $rule = $type->state->getRequiredRule() ?: Rules::required();
+                    $rule = $type->getSetup()->getRequiredRule() ?: Rules::required();
 
-                    $newDefault = Helpers::tryToGetDefault($rule->getID(), $typeProxy, $gc);
+                    $newDefault = Helpers::tryToGetDefault($rule->getID(), $type, $gc);
                     if (Helpers::isNotUndefined($newDefault)) {
                         $c->value[$fieldname] = $newDefault;
                     } else {
-                        $errors = Helpers::getErrors($rule, $typeProxy, $c, []);
+                        $errors = Helpers::getErrors($rule, $type, $c, []);
                         $c->errors[$fieldname] = $errors; // TODO check if this is correct
                         $c->value[$fieldname] = Undefined::instance();
                     }
@@ -135,7 +129,7 @@ final class TypeGroup extends TypeCompound
                 }
 
                 // remove temporary field
-                if ($type->state->getOnce()) {
+                if ($type->getSetup()->getOnce()) {
                     $typeFields->removeCurrent();
                 }
             }
@@ -153,8 +147,8 @@ final class TypeGroup extends TypeCompound
 
     private function getFieldsFromState(ContextInterface $c): \Kedniko\Vivy\Core\LinkedList
     {
-        if ($this->state->setupFn !== null && is_callable($this->state->setupFn)) {
-            $fn = $this->state->setupFn;
+        if ($this->getSetup()->setupFn !== null && is_callable($this->getSetup()->setupFn)) {
+            $fn = $this->getSetup()->setupFn;
             $arraySetup = $fn($c);
 
             assert(is_array($arraySetup));
@@ -162,9 +156,8 @@ final class TypeGroup extends TypeCompound
             return $this->getTypeFromArray($arraySetup);
         }
 
-        return $this->state->getFields();
+        return $this->getSetup()->getFields();
     }
-
 
     // public function addField($name, BasicField $type, Options $options = null)
     // {
@@ -178,8 +171,8 @@ final class TypeGroup extends TypeCompound
     public function addField(string $fieldname, TypeInterface $type)
     {
         /** @var LinkedList[TypeInterface] $types */
-        $types = $this->state->getFields();
-        (new TypeProxy($type))->setName($fieldname);
+        $types = $this->getSetup()->getFields();
+        $type->getSetup()->setName($fieldname);
         $types->append($type);
 
         return $this;
@@ -204,19 +197,19 @@ final class TypeGroup extends TypeCompound
             } elseif (is_callable($type)) {
                 $setupFn = $type;
                 $type = TypeAny::new();
-                $type->state->setupFn = $setupFn;
+                $type->getSetup()->setupFn = $setupFn;
             } elseif (is_array($type)) {
                 $type = V::group($type);
             } elseif ($type instanceof TypeInterface) {
                 // do nothing
             } else {
-                throw new VivyException('Unknown setup type: ' . gettype($type));
+                throw new VivyException('Unknown setup type: '.gettype($type));
             }
 
-            if (!$type->state->issetRequired()) {
-                $type->state->setRequired(true, Rules::required());
+            if (! $type->getSetup()->issetRequired()) {
+                $type->getSetup()->setRequired(true, Rules::required());
             }
-            (new TypeProxy($type))->setName($fieldname);
+            $type->getSetup()->setName($fieldname);
             $types->append($type);
         }
 

@@ -57,6 +57,13 @@ final class ScanCommand
 
     private function getHeader(): string
     {
-        return file_get_contents(__DIR__ . '/../stubs/header.txt');
+        return <<<'HEADER'
+        // @formatter:off
+        /**
+        * A helper file for your Vivy validators.
+        *
+        * @author @kedniko
+        */
+        HEADER;
     }
 }

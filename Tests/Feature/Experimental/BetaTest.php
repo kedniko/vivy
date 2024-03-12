@@ -23,8 +23,8 @@ test('failhandlers-1', function () {
             'name' => V::string()->minLength(40),
         ]);
 
-    $validated1 = $v->validate(['name' => 'kedniko',])->orFailWith('global');
-    $validated2 = $v->validate(['name' => 'kedniko',])->orFailWith('local');
+    $validated1 = $v->validate(['name' => 'kedniko'])->orFailWith('global');
+    $validated2 = $v->validate(['name' => 'kedniko'])->orFailWith('local');
     V::string()->validate('a')->forceFailWith(function () use (&$forceWorks) {
         $forceWorks = true;
     });
@@ -35,8 +35,6 @@ test('failhandlers-1', function () {
     expect($localWorks)->toBeTrue();
     expect($forceWorks)->toBeTrue();
 });
-
-
 
 test('return-group', function () {
     $v = V::group([
@@ -63,15 +61,6 @@ test('return-group', function () {
 
     expect($validated->isValid())->toBeTrue();
 });
-
-
-
-
-
-
-
-
-
 
 // test(
 // 	'Login',
@@ -309,8 +298,6 @@ test('return-group', function () {
 // 		$d = 1;
 // 	});
 
-
-
 // test(
 // 	'DefaultValue',
 // 	function () {
@@ -342,7 +329,6 @@ test('return-group', function () {
 // 		// dd([$validated->value()]);
 // 	}
 // );
-
 
 // test(
 // 	'Refactor',

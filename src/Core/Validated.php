@@ -20,8 +20,9 @@ final class Validated
     private function getFailHandler(string|callable $handler): callable
     {
         if (is_string($handler)) {
-            $handler = $this->chain->state->failHandlers[$handler] ?? V::getGlobalFailHandler($handler);
+            $handler = $this->chain->getSetup()->failHandlers[$handler] ?? V::getGlobalFailHandler($handler);
         }
+
         return $handler;
     }
 

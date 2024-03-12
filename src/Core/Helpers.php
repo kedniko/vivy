@@ -2,16 +2,15 @@
 
 namespace Kedniko\Vivy\Core;
 
-use Kedniko\Vivy\Type\TypeOr;
-use Kedniko\Vivy\Enum\RulesEnum;
-use Kedniko\Vivy\Support\TypeProxy;
 use Kedniko\Vivy\Contracts\ContextInterface;
+use Kedniko\Vivy\Contracts\TypeInterface;
+use Kedniko\Vivy\Enum\RulesEnum;
 
 final class Helpers
 {
     public static function isNotUndefined($value)
     {
-        return !self::isUndefined($value);
+        return ! self::isUndefined($value);
     }
 
     public static function isUndefined($value)
@@ -21,13 +20,13 @@ final class Helpers
 
     /**
      * @param  string  $ruleID
-     * @param  ContextInterface  $c Context passed to the user if the default value is a function
+     * @param  ContextInterface  $c  Context passed to the user if the default value is a function
      */
-    public static function tryToGetDefault($ruleID, TypeProxy $typeProxy, ContextInterface $c)
+    public static function tryToGetDefault($ruleID, TypeInterface $type, ContextInterface $c)
     {
         $newDefault = Undefined::instance();
-        if ($typeProxy->hasDefaultValue($ruleID)) {
-            $newDefault = Helpers::valueOrFunction($typeProxy->getDefaultValue($ruleID), $c);
+        if (self::hasDefaultValue($type, $ruleID)) {
+            $newDefault = Helpers::valueOrFunction(self::getDefaultValue($type, $ruleID), $c);
             // if ($c instanceof GroupContext) {
             // 	$value = $c->value;
             // 	$value[$c->fieldname()] = $defaultValue;
@@ -37,8 +36,8 @@ final class Helpers
             // 	// $c->setValue($defaultValue);
             // 	$newDefault = $defaultValue;
             // }
-        } elseif ($typeProxy->hasDefaultValueAny()) {
-            $newDefault = Helpers::valueOrFunction($typeProxy->getDefaultValueAny(), $c);
+        } elseif (self::hasDefaultValueAny($type)) {
+            $newDefault = Helpers::valueOrFunction(self::getDefaultValueAny($type), $c);
             // if ($c instanceof GroupContext) {
             // 	$value = $c->fatherContext()->value();
             // 	$value[$c->fieldname()] = $defaultValue;
@@ -53,7 +52,7 @@ final class Helpers
         return $newDefault;
     }
 
-    public static function getErrors(Rule $middleware, TypeProxy $typeProxy, ContextInterface $c, $errors = null)
+    public static function getErrors(Rule $middleware, TypeInterface $type, ContextInterface $c, $errors = null)
     {
         $errors ??= $c->errors;
         $ruleID = $middleware->getID();
@@ -69,17 +68,17 @@ final class Helpers
         $idEmptyRules = [
             RulesEnum::ID_REQUIRED->value,
             RulesEnum::ID_NOT_NULL->value,
-            RulesEnum::ID_NOT_EMPTY_STRING->value
+            RulesEnum::ID_NOT_EMPTY_STRING->value,
         ];
 
-        if ($typeProxy->hasCustomErrorMessage($ruleID)) {
-            $errormessage = $typeProxy->getCustomErrorMessage($ruleID);
+        if ($type->getSetup()->hasCustomErrorMessage($ruleID)) {
+            $errormessage = $type->getSetup()->getCustomErrorMessage($ruleID);
             $errorKey = $ruleID;
-        } elseif ($typeProxy->hasErrorMessageEmpty() && in_array($ruleID, $idEmptyRules, true)) {
-            $errormessage = $typeProxy->getErrorMessageEmpty();
+        } elseif ($type->getSetup()->hasErrorMessageEmpty() && in_array($ruleID, $idEmptyRules, true)) {
+            $errormessage = $type->getSetup()->getErrorMessageEmpty();
             $errorKey = 'error';
-        } elseif ($typeProxy->hasErrorMessageAny()) {
-            $errormessage = $typeProxy->getErrorMessageAny();
+        } elseif ($type->getSetup()->hasErrorMessageAny()) {
+            $errormessage = $type->getSetup()->getErrorMessageAny();
             $errorKey = 'error';
         } else {
             $errormessage = $middleware->getErrorMessage();
@@ -130,7 +129,7 @@ final class Helpers
 
     public static function issetOrFail(&$variable, $message_or_var = null)
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             if ($message_or_var === null) {
                 $message_or_var = 'Variable not set';
             } elseif ($message_or_var !== null && str_starts_with((string) $message_or_var, '$')) {
@@ -144,7 +143,7 @@ final class Helpers
 
     public static function issetOrDefault(&$variable, $defaultValue)
     {
-        if (!isset($variable)) {
+        if (! isset($variable)) {
             return $defaultValue;
         }
 
@@ -153,7 +152,7 @@ final class Helpers
 
     public static function assertTrueOrFail($bool, $message_or_var = null)
     {
-        if (!$bool) {
+        if (! $bool) {
             $default = 'Assertion failed';
             throw new \Exception("{$default}: {$message_or_var}" ?: $default, 1);
         }
@@ -179,7 +178,7 @@ final class Helpers
         $method = null;
 
         if (is_array($value) && (count($value) === 2 && (is_string($value[0]) || is_object($value[0])))) {
-            if (is_string($value[1]) && !empty($value[1])) {
+            if (is_string($value[1]) && ! empty($value[1])) {
                 $class = $value[0];
                 $method = $value[1];
             } elseif (is_string($value[0])) {
@@ -188,7 +187,7 @@ final class Helpers
             }
         }
 
-        if (!$class && !$method && is_string($value)) {
+        if (! $class && ! $method && is_string($value)) {
             $separators = ['::', '@', ','];
             foreach ($separators as $separator) {
                 if (str_contains($value, $separator)) {
@@ -207,10 +206,10 @@ final class Helpers
         }
 
         if (is_string($class)) {
-            $class = '\\' . ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
+            $class = '\\'.ltrim(str_replace('/', '\\', ltrim($class, '\\')), '\\');
         }
 
-        if (!method_exists($class, $method)) {
+        if (! method_exists($class, $method)) {
             return false;
         }
 
@@ -223,5 +222,25 @@ final class Helpers
             RulesEnum::ID_GROUP->value,
             RulesEnum::ID_EACH->value,
         ];
+    }
+
+    public static function hasDefaultValue(TypeInterface $type, $ruleID): bool
+    {
+        return array_key_exists($ruleID, $type->getSetup()->getDefaultValues());
+    }
+
+    public static function getDefaultValue(TypeInterface $type, $ruleID)
+    {
+        return self::hasDefaultValue($type, $ruleID) ? $type->getSetup()->getDefaultValues()[$ruleID] : null;
+    }
+
+    public static function hasDefaultValueAny(TypeInterface $type)
+    {
+        return $type->getSetup()->hasDefaultValuesAny();
+    }
+
+    public static function getDefaultValueAny(TypeInterface $type)
+    {
+        return $type->getSetup()->getDefaultValueAny();
     }
 }

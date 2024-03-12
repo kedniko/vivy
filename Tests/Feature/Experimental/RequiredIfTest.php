@@ -7,7 +7,6 @@ use Kedniko\Vivy\V;
 
 uses()->group('required-if');
 
-
 test('required-if-simple-1', function () {
     $v = V::group([
         'allow_sms' => V::bool(),
