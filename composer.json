@@ -54,11 +54,5 @@
 			"@test:types",
 			"@test:unit"
 		]
-	},
-	"repositories": [
-		{
-				"type": "path",
-				"url": "../vivy-plugin-standard"
-		}
-]
+	}
 }
