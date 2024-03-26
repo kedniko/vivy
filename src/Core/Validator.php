@@ -29,30 +29,20 @@ final class Validator
     ) {
         $this->type = $type;
         $this->fatherContext = $fatherContext;
+        $this->type->skipOtherMiddlewares = false;
+        $this->type->skipOtherRules = false;
+        $this->context = $this->type->getContext($this->fatherContext);
     }
 
     public function validate(mixed $value = null): Validated
     {
-        $this->type->skipOtherMiddlewares = false;
-        $this->type->skipOtherRules = false;
-        $issetvalue = func_num_args();
-
-        $this->context = $this->type->getContext($this->fatherContext);
-
-        if ($issetvalue !== 0) {
+        if (func_num_args() !== 0) {
             $this->context->value = $value;
         } elseif ($this->type->getSetup()->hasData()) {
             $this->context->value = $this->type->getSetup()->getData();
         } else {
             throw new \Exception('No data to validate');
         }
-        unset($value);
-
-        // CAN BE OPTIMIZED
-
-        // if (!$this->type->getSetup()->hasMiddlewares()) {
-        //     return new Validated($this->type->value, []);
-        // }
 
         $this->applyMiddlewares();
 
@@ -269,11 +259,8 @@ final class Validator
             $this->applyCallback($middleware);
         }
 
-        // return $validated;
-
         if ($errors !== []) {
             $errors = array_replace_recursive($this->context->errors, $errors);
-            // $this->context->errors = $errors;
 
             $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
 
@@ -284,7 +271,7 @@ final class Validator
             }
         }
 
-        return ! $errors;
+        return $errors === [];
     }
 
     private function applyOnValidFunctions(): void
