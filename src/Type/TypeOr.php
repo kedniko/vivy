@@ -33,26 +33,7 @@ final class TypeOr extends Type
 
         $rule = $this->getOrRule($types, $isNot, $options->getErrorMessage());
         $this->addRule($rule, $options);
-        // $this->universes = $types;
-
-        // $this->_extra['hasUndefined'] = false;
-        foreach ($types as $type) {
-
-            assert($type instanceof TypeInterface);
-            $canBeNull = $type->getSetup()->canBeNull();
-            $canBeEmptyString = $type->getSetup()->canBeEmptyString();
-            if ($canBeNull) {
-                $this->getSetup()->_extra['childCanBeNull'] = true;
-            }
-            if ($canBeEmptyString) {
-                $this->getSetup()->_extra['childCanBeEmptyString'] = true;
-            }
-
-            // if (isset($type->getSetup()->_extra['startsWithUndefined']) && $type->getSetup()->_extra['startsWithUndefined']) {
-            // 	$this->_extra['hasUndefined'] = true;
-            // }
-        }
-
+     
         return $this;
     }
 

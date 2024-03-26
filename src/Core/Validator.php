@@ -54,70 +54,18 @@ final class Validator
         //     return new Validated($this->type->value, []);
         // }
 
-        $this->type->canBeEmptyString = $this->type->getSetup()->canBeEmptyString();
-        $this->type->canBeNull = $this->type->getSetup()->canBeNull();
-
-        if ($this->type instanceof TypeOr) {
-            $orChildCanBeNull = $this->type->getSetup()->_extra['childCanBeNull'] ?? false;
-            $orChildCanBeEmptyString = $this->type->getSetup()->_extra['childCanBeEmptyString'] ?? false;
-            $emptyIsInvalid = (! $orChildCanBeEmptyString && $this->context->value === '') || (! $orChildCanBeNull && $this->context->value === null);
-        } else {
-            $emptyIsInvalid = (! $this->type->canBeEmptyString && $this->context->value === '') || (! $this->type->canBeNull && $this->context->value === null);
-        }
-
-        if (false && 'TODO' && $emptyIsInvalid) {
-            $this->getValidatedOnEmpty();
-        } else {
-            $this->applyMiddlewares();
-        }
+        $this->applyMiddlewares();
 
         $validated = new Validated($this->context->value, $this->context->errors);
         $validated->chain = $this->type;
         $this->validated = $validated;
 
-        unset($this->type->skipOtherMiddlewares, $this->type->skipOtherRules, $this->type->canBeEmptyString, $this->type->canBeNull);
+        unset(
+            $this->type->skipOtherMiddlewares, 
+            $this->type->skipOtherRules
+        );
 
         return $this->validated;
-    }
-
-    public function getValidatedOnEmpty(): void
-    {
-        $errors = [];
-
-        if (! $this->type->canBeEmptyString && $this->context->value === '') {
-            $ruleID = RulesEnum::ID_NOT_EMPTY_STRING->value;
-            $rule = $this->type->getSetup()->hasRule($ruleID) ? $this->type->getSetup()->getRule($ruleID) : Rules::notEmptyString();
-
-            $newDefault = Helpers::tryToGetDefault($rule->getID(), $this->type, $this->context);
-            if (Helpers::isNotUndefined($newDefault)) {
-                $this->context->value = $newDefault;
-            } else {
-                $errors = Helpers::getErrors($rule, $this->type, $this->context);
-            }
-        } elseif (! $this->type->canBeNull && $this->context->value === null) {
-            $ruleID = RulesEnum::ID_NOT_NULL->value;
-            $rule = $this->type->getSetup()->hasRule($ruleID) ? $this->type->getSetup()->getRule($ruleID) : Rules::notNull();
-
-            $newDefault = Helpers::tryToGetDefault($rule->getID(), $this->type, $this->context);
-            if (Helpers::isNotUndefined($newDefault)) {
-                $this->context->value = $newDefault;
-            } else {
-                $errors = Helpers::getErrors($rule, $this->type, $this->context);
-            }
-        }
-
-        // $this->context->errors = array_replace_recursive($this->context->errors, $errors);
-
-        $errors = array_replace_recursive($this->context->errors, $errors);
-        // $this->context->errors = $errors;
-
-        $this->type->_extra['or_errors'] = $errors; // used by Callback() middleware in "applyMiddleware()"
-
-        // errors for types inside orRule are ignored. The main orRule will handle them
-        $canEditContextErrors = ! (isset($this->type->_extra['isInsideOr']) && $this->type->_extra['isInsideOr'] === true);
-        if ($canEditContextErrors) {
-            $this->context->errors = $errors;
-        }
     }
 
     public function errors(mixed $value = null): array
@@ -236,44 +184,34 @@ final class Validator
 
         $errors = [];
         $fn = $middleware->getCallback();
-
-        // ignore empty fields on rule
-        $emptyIsValid = ($this->type->canBeEmptyString && $this->context->value === '') || ($this->type->canBeNull && $this->context->value === null);
-
-        if ($emptyIsValid) {
-            // if current middleware check force empty value, don't skip other rules but continue to validate...
-            if (! in_array($middleware->getID(), [RulesEnum::ID_NULL->value, RulesEnum::ID_EMPTY_STRING->value])) {
-                $this->type->skipOtherRules = true;
-            }
+        
+        if (is_callable($fn)) {
+            $validated_or_bool = $fn($this->context);
         } else {
-            if (is_callable($fn)) {
-                $validated_or_bool = $fn($this->context);
+            throw new VivyException('Function is invalid');
+        }
+
+        if ($validated_or_bool instanceof Validated) {
+            if ($this->type instanceof TypeOr) {
+                $isvalid = ! ($this->type->getSetup()->_extra['or_errors'] ?? []);
             } else {
-                throw new VivyException('Function is invalid');
+                $isvalid = $validated_or_bool->isValid();
+            }
+            $validated_or_bool->value();
+        } else {
+            $isvalid = (bool) $validated_or_bool;
+        }
+
+        if (! $isvalid) {
+            $newDefault = Helpers::tryToGetDefault($middleware->getID(), $this->type, $this->context);
+            if (Helpers::isNotUndefined($newDefault)) {
+                $this->context->value = $newDefault;
+            } else {
+                $errors = Helpers::getErrors($middleware, $this->type, $this->context);
             }
 
-            if ($validated_or_bool instanceof Validated) {
-                if ($this->type instanceof TypeOr) {
-                    $isvalid = ! ($this->type->getSetup()->_extra['or_errors'] ?? []);
-                } else {
-                    $isvalid = $validated_or_bool->isValid();
-                }
-                $validated_or_bool->value();
-            } else {
-                $isvalid = (bool) $validated_or_bool;
-            }
-
-            if (! $isvalid) {
-                $newDefault = Helpers::tryToGetDefault($middleware->getID(), $this->type, $this->context);
-                if (Helpers::isNotUndefined($newDefault)) {
-                    $this->context->value = $newDefault;
-                } else {
-                    $errors = Helpers::getErrors($middleware, $this->type, $this->context);
-                }
-
-                if ($middleware->getStopOnFailure()) {
-                    $this->type->skipOtherMiddlewares = true;
-                }
+            if ($middleware->getStopOnFailure()) {
+                $this->type->skipOtherMiddlewares = true;
             }
         }
 

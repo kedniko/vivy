@@ -19,8 +19,6 @@ final class Setup
 
     private bool|Undefined $required;
 
-    private bool|Undefined $notEmptyString;
-
     private bool|Undefined $notNull;
 
     private Rule $requiredRule;
@@ -88,7 +86,6 @@ final class Setup
         $this->required = Undefined::instance();
         $this->requiredIf = Undefined::instance();
         $this->requiredIfField = Undefined::instance();
-        $this->notEmptyString = Undefined::instance();
         $this->setupFn = Undefined::instance();
         $this->notNull = Undefined::instance();
         $this->defaultValueIfOptional = Undefined::instance();
@@ -110,35 +107,6 @@ final class Setup
     public function setData($data)
     {
         $this->data = $data;
-
-        return $this;
-    }
-
-    public function canBeEmptyString(): bool
-    {
-        if (! $this->hasNotEmptyString()) {
-            return false;
-        }
-
-        return $this->notEmptyString === false;
-    }
-
-    public function hasNotEmptyString()
-    {
-        return ! $this->isUndefined($this->notEmptyString);
-    }
-
-    public function getNotEmptyString(): bool|Undefined
-    {
-        return $this->notEmptyString;
-    }
-
-    public function setNotEmptyString(bool|Undefined $notEmptyString, $rule = null)
-    {
-        $this->notEmptyString = $notEmptyString;
-        if ($rule instanceof Rule) {
-            $this->setRequiredRule($rule);
-        }
 
         return $this;
     }
@@ -210,11 +178,6 @@ final class Setup
     {
         $this->requiredRule = $rule;
 
-        return $this;
-    }
-
-    public function setNotEmptyStringRule($rule)
-    {
         return $this;
     }
 

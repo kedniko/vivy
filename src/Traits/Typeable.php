@@ -49,10 +49,6 @@ trait Typeable
 
     public array $errors = [];
 
-    public bool $canBeEmptyString;
-
-    public bool $canBeNull;
-
     public TypeInterface $field;
 
     public array $_extra;
@@ -603,15 +599,6 @@ trait Typeable
     // 	return $this;
     // }
 
-    // public function notEmptyString(Options $options = null)
-    // {
-
-    // 	$options = Helpers::getOptions($options);
-    // 	$errormessage = $options->getErrormessage() ?: RuleMessage::getErrorMessage(RulesEnum::ID_NOT_EMPTY_STRING->value);
-    // 	$this->addRule(Rules::notEmptyString($errormessage), $options);
-    // 	$this->getSetup()->setNotEmptyString(true);
-    // 	return $this;
-    // }
 
     // public function allow($value, $stopOnMatch = true)
     // {
