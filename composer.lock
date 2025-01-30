@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f00064757a2fae0c5cbef44696fb103c",
+    "content-hash": "1c0b4359087019909f304be78306fd9d",
     "packages": [
         {
             "name": "brick/math",
@@ -63,18 +63,24 @@
         },
         {
             "name": "kedniko/vivy-plugin-standard",
-            "version": "0.0.4",
+            "version": "v0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kedniko/vivy-plugin-standard.git",
+                "reference": "d3dd31252fa732c49dd497180bcb9243fad57a39"
+            },
             "dist": {
-                "type": "path",
-                "url": "../vivy-plugin-standard",
-                "reference": "218212f281118becabaea26626814cf856b87df4"
+                "type": "zip",
+                "url": "https://api.github.com/repos/kedniko/vivy-plugin-standard/zipball/d3dd31252fa732c49dd497180bcb9243fad57a39",
+                "reference": "d3dd31252fa732c49dd497180bcb9243fad57a39",
+                "shasum": ""
             },
             "require": {
-                "kedniko/vivy": "^0.0.9",
                 "php": "^8.2.0"
             },
             "require-dev": {
                 "fakerphp/faker": "^1.23",
+                "kedniko/vivy": "dev-main",
                 "laravel/pint": "^1.13.7",
                 "pestphp/pest": "^2.28.1",
                 "phpstan/phpstan": "^1.10.50",
@@ -87,40 +93,7 @@
                     "Kedniko\\VivyPluginStandard\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "refacto": [
-                    "rector"
-                ],
-                "lint": [
-                    "pint"
-                ],
-                "test:refacto": [
-                    "rector --dry-run"
-                ],
-                "test:lint": [
-                    "pint --test"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi"
-                ],
-                "test": [
-                    "pest --colors=always"
-                ],
-                "scan": [
-                    "php ./vendor/bin/vivy"
-                ],
-                "test:all": [
-                    "@test:refacto",
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -132,13 +105,15 @@
             ],
             "description": "A skeleton repository for my packages",
             "keywords": [
+                "Skeleton",
                 "package",
-                "php",
-                "skeleton"
+                "php"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/kedniko/vivy-plugin-standard/issues",
+                "source": "https://github.com/kedniko/vivy-plugin-standard/tree/v0.0.4"
+            },
+            "time": "2024-03-13T00:00:49+00:00"
         },
         {
             "name": "nette/php-generator",
@@ -3745,16 +3720,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v7.0.4",
+            "version": "v7.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "0e7727191c3b71ebec6d529fa0e50a01ca5679e9"
+                "reference": "9b8a40b7289767aa7117e957573c2a535efe6585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/0e7727191c3b71ebec6d529fa0e50a01ca5679e9",
-                "reference": "0e7727191c3b71ebec6d529fa0e50a01ca5679e9",
+                "url": "https://api.github.com/repos/symfony/process/zipball/9b8a40b7289767aa7117e957573c2a535efe6585",
+                "reference": "9b8a40b7289767aa7117e957573c2a535efe6585",
                 "shasum": ""
             },
             "require": {
@@ -3786,7 +3761,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v7.0.4"
+                "source": "https://github.com/symfony/process/tree/v7.1.7"
             },
             "funding": [
                 {
@@ -3802,7 +3777,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-22T20:27:20+00:00"
+            "time": "2024-11-06T09:25:12+00:00"
         },
         {
             "name": "symfony/service-contracts",
